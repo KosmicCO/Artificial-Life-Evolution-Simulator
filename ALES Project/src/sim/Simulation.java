@@ -5,8 +5,11 @@
  */
 package sim;
 
+import sim.guis.MainMenu;
 import engine.Core;
 import graphics.Window2D;
+import gui.GUI;
+import gui.GUIController;
 import util.Color4;
 
 /**
@@ -20,16 +23,22 @@ public class Simulation {
     
     public static void main(String[] args) {
         
-        Core.screenHeight = Core.screenWidth = 500;
+        Core.screenHeight = 500;
+        Core.screenWidth = 1000;
         Core.title = "ALES by CEB";
-        Core.is3D = false;
-        Window2D.background = Color4.BLACK;
+        Core.is3D = true;
         
         Core.init();
         
-        Core.render.onEvent(() -> {
+        Window2D.background = Color4.BLACK;
         
-        });
+        GUI main = new MainMenu("mainMenu");
+        
+        GUIController.add(main);
+        
+        main.setVisible(true);
+        
+        Core.render.onEvent(GUIController::draw);
         
         Core.update.onEvent(() -> {
         
@@ -40,5 +49,7 @@ public class Simulation {
             
             updates++;
         });
+        
+        Core.run();
     }
 }
