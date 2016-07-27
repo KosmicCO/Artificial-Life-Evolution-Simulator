@@ -11,6 +11,7 @@ import gui.types.ComponentInputGUI;
 import gui.types.GUIInputComponent;
 import org.newdawn.slick.Color;
 import static sim.GUIs.getColor;
+import util.Vec2;
 
 /**
  *
@@ -18,18 +19,20 @@ import static sim.GUIs.getColor;
  */
 public class MainMenu extends ComponentInputGUI{
     
+    private Vec2 start = new Vec2(350, 0);
     
     public MainMenu(String name) {
         
         super(name, (GUIInputComponent) null);
         
-        inputs.add(new GUIButton("start", this, null /*it goes*/, null, "Start Simulation", Color.black));
+        inputs.add(new GUIButton("start", this, null, null, "Start", Color.black));
+        inputs.add(new GUIButton("preset", this, null, null, "Preset", Color.black));
+        inputs.add(new GUIButton("settings", this, null, null, "Settings", Color.black));
         
         for (int i = 0; i < 3; i++) {
             
-            components.add(new GUIPanel("startP", null, null, getColor(0)));
+            components.add(new GUIPanel("top" + i, null, null, getColor(0).multiply(1.0 - 0.2 * i)));
         }
-        
     }
 
     @Override
@@ -41,7 +44,6 @@ public class MainMenu extends ComponentInputGUI{
     @Override
     public GUIInputComponent getDefaultComponent() {
 
-        //start button
-        return null;
+        return inputs.get(0);
     }
 }
