@@ -26,7 +26,7 @@ public class TerrainTest {
                 cellArray[row][c] = new StructureCell(row,c);
             }
         }
-        List<Creature> pop = new ArrayList<Creature>();
+        List<Creature> pop = new ArrayList<>();
         Creature test1 = new Creature(cellArray, 0, null, 0, 0);
         pop.add(test1);
         Terrain map = new Terrain(env,pop);
