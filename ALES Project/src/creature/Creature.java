@@ -6,6 +6,7 @@
 package creature;
 
 import creature.cells.Cell;
+import creature.cells.ForagerCell;
 import creature.cells.HunterCell;
 import creature.cells.MotorCell;
 import creature.cells.ReproductionCell;
@@ -21,6 +22,10 @@ import static utility.Mapping.ADY4;
  */
 public class Creature {
 
+    public static final int REPRODUCE = 0;
+    public static final int HUNT = 1;
+    public static final int FORAGE = 2;
+    
     public static final int SIDE_LENGTH = 10;
     
     private final List<Cell> cells;
@@ -31,7 +36,7 @@ public class Creature {
     private int posY;
     private List<Cell> modeCells;
     private List<MotorCell> motorCells;
-    private Mode mode;
+    private int mode;
     private int maxStore;
     private int energy;
 
@@ -64,14 +69,31 @@ public class Creature {
         }
     }
 
-    private List<Cell> findType(Class<? extends Cell> type) {
+    private List<Cell> findType(int type) {
 
         List<Cell> found = new ArrayList();
 
         for (Cell cell : cells) {
 
-            if (cell.getClass() == type) {
-
+            boolean isType;
+            
+            switch(type){
+                
+                case REPRODUCE: 
+                    isType = cell instanceof ReproductionCell;
+                    break;
+                case HUNT:
+                    isType = cell instanceof HunterCell;
+                    break;
+                case FORAGE:
+                    isType = cell instanceof ForagerCell;
+                    break;
+                default:
+                    isType = false;
+            }
+            
+            if(isType){
+                
                 found.add(cell);
             }
         }
@@ -83,10 +105,10 @@ public class Creature {
 
     }
 
-    private void changeMode(Mode mode) {
+    private void changeMode(int mode) {
 
         this.mode = mode;
-        modeCells = findType(mode.getPreload());
+        modeCells = findType(mode);
     }
 
     private void checkFromMode() {
