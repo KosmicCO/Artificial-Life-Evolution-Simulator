@@ -27,12 +27,11 @@ public class TerrainTest {
             }
         }
         List<Creature> pop = new ArrayList<Creature>();
-        Creature test1 = new Creature(cellArray, 0, null, 3, 3);
-        Creature test2 = new Creature(cellArray, 0, null, 2, 2);
+        Creature test1 = new Creature(cellArray, 0, null, 0, 0);
         pop.add(test1);
-        pop.add(test2);
         Terrain map = new Terrain(env,pop);
-        Cell c = map.cellAtAbsPos(4, 4);
+        Cell c = map.cellAtAbsPos(1, 0);
         System.out.println(c);
+        System.out.println(test1);
     }
 }
