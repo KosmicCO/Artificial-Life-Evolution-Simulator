@@ -5,6 +5,11 @@
  */
 package creature;
 
+import creature.cells.Cell;
+import creature.cells.ForagerCell;
+import creature.cells.HunterCell;
+import creature.cells.MotorCell;
+import creature.cells.ReproductionCell;
 import creature.genetics.Chromosome;
 import java.util.ArrayList;
 import java.util.List;
@@ -17,6 +22,12 @@ import static utility.Mapping.ADY4;
  */
 public class Creature {
 
+    public static final int REPRODUCE = 0;
+    public static final int HUNT = 1;
+    public static final int FORAGE = 2;
+    
+    public static final int SIDE_LENGTH = 10;
+    
     private final List<Cell> cells;
     private final Cell[][] cellMap;
     private final List<Chromosome> genes;
@@ -24,8 +35,8 @@ public class Creature {
     private int posX;
     private int posY;
     private List<Cell> modeCells;
-    private List<Cell.MotorCell> motorCells;
-    private Mode mode;
+    private List<MotorCell> motorCells;
+    private int mode;
     private int maxStore;
     private int energy;
 
@@ -41,7 +52,7 @@ public class Creature {
         for (Cell[] cellRow : cellMap) {
 
             for (Cell cell : cellRow) {
-
+                cell.setCreature(this);
                 if (cell != null) {
 
                     maxStore += cell.getMaxStore();
@@ -58,14 +69,31 @@ public class Creature {
         }
     }
 
-    private List<Cell> findType(Class<? extends Cell> type) {
+    private List<Cell> findType(int type) {
 
         List<Cell> found = new ArrayList();
 
         for (Cell cell : cells) {
 
-            if (cell.getClass() == type) {
-
+            boolean isType;
+            
+            switch(type){
+                
+                case REPRODUCE: 
+                    isType = cell instanceof ReproductionCell;
+                    break;
+                case HUNT:
+                    isType = cell instanceof HunterCell;
+                    break;
+                case FORAGE:
+                    isType = cell instanceof ForagerCell;
+                    break;
+                default:
+                    isType = false;
+            }
+            
+            if(isType){
+                
                 found.add(cell);
             }
         }
@@ -77,10 +105,10 @@ public class Creature {
 
     }
 
-    private void changeMode(Mode mode) {
+    private void changeMode(int mode) {
 
         this.mode = mode;
-        modeCells = findType(mode.getPreload());
+        modeCells = findType(mode);
     }
 
     private void checkFromMode() {
@@ -91,7 +119,7 @@ public class Creature {
 
                 for (Cell rc : modeCells) {
 
-                    Cell.ReproductionCell r = (Cell.ReproductionCell) rc;
+                    ReproductionCell r = (ReproductionCell) rc;
                     int x = r.getX();
                     int y = r.getY();
 
@@ -106,7 +134,7 @@ public class Creature {
 
                             if (c != null) {
 
-                                if (c instanceof Cell.ReproductionCell) {
+                                if (c instanceof ReproductionCell) {
 
                                     //reproduce methode with itself
                                 } else {
@@ -130,7 +158,7 @@ public class Creature {
 
                 for (Cell hc : modeCells) {
 
-                    Cell.HunterCell h = (Cell.HunterCell) hc;
+                    HunterCell h = (HunterCell) hc;
 
                     int x = h.getX();
                     int y = h.getY();
@@ -188,4 +216,17 @@ public class Creature {
                 break;
         }
     }
+    
+    public Cell cellAtRelPos(int x, int y){
+        return cellMap[x][y];
+    }
+    
+    public int getPosX() {
+        return posX;
+    }
+
+    public int getPosY() {
+        return posY;
+    }
+
 }
