@@ -5,6 +5,10 @@
  */
 package creature;
 
+import creature.cells.Cell;
+import creature.cells.HunterCell;
+import creature.cells.MotorCell;
+import creature.cells.ReproductionCell;
 import creature.genetics.Chromosome;
 import java.util.ArrayList;
 import java.util.List;
@@ -26,7 +30,7 @@ public class Creature {
     private int posX;
     private int posY;
     private List<Cell> modeCells;
-    private List<Cell.MotorCell> motorCells;
+    private List<MotorCell> motorCells;
     private Mode mode;
     private int maxStore;
     private int energy;
@@ -43,7 +47,7 @@ public class Creature {
         for (Cell[] cellRow : cellMap) {
 
             for (Cell cell : cellRow) {
-
+                cell.setCreature(this);
                 if (cell != null) {
 
                     maxStore += cell.getMaxStore();
@@ -93,7 +97,7 @@ public class Creature {
 
                 for (Cell rc : modeCells) {
 
-                    Cell.ReproductionCell r = (Cell.ReproductionCell) rc;
+                    ReproductionCell r = (ReproductionCell) rc;
                     int x = r.getX();
                     int y = r.getY();
 
@@ -108,7 +112,7 @@ public class Creature {
 
                             if (c != null) {
 
-                                if (c instanceof Cell.ReproductionCell) {
+                                if (c instanceof ReproductionCell) {
 
                                     //reproduce methode with itself
                                 } else {
@@ -132,7 +136,7 @@ public class Creature {
 
                 for (Cell hc : modeCells) {
 
-                    Cell.HunterCell h = (Cell.HunterCell) hc;
+                    HunterCell h = (HunterCell) hc;
 
                     int x = h.getX();
                     int y = h.getY();

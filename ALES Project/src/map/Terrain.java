@@ -6,7 +6,7 @@
 
 package map;
 
-import creature.Cell;
+import creature.cells.Cell;
 import creature.Creature;
 import java.util.ArrayList;
 import java.util.List;
@@ -24,11 +24,11 @@ public class Terrain {
     private int height;
     private List<Creature> population;
             
-    public Terrain(int[][] generated){
+    public Terrain(int[][] generated, List<Creature> pop){
         environment = generated;
         height = generated.length;
         width = generated[0].length;
-        //population also to be instantiated by generator
+        population = pop;
     }
     
     public Cell cellAtAbsPos(int x, int y){

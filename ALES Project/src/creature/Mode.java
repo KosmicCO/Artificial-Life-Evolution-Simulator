@@ -5,15 +5,17 @@
  */
 package creature;
 
+import creature.cells.*;
+
 /**
  *
  * @author Kosmic
  */
 public enum Mode {
     
-    REPRODUCE(Cell.ReproductionCell.class),
-    HUNT(Cell.HunterCell.class),
-    FORAGE(Cell.ForagerCell.class);
+    REPRODUCE(ReproductionCell.class),
+    HUNT(HunterCell.class),
+    FORAGE(ForagerCell.class);
     
     private final Class<? extends Cell> preload;
     
