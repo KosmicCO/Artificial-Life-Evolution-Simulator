@@ -156,7 +156,34 @@ public class Creature {
 
             case FORAGE:
                 
-                //check for food
+                for (Cell fc : modeCells) {
+
+                    Cell.HunterCell f = (Cell.HunterCell) fc;
+
+                    int x = f.getX();
+                    int y = f.getY();
+
+                    for (int i = 0; i < 5; i++) {
+
+                        int hx;
+                        int hy;
+                        
+                        if(i == 5){
+                            
+                            hx = x;
+                            hy = y;
+                        }else{
+                            
+                            hx = x + ADX4[i];
+                            hy = y + ADY4[i];
+                        }
+
+                        if (/*inside map && map at pos has food*/true) {
+
+                            //collect food
+                        }
+                    }
+                }
                 
                 break;
         }
