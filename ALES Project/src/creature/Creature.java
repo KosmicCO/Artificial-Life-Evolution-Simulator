@@ -17,6 +17,8 @@ import static utility.Mapping.ADY4;
  */
 public class Creature {
 
+    public static final int SIDE_LENGTH = 10;
+    
     private final List<Cell> cells;
     private final Cell[][] cellMap;
     private final List<Chromosome> genes;
@@ -161,4 +163,17 @@ public class Creature {
                 break;
         }
     }
+    
+    public Cell cellAtRelPos(int x, int y){
+        return cellMap[x][y];
+    }
+    
+    public int getPosX() {
+        return posX;
+    }
+
+    public int getPosY() {
+        return posY;
+    }
+
 }

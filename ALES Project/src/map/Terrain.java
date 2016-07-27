@@ -6,7 +6,9 @@
 
 package map;
 
+import creature.Cell;
 import creature.Creature;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -28,5 +30,24 @@ public class Terrain {
         width = generated[0].length;
         //population also to be instantiated by generator
     }
+    
+    public Cell cellAtAbsPos(int x, int y){
+        List<Creature> creaturesAtPos = new ArrayList<Creature>();
+        for (Creature c : population){
+            int xDiff = c.getPosX()-x;
+            int yDiff = c.getPosY()-y;
+            if (xDiff<Creature.SIDE_LENGTH&&xDiff>=0){
+                if(yDiff<Creature.SIDE_LENGTH&&yDiff>=0){
+                    creaturesAtPos.add(c);
+                }
+            }
+        }
+        for(Creature c : creaturesAtPos){
+            Cell found = c.cellAtRelPos(x-c.getPosX(),y-c.getPosY());
+            if (found != null){
+                return found;
+            }
+        }
+        return null;
+    }
 }
-
