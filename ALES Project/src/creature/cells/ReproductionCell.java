@@ -12,7 +12,7 @@ package creature.cells;
  */
  public class ReproductionCell extends Cell{
 
-        public ReproductionCell(int maxHP, int maxStore, int energy, int x, int y) {
+        public ReproductionCell(int x, int y) {
             
             super(1, 2, 3, x, y);
         }
