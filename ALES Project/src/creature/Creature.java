@@ -186,7 +186,7 @@ public class Creature {
                 
                 for (Cell fc : modeCells) {
 
-                    Cell.HunterCell f = (Cell.HunterCell) fc;
+                    HunterCell f = (HunterCell) fc;
 
                     int x = f.getX();
                     int y = f.getY();
