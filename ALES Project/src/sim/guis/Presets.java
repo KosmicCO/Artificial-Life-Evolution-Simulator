@@ -45,10 +45,9 @@ public class Presets extends ComponentInputGUI{
         components.add(new GUIPanel("bottom", nextPlace(parent.getStartPos(), 1, 1), BUTTON_SIZE, getColor(1).multiply(0.7)));
     }
     
-    public void start(boolean grabbed){
+    public void start(){
         
         this.setVisible(true);
-        this.grabbed = grabbed;
         typing(this, true);
     }
 
