@@ -57,26 +57,30 @@ public class GeneInterpreter {
 
     public static Cell[][] StructureGen(Chromosome c) {
         List<Vec2> nodes = new ArrayList();
-        nodes.add(new Vec2(Creature.SIDE_LENGTH / 2 + 1));
+        nodes.add(new Vec2(Creature.SIDE_LENGTH / 2));
         int[][] cellMap = new int[Creature.SIDE_LENGTH][Creature.SIDE_LENGTH];
         for (int[] i : cellMap) {
             for (int j = 0; j < i.length; j++) {
                 i[j] = -1;
             }
         }
-        cellMap[Creature.SIDE_LENGTH / 2 + 1][Creature.SIDE_LENGTH / 2 + 1] = -2;
+        cellMap[Creature.SIDE_LENGTH / 2][Creature.SIDE_LENGTH / 2] = -2;
         for (int i = 0; i < c.geneCount(); i++) {
             int gene = geneToCell(Conversions.byteToInt(c.getSegment(i)), CELL_TYPES);
 
-            for (int j = 0; j < 4; j++) {
-                Vec2 adj = nodes.get(i).add(new Vec2(ADX4[j], ADY4[j]));
-                boolean inBounds = adj.x < Creature.SIDE_LENGTH && adj.y < Creature.SIDE_LENGTH && adj.x > 0 && adj.y > 0;
-                if (inBounds && cellMap[(int) adj.x][(int) adj.y] == -1) {
-                    nodes.add(adj);
-                }
+            if (gene != 12) {
+                
+                for (int j = 0; j < 4; j++) {
+                    Vec2 adj = nodes.get(i).add(new Vec2(ADX4[j], ADY4[j]));
+                    boolean inBounds = adj.x < Creature.SIDE_LENGTH && adj.y < Creature.SIDE_LENGTH && adj.x > 0 && adj.y > 0;
+                    if (inBounds && cellMap[(int) adj.x][(int) adj.y] == -1) {
+                        nodes.add(adj);
+                    }
 
-                cellMap[(int) adj.x][(int) adj.y] = gene;
+                }
             }
+
+            cellMap[(int) nodes.get(i).x][(int) nodes.get(i).y] = gene;
         }
         Cell[][] creatureStructure = new Cell[Creature.SIDE_LENGTH][Creature.SIDE_LENGTH];
         for (int row = 0; row < Creature.SIDE_LENGTH; row++) {
