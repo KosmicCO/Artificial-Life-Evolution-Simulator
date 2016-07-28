@@ -44,7 +44,7 @@ public class MainMenu extends ComponentInputGUI{
     @Override
     public void recieve(String string, Object o) {
 
-        
+        System.out.println(string);
     }
     
     @Override
