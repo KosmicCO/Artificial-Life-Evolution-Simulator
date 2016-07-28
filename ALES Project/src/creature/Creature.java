@@ -229,4 +229,16 @@ public class Creature {
         return posY;
     }
 
+    @Override
+    public String toString(){
+        String s = "";
+     for (int row = 0; row < cellMap.length; row++){
+         s += ("ROW "+row+":\n");
+         for (int i = 0; i<cellMap[row].length; i++){
+             s+=(cellMap[row][i])+"\n";
+         }
+         s+=("\n");
+     }
+     return s;
+    }
 }

@@ -29,6 +29,8 @@ public abstract class Cell {
         this.maxStore = maxStore;
         this.energy = energy;
         this.creature = null;
+        this.posX=x;
+        this.posY=y;
         //this.color = color;
     }
 
@@ -107,4 +109,11 @@ public abstract class Cell {
 //            //creature.heal cells near (x, y)
 //        }
 //    }
+    @Override
+    public String toString(){
+        int absX=this.getX()+this.creature.getPosX();
+        int absY=this.getY()+this.creature.getPosY();
+        return "Cell Relative Position: \n X-Coordinate: "+this.getX()+"\n Y-Coordinate: "+this.getY()
+                +"\nCell Absolute Position: \n X-Coordinate: "+absX+"\n Y-Coordinate: "+absY;
+    }
 }

@@ -26,13 +26,19 @@ public class TerrainTest {
                 cellArray[row][c] = new StructureCell(row,c);
             }
         }
-        List<Creature> pop = new ArrayList<Creature>();
-        Creature test1 = new Creature(cellArray, 0, null, 3, 3);
-        Creature test2 = new Creature(cellArray, 0, null, 2, 2);
+        List<Creature> pop = new ArrayList<>();
+        Creature test1 = new Creature(cellArray, 0, null, 0, 0);
         pop.add(test1);
-        pop.add(test2);
         Terrain map = new Terrain(env,pop);
-        Cell c = map.cellAtAbsPos(4, 4);
+        Cell c = map.cellAtAbsPos(1, 0);
         System.out.println(c);
+        System.out.println(test1);
+        System.out.println("------------NEW TEST--------------");
+        pop.remove(test1);
+        Creature test2 = new Creature(cellArray,0,null,1,1);
+        pop.add(test2);
+        Cell c2 = map.cellAtAbsPos(1, 4);
+        System.out.println(c2);
+        System.out.println(test2);
     }
 }
