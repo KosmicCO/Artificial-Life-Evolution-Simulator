@@ -16,6 +16,9 @@ import java.util.List;
 public class ChromosomeTest {
 
     public static void main(String[] args) {
+        int counter = 0;
+        int aveLen = 0;
+        while(counter<10000){
         List<Boolean> g = new ArrayList<>();
         for (int i = 0; i < 43; i++) {
             double random = Math.random();
@@ -41,7 +44,12 @@ public class ChromosomeTest {
         List<Boolean> j = new ArrayList<>();
         j = m.reproduce(f);
         Chromosome child = new Chromosome(j);
+        aveLen+=child.getLength();
         System.out.println("CHILD:  "+child);
+        counter++;
+        }
+        aveLen /= 10000;
+        System.out.println("Average Child Length = " + aveLen);
     }
 
 }

@@ -89,13 +89,9 @@ public class Chromosome {
             }
         }
 
-        int rand = (int) (Math.random() * 2 * VARIANCE);
-        rand -= VARIANCE; //Perhaps revise this concept later so that the child chromosome has a size range of shortSize - VARIANCE to longer.getLength() + VARIANCE
-        if (rand < 0) {
-            for (int i = 0; i > rand; i--) {
-                child.remove(child.size()-1);
-            }
-        } else {
+        int rand = (int) (Math.random() * ((2 * VARIANCE)+(larger.getLength()-shortSize)));
+        rand -= ((larger.getLength()-shortSize)+VARIANCE);
+        if (rand >= 0 || child.size()<VARIANCE) {
             for (int i = 0; i < rand; i++) {
                 double random = Math.random();
                 if (random < 0.5) {
@@ -103,6 +99,10 @@ public class Chromosome {
                 } else {
                     child.add(false);
                 }
+            }
+        } else {
+            for (int i = 0; i > rand; i--) {
+                child.remove(child.size()-1);
             }
         }
         return child;
