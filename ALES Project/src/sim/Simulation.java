@@ -8,7 +8,6 @@ package sim;
 import sim.guis.MainMenu;
 import engine.Core;
 import graphics.Window2D;
-import gui.GUI;
 import gui.GUIController;
 import gui.TypingManager;
 import gui.types.ComponentInputGUI;
@@ -34,11 +33,11 @@ public class Simulation {
         
         Window2D.background = Color4.BLACK;
         
-        ComponentInputGUI main = new MainMenu("mainMenu");
+        MainMenu main = new MainMenu("mainMenu");
         
         TypingManager tm = new TypingManager(main);
         GUIController.add(main);
-        main.setVisible(true);
+        main.start();
         
         Core.render.onEvent(GUIController::draw);
         
