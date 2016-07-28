@@ -14,6 +14,7 @@ package creature.cells;
 
         private final int direction;
         
+       
         public MotorCell(int direction, int x, int y) {
             
             super(3, 2, 1, x, y);
