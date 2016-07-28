@@ -15,7 +15,7 @@ import util.Vec2;
 public class GUIs {
 
     public static final Color4[] COLORS = {Color4.ORANGE, Color4.BLUE, Color4.WHITE};
-    public static final Vec2 BUTTON_SIZE = new Vec2(200, 50);
+    public static final Vec2 BUTTON_SIZE = new Vec2(150, 50);
 
     public static Color4 getColor(int rank) {
 

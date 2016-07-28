@@ -5,14 +5,12 @@
  */
 package sim.guis;
 
-import engine.Input;
 import gui.GUIController;
 import static gui.TypingManager.typing;
 import gui.components.GUIButton;
 import gui.components.GUIPanel;
 import gui.types.ComponentInputGUI;
 import gui.types.GUIInputComponent;
-import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import org.newdawn.slick.Color;
 import static utility.GUIs.BUTTON_SIZE;
@@ -26,9 +24,10 @@ import util.Vec2;
  */
 public class MainMenu extends ComponentInputGUI {
 
-    private Vec2 start = new Vec2(0, 250);
+    private Vec2 start = new Vec2(-500, -125);
 
     private Presets pre;
+    private Simulation sim;
 
     public MainMenu(String name) {
 
@@ -48,7 +47,8 @@ public class MainMenu extends ComponentInputGUI {
         components.add(new GUIPanel("bottom", nextPlace(start, 0, 1), BUTTON_SIZE, getColor(1).multiply(0.6)));
 
         pre = new Presets("presets", this);
-        GUIController.add(pre);
+        sim = new Simulation("simulation");
+        GUIController.add(pre, sim);
     }
 
     public Vec2 getStartPos() {
@@ -59,7 +59,6 @@ public class MainMenu extends ComponentInputGUI {
     public void start() {
 
         this.setVisible(true);
-        grabbed = Mouse.isGrabbed();
         Mouse.setGrabbed(false);
         typing(this, true);
     }
@@ -69,8 +68,13 @@ public class MainMenu extends ComponentInputGUI {
 
         switch (string) {
             
+            case "start":
+                this.setVisible(false);
+                typing(this, false);
+                sim.start();
+                break;
             case "presets":
-                pre.start(grabbed);
+                pre.start();
                 break;
             case "quit":
                 System.exit(0);
