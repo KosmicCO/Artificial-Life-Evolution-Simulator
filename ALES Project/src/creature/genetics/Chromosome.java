@@ -33,6 +33,10 @@ public class Chromosome {
     public int getLength() {
         return gene.size();
     }
+    
+    public int geneCount(){
+        return gene.size()/8;
+    }
 
     public boolean get(int i) {
         return gene.get(i);
@@ -86,10 +90,10 @@ public class Chromosome {
         }
 
         int rand = (int) (Math.random() * 2 * VARIANCE);
-        rand -= VARIANCE;
+        rand -= VARIANCE; //Perhaps revise this concept later so that the child chromosome has a size range of shortSize - VARIANCE to longer.getLength() + VARIANCE
         if (rand < 0) {
             for (int i = 0; i > rand; i--) {
-                child.remove(child.size() - 1);
+                child.remove(child.size()-1);
             }
         } else {
             for (int i = 0; i < rand; i++) {
