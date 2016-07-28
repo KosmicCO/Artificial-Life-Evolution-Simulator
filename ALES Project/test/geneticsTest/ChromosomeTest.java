@@ -17,7 +17,7 @@ public class ChromosomeTest {
 
     public static void main(String[] args) {
         List<Boolean> g = new ArrayList<>();
-        for (int i = 0; i < 19; i++) {
+        for (int i = 0; i < 43; i++) {
             double random = Math.random();
                 if (random < 0.5) {
                     g.add(true);

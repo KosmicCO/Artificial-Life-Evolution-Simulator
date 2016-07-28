@@ -85,13 +85,14 @@ public class Chromosome {
             }
         }
 
-        int rand = (int) (Math.random() * 2);
-        if (rand == 0) {
-            for (int i = 0; i < VARIANCE; i++) {
+        int rand = (int) (Math.random() * 2 * VARIANCE);
+        rand -= VARIANCE;
+        if (rand < 0) {
+            for (int i = 0; i > rand; i--) {
                 child.remove(child.size() - 1);
             }
         } else {
-            for (int i = 0; i < VARIANCE; i++) {
+            for (int i = 0; i < rand; i++) {
                 double random = Math.random();
                 if (random < 0.5) {
                     child.add(true);
