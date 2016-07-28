@@ -33,5 +33,12 @@ public class TerrainTest {
         Cell c = map.cellAtAbsPos(1, 0);
         System.out.println(c);
         System.out.println(test1);
+        System.out.println("------------NEW TEST--------------");
+        pop.remove(test1);
+        Creature test2 = new Creature(cellArray,0,null,1,1);
+        pop.add(test2);
+        Cell c2 = map.cellAtAbsPos(1, 4);
+        System.out.println(c2);
+        System.out.println(test2);
     }
 }

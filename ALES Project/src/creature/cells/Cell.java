@@ -114,6 +114,6 @@ public abstract class Cell {
         int absX=this.getX()+this.creature.getPosX();
         int absY=this.getY()+this.creature.getPosY();
         return "Cell Relative Position: \n X-Coordinate: "+this.getX()+"\n Y-Coordinate: "+this.getY()
-                +"\n Cell Absolute Position: \n X-Coordinate: "+absX+"\n Y-Coordinate: "+absY;
+                +"\nCell Absolute Position: \n X-Coordinate: "+absX+"\n Y-Coordinate: "+absY;
     }
 }

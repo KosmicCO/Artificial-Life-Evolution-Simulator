@@ -34,8 +34,8 @@ public class Terrain {
     public Cell cellAtAbsPos(int x, int y){
         List<Creature> creaturesAtPos = new ArrayList<Creature>();
         for (Creature c : population){
-            int xDiff = c.getPosX()-x;
-            int yDiff = c.getPosY()-y;
+            int xDiff = x-c.getPosX();
+            int yDiff = y-c.getPosY();
             if (xDiff<Creature.SIDE_LENGTH&&xDiff>=0){
                 if(yDiff<Creature.SIDE_LENGTH&&yDiff>=0){
                     creaturesAtPos.add(c);
@@ -43,7 +43,7 @@ public class Terrain {
             }
         }
         for(Creature c : creaturesAtPos){
-            Cell found = c.cellAtRelPos(x-c.getPosX(),y-c.getPosY());
+            Cell found = c.cellAtRelPos(x-c.getPosX(), y-c.getPosY());
             if (found != null){
                 return found;
             }
