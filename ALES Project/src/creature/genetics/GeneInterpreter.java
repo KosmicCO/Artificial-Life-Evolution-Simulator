@@ -5,7 +5,14 @@
  */
 package creature.genetics;
 
+import creature.Creature;
 import creature.cells.*;
+import java.util.ArrayList;
+import java.util.List;
+import util.Vec2;
+import utility.Conversions;
+import static utility.Mapping.ADX4;
+import static utility.Mapping.ADY4;
 
 /**
  *
@@ -17,6 +24,7 @@ public class GeneInterpreter {
     private static int right = 1;
     private static int down = 2;
     private static int up = 3;
+    public static final int CELL_TYPES = 12;
 
     private static Cell newCell(int i, int x, int y) {
         switch (i) {
@@ -42,8 +50,49 @@ public class GeneInterpreter {
                 return new StorageCell(x, y);
             case 10:
                 return new StructureCell(x, y);
+            default:
+                return null;
         }
-        return null;
+    }
+
+    public static Cell[][] StructureGen(Chromosome c) {
+        List<Vec2> nodes = new ArrayList();
+        nodes.add(new Vec2(Creature.SIDE_LENGTH / 2 + 1));
+        int[][] cellMap = new int[Creature.SIDE_LENGTH][Creature.SIDE_LENGTH];
+        for (int[] i : cellMap) {
+            for (int j = 0; j < i.length; j++) {
+                i[j] = -1;
+            }
+        }
+        cellMap[Creature.SIDE_LENGTH / 2 + 1][Creature.SIDE_LENGTH / 2 + 1] = -2;
+        for (int i = 0; i < c.geneCount(); i++) {
+            int gene = geneToCell(Conversions.byteToInt(c.getSegment(i)), CELL_TYPES);
+
+            for (int j = 0; j < 4; j++) {
+                Vec2 adj = nodes.get(i).add(new Vec2(ADX4[j], ADY4[j]));
+                boolean inBounds = adj.x < Creature.SIDE_LENGTH && adj.y < Creature.SIDE_LENGTH && adj.x > 0 && adj.y > 0;
+                if (inBounds && cellMap[(int) adj.x][(int) adj.y] == -1) {
+                    nodes.add(adj);
+                }
+
+                cellMap[(int) adj.x][(int) adj.y] = gene;
+            }
+        }
+        Cell[][] creatureStructure = new Cell[Creature.SIDE_LENGTH][Creature.SIDE_LENGTH];
+        for (int row = 0; row < Creature.SIDE_LENGTH; row++) {
+            for (int cell = 0; cell < Creature.SIDE_LENGTH; cell++) {
+                creatureStructure[row][cell] = newCell(cellMap[row][cell], row, cell);
+            }
+        }
+        return creatureStructure;
+    }
+
+    private static int geneToCell(int i, int cellNum) {
+        int mod = i % cellNum;
+        int diff = i / cellNum;
+        int sum = mod + diff + cellNum;
+        int cellTag = sum % 12;
+        return cellTag;
     }
 
 }
