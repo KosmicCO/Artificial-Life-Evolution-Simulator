@@ -6,6 +6,7 @@
 package creature.cells;
 
 import creature.Creature;
+import util.Color4;
 
 /**
  *
@@ -96,19 +97,14 @@ public abstract class Cell {
         this.posY = posY;
     }
     
-//    public class HealerCell extends Cell{
-//
-//        public HealerCell(Creature creature, int x, int y) {
-//            
-//            super(3, 3, 3, creature, x, y);
-//        }
-//
-//        @Override
-//        public void doAction() {
-//
-//            //creature.heal cells near (x, y)
-//        }
-//    }
+    public static Color4 cellColor(int type){
+        
+        //switch goes here
+        return Color4.BLACK;
+    }
+    
+    public abstract int getCellType();
+    
     @Override
     public String toString(){
         int absX=this.getX()+this.creature.getPosX();

@@ -3,24 +3,22 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package creature.cells;
 
 /**
  *
  * @author bhargav
  */
-    public class ForagerCell extends Cell{
+public class ForagerCell extends Cell {
 
-        public ForagerCell(int x, int y) {
-            
-            super(2, 4, 1, x, y);
-        }
+    public ForagerCell(int x, int y) {
 
-//        @Override
-//        public void doAction() {
-//
-//            //creature.use energy -USER VAR-
-//            //ask map to return int of energy gained (creature asks map to remove food)
-//        }
+        super(2, 4, 1, x, y);
     }
+
+    @Override
+    public int getCellType() {
+
+        return 2;
+    }
+}
