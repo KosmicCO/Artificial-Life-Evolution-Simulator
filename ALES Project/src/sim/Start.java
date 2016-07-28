@@ -8,11 +8,10 @@ package sim;
 import sim.guis.MainMenu;
 import engine.Core;
 import graphics.Window2D;
-import graphics.Window3D;
 import gui.GUIController;
 import gui.TypingManager;
+import static sim.TestGenMap.makeTestMap;
 import util.Color4;
-import util.Vec2;
 
 /**
  *
@@ -32,7 +31,13 @@ public class Start {
         
         Core.init();
         
-        Window2D.background = Color4.WHITE;
+        Window2D.background = Color4.BLACK;
+        
+        //testing graphics start
+        
+        makeTestMap();
+        
+        //testing graphics end
         
         MainMenu main = new MainMenu("mainMenu");
         

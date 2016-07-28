@@ -11,8 +11,12 @@ import creature.cells.HunterCell;
 import creature.cells.MotorCell;
 import creature.cells.ReproductionCell;
 import creature.genetics.Chromosome;
+import graphics.Graphics2D;
 import java.util.ArrayList;
 import java.util.List;
+import static sim.guis.Simulation.getZoom;
+import util.Color4;
+import util.Vec2;
 import static utility.Mapping.ADX4;
 import static utility.Mapping.ADY4;
 
@@ -25,9 +29,9 @@ public class Creature {
     public static final int REPRODUCE = 0;
     public static final int HUNT = 1;
     public static final int FORAGE = 2;
-    
-    public static final int SIDE_LENGTH = 10;
-    
+
+    public static final int SIDE_LENGTH = 11;
+
     private final List<Cell> cells;
     private final Cell[][] cellMap;
     private final List<Chromosome> genes;
@@ -52,9 +56,10 @@ public class Creature {
         for (Cell[] cellRow : cellMap) {
 
             for (Cell cell : cellRow) {
-                cell.setCreature(this);
+
                 if (cell != null) {
 
+                    cell.setCreature(this);
                     maxStore += cell.getMaxStore();
                     cells.add(cell);
                 }
@@ -76,10 +81,10 @@ public class Creature {
         for (Cell cell : cells) {
 
             boolean isType;
-            
-            switch(type){
-                
-                case REPRODUCE: 
+
+            switch (type) {
+
+                case REPRODUCE:
                     isType = cell instanceof ReproductionCell;
                     break;
                 case HUNT:
@@ -91,9 +96,9 @@ public class Creature {
                 default:
                     isType = false;
             }
-            
-            if(isType){
-                
+
+            if (isType) {
+
                 found.add(cell);
             }
         }
@@ -183,7 +188,7 @@ public class Creature {
                 break;
 
             case FORAGE:
-                
+
                 for (Cell fc : modeCells) {
 
                     HunterCell f = (HunterCell) fc;
@@ -195,13 +200,13 @@ public class Creature {
 
                         int hx;
                         int hy;
-                        
-                        if(i == 5){
-                            
+
+                        if (i == 5) {
+
                             hx = x;
                             hy = y;
-                        }else{
-                            
+                        } else {
+
                             hx = x + ADX4[i];
                             hy = y + ADY4[i];
                         }
@@ -212,15 +217,15 @@ public class Creature {
                         }
                     }
                 }
-                
+
                 break;
         }
     }
-    
-    public Cell cellAtRelPos(int x, int y){
+
+    public Cell cellAtRelPos(int x, int y) {
         return cellMap[x][y];
     }
-    
+
     public int getPosX() {
         return posX;
     }
@@ -230,15 +235,23 @@ public class Creature {
     }
 
     @Override
-    public String toString(){
+    public String toString() {
         String s = "";
-     for (int row = 0; row < cellMap.length; row++){
-         s += ("ROW "+row+":\n");
-         for (int i = 0; i<cellMap[row].length; i++){
-             s+=(cellMap[row][i])+"\n";
-         }
-         s+=("\n");
-     }
-     return s;
+        for (int row = 0; row < cellMap.length; row++) {
+            s += ("ROW " + row + ":\n");
+            for (int i = 0; i < cellMap[row].length; i++) {
+                s += (cellMap[row][i]) + "\n";
+            }
+            s += ("\n");
+        }
+        return s;
+    }
+
+    public void draw(Vec2 ScreenAbs) {
+
+        for (Cell c : cells) {
+
+            Graphics2D.fillRect(ScreenAbs.add(new Vec2((c.getX() + posX) * getZoom(), (c.getY() + posY) * getZoom())), new Vec2(getZoom()), Color4.BLUE);
+        }
     }
 }

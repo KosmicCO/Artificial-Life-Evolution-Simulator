@@ -3,17 +3,22 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package creature.cells;
 
 /**
  *
  * @author bhargav
  */
-    public class CoreCell extends Cell{
+public class CoreCell extends Cell {
 
-        public CoreCell(int x, int y) {
-            
-            super(1, 6, 4, x, y);
-        }
+    public CoreCell(int x, int y) {
+
+        super(1, 6, 4, x, y);
     }
+
+    @Override
+    public int getCellType() {
+
+        return 0;
+    }
+}

@@ -3,25 +3,23 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package creature.cells;
 
 /**
  *
  * @author bhargav
  */
- public class ReproductionCell extends Cell{
+public class ReproductionCell extends Cell {
 
-        public ReproductionCell(int x, int y) {
-            
-            super(1, 2, 3, x, y);
-        }
+    public ReproductionCell(int x, int y) {
 
-//        @Override
-//        public void doAction() {
-//
-//            //creature.use energy -USER VAR-
-//            //make a baby
-//            //make creature check for 2 reproductive cells that are near each other
-//        }
+        super(1, 2, 3, x, y);
     }
+
+    @Override
+    public int getCellType() {
+
+        return 8;
+    }
+
+}

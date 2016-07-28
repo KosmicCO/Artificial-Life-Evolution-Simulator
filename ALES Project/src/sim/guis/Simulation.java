@@ -10,6 +10,7 @@ import gui.components.GUIButton;
 import gui.components.GUIPanel;
 import gui.types.ComponentInputGUI;
 import gui.types.GUIInputComponent;
+import static map.Terrain.currentT;
 import org.newdawn.slick.Color;
 import util.Vec2;
 import static utility.GUIs.getColor;
@@ -20,12 +21,24 @@ import static utility.GUIs.getColor;
  */
 public class Simulation extends ComponentInputGUI{
     
+    private static int zoom = 2;
+    
     public Simulation(String n) {
         
         super(n);
         
-        inputs.add(new GUIButton("plane", this, new Vec2(0, 0), new Vec2(500), " ", Color.transparent));
-        components.add(new GUIPanel("planeP", new Vec2(0, 0), new Vec2(500), getColor(2)));
+        inputs.add(new GUIButton("plane", this, new Vec2(-500, -250), new Vec2(500), " ", Color.transparent));
+        components.add(new GUIPanel("planeP", new Vec2(-500, -250), new Vec2(500), getColor(2)));
+    }
+
+    public static int getZoom() {
+        
+        return zoom;
+    }
+
+    public static void setZoom(int zoom) {
+        
+        Simulation.zoom = zoom;
     }
     
     public void start(){
@@ -44,6 +57,15 @@ public class Simulation extends ComponentInputGUI{
                 break;
         }
     }
+
+    @Override
+    public void draw() {
+        
+        super.draw();
+        currentT.draw();
+    }
+    
+    
 
     @Override
     public GUIInputComponent getDefaultComponent() {

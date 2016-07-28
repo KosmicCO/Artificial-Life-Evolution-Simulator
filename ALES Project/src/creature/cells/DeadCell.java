@@ -3,7 +3,6 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package creature.cells;
 
 /**
@@ -12,8 +11,14 @@ package creature.cells;
  */
 public class DeadCell extends Cell {
 
-        public DeadCell(int x, int y) {
+    public DeadCell(int x, int y) {
 
-            super(6, 0, 0, x, y);
-        }
+        super(6, 0, 0, x, y);
     }
+
+    @Override
+    public int getCellType() {
+
+        return 1;
+    }
+}

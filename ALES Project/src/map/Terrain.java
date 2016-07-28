@@ -10,16 +10,21 @@ import creature.cells.Cell;
 import creature.Creature;
 import java.util.ArrayList;
 import java.util.List;
+import util.Vec2;
 
 /**
  *
  * @author bhargav
  */
 public class Terrain {
+    
+    public static Terrain currentT;
+    
     private final int[][] environment;
     public final static int FOOD = 1;
     public final static int OBSTACLE = 2;
     public final static int PIT = -1;
+    
     private int width;
     private int height;
     private List<Creature> population;
@@ -49,5 +54,15 @@ public class Terrain {
             }
         }
         return null;
+    }
+    
+    public void draw(){
+        
+        for(Creature cre : population){
+            
+            cre.draw(new Vec2(-500, -250));
+        }
+        
+        //for the terrain too
     }
 }
