@@ -24,23 +24,33 @@ public class GeneInterpreter {
     private static int right = 1;
     private static int down = 2;
     private static int up = 3;
-    public static final int CELL_TYPES = 12;
+    public static final int CELL_TYPES = 11;
     private static List<Integer> weightedGenome = new ArrayList<>();
     private static List<Integer> geneRefList = new ArrayList<>();
 
-    public List<Integer> getWeightedGenome(){
+    public static List<Integer> getWeightedGenome() {
         List<Integer> w = new ArrayList<>();
-        for(int count = 0; count < weightedGenome.size(); count++){
+        for (int count = 0; count < weightedGenome.size(); count++) {
             int i = weightedGenome.get(count);
             w.add(i);
         }
         return w;
     }
-    
-    public void setWeightedGenome(List<Integer> w){
-        weightedGenome = w;
+
+    public static List<Integer> getRefList() {
+        List<Integer> g = new ArrayList<>();
+        for (int count = 0; count < geneRefList.size(); count++) {
+            int i = geneRefList.get(count);
+            g.add(i);
+        }
+        return g;
     }
-    
+
+    public static void setWeightedGenome(List<Integer> w) {
+        weightedGenome = w;
+        geneReferenceGen();
+    }
+
     private static Cell newCell(int i, int x, int y) {
         switch (i) {
             case 0:
@@ -81,15 +91,19 @@ public class GeneInterpreter {
         }
         cellMap[Creature.SIDE_LENGTH / 2][Creature.SIDE_LENGTH / 2] = -2;
         for (int i = 0; i < c.geneCount(); i++) {
-            int gene = geneToCell(Conversions.byteToInt(c.getSegment(i)), CELL_TYPES);
+            int gene = geneToCell(Conversions.byteToInt(c.getSegment(i)));
+            if (nodes.size() <= i) {
+                break;
+            }
+            if (gene != CELL_TYPES) {
 
-            if (gene != 12) {
-                
                 for (int j = 0; j < 4; j++) {
+
                     Vec2 adj = nodes.get(i).add(new Vec2(ADX4[j], ADY4[j]));
                     boolean inBounds = adj.x < Creature.SIDE_LENGTH && adj.y < Creature.SIDE_LENGTH && adj.x > 0 && adj.y > 0;
                     if (inBounds && cellMap[(int) adj.x][(int) adj.y] == -1) {
                         nodes.add(adj);
+                        cellMap[(int) adj.x][(int) adj.y] = -2;
                     }
 
                 }
@@ -113,17 +127,17 @@ public class GeneInterpreter {
         int cellTag = sum % cellNum;
         return cellTag;
     }
-    
+
     private static void geneReferenceGen() {
         for (int j = 0; j < weightedGenome.size(); j++) {
             for (int k = 0; k < weightedGenome.get(j); k++) {
-                int ind = (int)(Math.random()*geneRefList.size()+1);
+                int ind = (int) (Math.random() * geneRefList.size());
                 geneRefList.add(ind, j);
             }
         }
     }
-    
-    private static int geneToCell(int ind){
+
+    private static int geneToCell(int ind) {
         int j = geneRefList.get(ind);
         return j;
     }

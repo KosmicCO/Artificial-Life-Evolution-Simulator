@@ -113,9 +113,9 @@ public class Chromosome {
         String r = "";
         for (int i = 0; i < this.getLength(); i++) {
             if (this.get(i)) {
-                r += "0";
-            } else {
                 r += "1";
+            } else {
+                r += "0";
             }
         }
         r += "\n Length: " + this.getLength();
