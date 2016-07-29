@@ -18,7 +18,7 @@ import static utility.Mapping.ADY4;
  *
  * @author bhargav
  */
-public class GeneInterpreter {
+public class StructureInterpreter {
 
     private static int left = 0;
     private static int right = 1;

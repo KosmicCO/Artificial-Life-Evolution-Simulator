@@ -9,8 +9,8 @@ import creature.Creature;
 import static creature.Creature.SIDE_LENGTH;
 import creature.cells.Cell;
 import creature.genetics.Chromosome;
-import creature.genetics.GeneInterpreter;
-import static creature.genetics.GeneInterpreter.StructureGen;
+import creature.genetics.StructureInterpreter;
+import static creature.genetics.StructureInterpreter.StructureGen;
 import java.util.ArrayList;
 import java.util.List;
 import map.Terrain;
@@ -25,7 +25,7 @@ public class TestGenMap {
 
         List<List<Boolean>> g = new ArrayList();
         List<Creature> lca = new ArrayList();
-        int deNum = 3;
+        int deNum = 300;
         List<Integer> w = new ArrayList<>();
 
         int sum = 5;
@@ -37,7 +37,7 @@ public class TestGenMap {
         }
         w.add(256 - sum);
 
-        GeneInterpreter.setWeightedGenome(w);
+        StructureInterpreter.setWeightedGenome(w);
 
         for (int i = 0; i < deNum; i++) {
 
