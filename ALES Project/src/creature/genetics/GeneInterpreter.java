@@ -25,7 +25,22 @@ public class GeneInterpreter {
     private static int down = 2;
     private static int up = 3;
     public static final int CELL_TYPES = 12;
+    private static List<Integer> weightedGenome = new ArrayList<>();
+    private static List<Integer> geneRefList = new ArrayList<>();
 
+    public List<Integer> getWeightedGenome(){
+        List<Integer> w = new ArrayList<>();
+        for(int count = 0; count < weightedGenome.size(); count++){
+            int i = weightedGenome.get(count);
+            w.add(i);
+        }
+        return w;
+    }
+    
+    public void setWeightedGenome(List<Integer> w){
+        weightedGenome = w;
+    }
+    
     private static Cell newCell(int i, int x, int y) {
         switch (i) {
             case 0:
@@ -95,8 +110,22 @@ public class GeneInterpreter {
         int mod = i % cellNum;
         int diff = i / cellNum;
         int sum = mod + diff + cellNum;
-        int cellTag = sum % 12;
+        int cellTag = sum % cellNum;
         return cellTag;
+    }
+    
+    private static void geneReferenceGen() {
+        for (int j = 0; j < weightedGenome.size(); j++) {
+            for (int k = 0; k < weightedGenome.get(j); k++) {
+                int ind = (int)(Math.random()*geneRefList.size()+1);
+                geneRefList.add(ind, j);
+            }
+        }
+    }
+    
+    private static int geneToCell(int ind){
+        int j = geneRefList.get(ind);
+        return j;
     }
 
 }
