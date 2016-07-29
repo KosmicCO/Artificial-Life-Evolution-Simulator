@@ -51,7 +51,7 @@ public class TestGenMap {
                 }
             }
 
-            for (int j = 0; j < 10; j++) {
+            for (int j = 0; j < 444; j++) {
 
                 System.out.print(g.get(i).get(j) ? "1" : "0");
             }
