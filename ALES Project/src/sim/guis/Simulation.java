@@ -5,7 +5,6 @@
  */
 package sim.guis;
 
-import static gui.TypingManager.typing;
 import gui.components.GUIButton;
 import gui.components.GUIPanel;
 import gui.types.ComponentInputGUI;
@@ -14,6 +13,7 @@ import static map.Terrain.currentT;
 import org.newdawn.slick.Color;
 import util.Vec2;
 import static utility.GUIs.getColor;
+import static gui.TypingManager.typing;
 
 /**
  *
