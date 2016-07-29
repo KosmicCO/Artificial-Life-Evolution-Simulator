@@ -31,6 +31,17 @@ public class TestGenMap {
             }
         }
         
+        int[][] ter = new int[250][250];
+        
+        for (int i = 0; i < 250; i++) {
+            
+            for (int j = 0; j < 250; j++) {
+                
+                if(Math.random() < 0.05)
+                ter[i][j] = (int) (Math.random() * 3 + 1);
+            }
+        }
+        
         List<Creature> cl = new ArrayList();
         
         cl.add(new Creature(ca, 0, null, 1, 1));
@@ -47,7 +58,7 @@ public class TestGenMap {
             System.out.println();
         }
         
-        Terrain t = new Terrain(new int[250][250], cl);
+        Terrain t = new Terrain(ter, cl);
         
         Terrain.currentT = t;
     }
