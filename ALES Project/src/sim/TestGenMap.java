@@ -8,7 +8,9 @@ package sim;
 import creature.Creature;
 import static creature.Creature.SIDE_LENGTH;
 import creature.cells.Cell;
-import creature.cells.StructureCell;
+import creature.genetics.Chromosome;
+import creature.genetics.GeneInterpreter;
+import static creature.genetics.GeneInterpreter.StructureGen;
 import java.util.ArrayList;
 import java.util.List;
 import map.Terrain;
@@ -18,48 +20,61 @@ import map.Terrain;
  * @author Kosmic
  */
 public class TestGenMap {
-    
-    public static void makeTestMap(){
-        
-        Cell[][] ca = new Cell[SIDE_LENGTH][SIDE_LENGTH];
-        
-        for (int i = 0; i < SIDE_LENGTH; i++) {
-            
-            for (int j = 0; j < SIDE_LENGTH; j++) {
-                
-                ca[i][j] = Math.random() < 0.1 ? null : new StructureCell(i, j);
-            }
+
+    public static void makeTestMap() {
+
+        List<List<Boolean>> g = new ArrayList();
+        List<Creature> lca = new ArrayList();
+        int deNum = 3;
+        List<Integer> w = new ArrayList<>();
+
+        int sum = 5;
+        w.add(5);
+        for (int i = 0; i < 10; i++) {
+            int r = (int) (Math.random() * 33);
+            w.add(r);
+            sum += r;
         }
-        
-        int[][] ter = new int[250][250];
-        
-        for (int i = 0; i < 250; i++) {
-            
-            for (int j = 0; j < 250; j++) {
-                
-                if(Math.random() < 0.05)
-                ter[i][j] = (int) (Math.random() * 3 + 1);
+        w.add(256 - sum);
+
+        GeneInterpreter.setWeightedGenome(w);
+
+        for (int i = 0; i < deNum; i++) {
+
+            g.add(new ArrayList());
+            for (int j = 0; j < 444; j++) {
+                double random = Math.random();
+                if (random < 0.5) {
+                    g.get(i).add(true);
+                } else {
+                    g.get(i).add(false);
+                }
             }
-        }
-        
-        List<Creature> cl = new ArrayList();
-        
-        cl.add(new Creature(ca, 0, null, 1, 1));
-        cl.add(new Creature(ca, 0, null, 80, 30));
-        cl.add(new Creature(ca, 0, null, 50, 50));
-        
-        for (Cell[] row : ca) {
-            
-            for(Cell c : row){
-                
-                System.out.print(c != null ? "X" : " ");
+
+            for (int j = 0; j < 10; j++) {
+
+                System.out.print(g.get(i).get(j) ? "1" : "0");
             }
             
             System.out.println();
+
+            lca.add(new Creature(StructureGen(new Chromosome(g.get(i))), 0, null, (int) (Math.random() * (250 - SIDE_LENGTH)), (int) (Math.random() * (250 - SIDE_LENGTH))));
         }
-        
-        Terrain t = new Terrain(ter, cl);
-        
+
+        int[][] ter = new int[250][250];
+
+        for (int i = 0; i < 250; i++) {
+
+            for (int j = 0; j < 250; j++) {
+
+                if (Math.random() < 0.05) {
+                    ter[i][j] = (int) (Math.random() * 3 + 1);
+                }
+            }
+        }
+
+        Terrain t = new Terrain(ter, lca);
+
         Terrain.currentT = t;
     }
 }
