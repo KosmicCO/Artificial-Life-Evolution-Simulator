@@ -30,7 +30,7 @@ public class Creature {
     public static final int HUNT = 1;
     public static final int FORAGE = 2;
 
-    public static final int SIDE_LENGTH = 11;
+    public static final int SIDE_LENGTH = 21;
 
     private final List<Cell> cells;
     private final Cell[][] cellMap;
