@@ -76,7 +76,7 @@ public class ReproductionTest {
         StructureInterpreter.setWeightedGenome(w);
         List<Integer> gRef = StructureInterpreter.getRefList();
         System.out.println(gRef);
-        Cell[][] map = StructureInterpreter.StructureGen(moGene.get(0));
+        Cell[][] map = StructureInterpreter.interpret(moGene.get(0));
         for (Cell[] c : map) {
             for (int i = 0; i < c.length; i++) {
                 if (c[i] == null) {
@@ -89,7 +89,7 @@ public class ReproductionTest {
         }
         System.out.println("");
         Creature mother = new Creature(map, 5, moGene, 0, 0);
-        Cell[][] mapa = StructureInterpreter.StructureGen(faGene.get(0));
+        Cell[][] mapa = StructureInterpreter.interpret(faGene.get(0));
         for (Cell[] c : mapa) {
             for (int i = 0; i < c.length; i++) {
                 if (c[i] == null) {
