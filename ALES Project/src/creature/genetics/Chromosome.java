@@ -42,7 +42,7 @@ public class Chromosome {
         return gene.get(i);
     }
 
-    public List<Boolean> reproduce(Chromosome other) {
+    public Chromosome reproduce(Chromosome other) {
         List<Boolean> child = new ArrayList<>();
         int shortSize = this.getLength();
         Chromosome larger = other;
@@ -105,7 +105,7 @@ public class Chromosome {
                 child.remove(child.size()-1);
             }
         }
-        return child;
+        return new Chromosome(child);
     }
 
     @Override
