@@ -25,7 +25,7 @@ public class TestGenMap {
 
         List<List<Boolean>> g = new ArrayList();
         List<Creature> lca = new ArrayList();
-        int deNum = 300;
+        int deNum = 100;
         List<Integer> w = new ArrayList<>();
 
         int sum = 5;

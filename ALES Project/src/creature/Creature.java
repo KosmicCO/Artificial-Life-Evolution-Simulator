@@ -11,6 +11,7 @@ import creature.cells.HunterCell;
 import creature.cells.MotorCell;
 import creature.cells.ReproductionCell;
 import creature.genetics.Chromosome;
+import creature.genetics.StructureInterpreter;
 import graphics.Graphics2D;
 import java.util.ArrayList;
 import java.util.List;
@@ -234,6 +235,14 @@ public class Creature {
         return posY;
     }
 
+    public Cell[][] getCellMap() {
+        return cellMap;
+    }
+
+    public List<Chromosome> getGenes() {
+        return genes;
+    }
+
     @Override
     public String toString() {
         String s = "";
@@ -253,5 +262,30 @@ public class Creature {
 
             Graphics2D.fillRect(ScreenAbs.add(new Vec2((c.getX() + posX) * getZoom(), (c.getY() + posY) * getZoom())), new Vec2(getZoom()), Color4.BLUE);
         }
+    }
+    
+    public Creature reproduce(Creature other, int x, int y){
+        List<Chromosome> childGene = new ArrayList<>();
+        int shortSize = this.genes.size();
+        int slack = other.genes.size()-shortSize;
+        Creature larger = other;
+        if(shortSize>other.genes.size()){
+            shortSize = other.genes.size();
+            slack = this.genes.size()-shortSize;
+            larger = this;
+        }
+        for(int i = 0; i < shortSize; i++){
+            Chromosome m = this.genes.get(i);
+            Chromosome f = other.genes.get(i);
+            Chromosome cr = new Chromosome(m.reproduce(f));
+            childGene.add(cr);
+        }
+        for(int i = 0; i<slack; i++){
+            Chromosome cr = larger.genes.get(shortSize+i);
+            childGene.add(cr);
+        }
+        Cell[][] childCellMap = StructureInterpreter.StructureGen(childGene.get(0));
+        Creature child = new Creature(childCellMap, 0, childGene, x, y);
+        return child;
     }
 }
