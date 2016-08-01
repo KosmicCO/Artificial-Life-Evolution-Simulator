@@ -13,8 +13,8 @@ import creature.genetics.StructureInterpreter;
 import graphics.Graphics2D;
 import java.util.ArrayList;
 import java.util.List;
+import static map.Terrain.currentT;
 import static sim.guis.Simulation.getZoom;
-import util.Color4;
 import util.Vec2;
 import static utility.Mapping.ADX4;
 import static utility.Mapping.ADY4;
@@ -25,8 +25,8 @@ import static utility.Mapping.ADY4;
  */
 public class Creature {
 
-    public static final int REPRODUCE = 0;
-    public static final int HUNT = 1;
+    public static final int HUNT = 0;
+    public static final int REPRODUCE = 1;
     public static final int FORAGE = 2;
 
     public static final int SIDE_LENGTH = 21;
@@ -103,117 +103,10 @@ public class Creature {
         this.mode = mode;
         modeCells = findType(mode);
     }
-
-    public void doModeAction() {
-
-        switch (mode) {
-
-            case REPRODUCE:
-
-                for (Cell rc : modeCells) {
-
-                    ReproductionCell r = (ReproductionCell) rc;
-                    int x = r.getX();
-                    int y = r.getY();
-
-                    for (int i = 0; i < 4; i++) {
-
-                        int rx = x + ADX4[i];
-                        int ry = y + ADY4[i];
-
-                        if (rx >= 0 && rx < cellMap.length && ry >= 0 && ry < cellMap[0].length) {
-
-                            Cell c = cellMap[rx][ry];
-
-                            if (c != null) {
-
-                                if (c instanceof ReproductionCell) {
-
-                                    //ask map to reproduce it
-                                    
-                                } else {
-
-                                    //ask map, no boarder check needed
-                                }
-                            }
-                        } else {
-
-                            //if in the map boarder
-                            //if reproductive cell
-                            //if similar enough* possibly add :/
-                            //reproduce with other organism
-                        }
-                    }
-                }
-
-                break;
-
-            case HUNT:
-
-                for (Cell hc : modeCells) {
-
-                    HunterCell h = (HunterCell) hc;
-
-                    int x = h.getX();
-                    int y = h.getY();
-
-                    for (int i = 0; i < 4; i++) {
-
-                        int hx = x + ADX4[i];
-                        int hy = y + ADY4[i];
-
-                        if (/*inside map*/true) {
-
-                            Cell c = cellMap[hx][hy];
-
-                            if (!cells.contains(c)) {
-
-                                //ask map to do damage to sell and return food value
-                            }
-                        }
-                    }
-                }
-
-                break;
-
-            case FORAGE:
-
-                for (Cell fc : modeCells) {
-
-                    HunterCell f = (HunterCell) fc;
-
-                    int x = f.getX();
-                    int y = f.getY();
-
-                    for (int i = 0; i < 5; i++) {
-
-                        int hx;
-                        int hy;
-
-                        if (i == 5) {
-
-                            hx = x;
-                            hy = y;
-                        } else {
-
-                            hx = x + ADX4[i];
-                            hy = y + ADY4[i];
-                        }
-
-                        if (/*inside map && map at pos has food*/true) {
-
-                            //collect food
-                        }
-                    }
-                }
-
-                break;
-        }
-    }
     
-    public boolean detect(int type){ //0-mode, 1-wall, 2-pit
+    public boolean detectMode(){
         
-        return !!!!!!!!!!!!!false;
+        return currentT.detect(this, mode);
     }
 
     public Cell cellAtRelPos(int x, int y) {
@@ -263,6 +156,11 @@ public class Creature {
 
             Graphics2D.fillRect(ScreenAbs.add(new Vec2((c.getX() + posX) * getZoom(), (c.getY() + posY) * getZoom())), new Vec2(getZoom()), Cell.cellColor(c.getCellType()));
         }
+    }
+    
+    public void doModeAction(){
+        
+        //this refers to terrain for energy consumption
     }
 
     public Creature reproduce(Creature other, int x, int y) {
