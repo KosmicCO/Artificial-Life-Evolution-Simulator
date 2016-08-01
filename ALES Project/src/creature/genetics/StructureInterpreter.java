@@ -80,7 +80,7 @@ public class StructureInterpreter {
         }
     }
 
-    public static Cell[][] StructureGen(Chromosome c) {
+    public static Cell[][] interpret(Chromosome c) {
         List<Vec2> nodes = new ArrayList();
         nodes.add(new Vec2(Creature.SIDE_LENGTH / 2));
         int[][] cellMap = new int[Creature.SIDE_LENGTH][Creature.SIDE_LENGTH];
@@ -91,7 +91,7 @@ public class StructureInterpreter {
         }
         cellMap[Creature.SIDE_LENGTH / 2][Creature.SIDE_LENGTH / 2] = -2;
         for (int i = 0; i < c.geneCount(); i++) {
-            int gene = geneToCell(Conversions.byteToInt(c.getSegment(i)));
+            int gene = geneToCode(Conversions.byteToInt(c.getSegment(i)));
             if (nodes.size() <= i) {
                 break;
             }
@@ -120,14 +120,6 @@ public class StructureInterpreter {
         return creatureStructure;
     }
 
-    private static int geneToCell(int i, int cellNum) {
-        int mod = i % cellNum;
-        int diff = i / cellNum;
-        int sum = mod + diff + cellNum;
-        int cellTag = sum % cellNum;
-        return cellTag;
-    }
-
     private static void geneReferenceGen() {
         for (int j = 0; j < weightedGenome.size(); j++) {
             for (int k = 0; k < weightedGenome.get(j); k++) {
@@ -137,7 +129,7 @@ public class StructureInterpreter {
         }
     }
 
-    private static int geneToCell(int ind) {
+    private static int geneToCode(int ind) {
         int j = geneRefList.get(ind);
         return j;
     }
