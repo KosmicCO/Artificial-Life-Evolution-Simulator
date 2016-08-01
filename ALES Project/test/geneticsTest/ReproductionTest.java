@@ -102,7 +102,7 @@ public class ReproductionTest {
         }
         System.out.println("");
         Creature father = new Creature(mapa, 5, faGene, 0, 0);
-        Creature child = mother.reproduce(father, 0, 0);
+        Creature child = mother.reproduce(father);
         for (Cell[] c : child.getCellMap()) {
             for (int i = 0; i < c.length; i++) {
                 if (c[i] == null) {
