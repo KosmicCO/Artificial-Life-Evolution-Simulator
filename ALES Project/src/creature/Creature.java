@@ -223,6 +223,14 @@ public class Creature {
         return posY;
     }
 
+    public void setPosX(int posX) {
+        this.posX = posX;
+    }
+
+    public void setPosY(int posY) {
+        this.posY = posY;
+    }
+
     public Cell[][] getCellMap() {
         return cellMap;
     }
