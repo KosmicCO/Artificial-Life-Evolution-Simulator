@@ -25,7 +25,7 @@ public class StructureInterpreter {
     private static int down = 2;
     private static int left = 3;
 
-    public static final int CELL_TYPES = 11;
+    public static final int CELL_TYPES = 12;
     private static List<Integer> weightedGenome = new ArrayList<>();
     private static List<Integer> geneRefList = new ArrayList<>();
 

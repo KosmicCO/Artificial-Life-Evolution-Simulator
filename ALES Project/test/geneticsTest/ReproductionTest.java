@@ -57,8 +57,8 @@ public class ReproductionTest {
         List<Integer> w = new ArrayList<>();
         int sum = 5;
         w.add(5);
-        for (int i = 0; i < 10; i++) {
-            int r = (int) ((Math.random() * 5 - 2) + 23);
+        for (int i = 0; i < 11; i++) {
+            int r = (int) ((Math.random() * 5 - 2) + 20);
             w.add(r);
             sum += r;
         }
@@ -82,7 +82,7 @@ public class ReproductionTest {
                 if (c[i] == null) {
                     System.out.print(" ");
                 } else {
-                    System.out.print("\u001B[" + (30 + c[i].getCellType()) + "mX\u001B[30m");
+                    System.out.print("\u001B[" + (29 + c[i].getCellType()) + "m█\u001B[30m");
                 }
             }
             System.out.println("");
@@ -95,7 +95,7 @@ public class ReproductionTest {
                 if (c[i] == null) {
                     System.out.print(" ");
                 } else {
-                    System.out.print("\u001B[" + (30 + c[i].getCellType()) + "mX\u001B[30m");
+                    System.out.print("\u001B[" + (29 + c[i].getCellType()) + "m█\u001B[30m");
                 }
             }
             System.out.println("");
@@ -108,7 +108,7 @@ public class ReproductionTest {
                 if (c[i] == null) {
                     System.out.print(" ");
                 } else {
-                    System.out.print("\u001B[" + (30 + c[i].getCellType()) + "mX\u001B[30m");
+                    System.out.print("\u001B[" + (29 + c[i].getCellType()) + "m█\u001B[30m");
                 }
             }
             System.out.println("");

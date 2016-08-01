@@ -121,7 +121,7 @@ public abstract class Cell {
             case 9:
                 return Color4.BLACK;
             case 10:
-                return Color4.RED.withR(144);
+                return Color4.RED.withR(.144);
             default:
                 return Color4.WHITE;
         }
