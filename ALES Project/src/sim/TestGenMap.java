@@ -30,7 +30,7 @@ public class TestGenMap {
 
         int sum = 5;
         w.add(5);
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < 11; i++) {
             int r = (int) (Math.random() * 33);
             w.add(r);
             sum += r;

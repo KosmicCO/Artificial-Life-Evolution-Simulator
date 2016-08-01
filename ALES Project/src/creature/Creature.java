@@ -284,7 +284,7 @@ public class Creature {
             Chromosome cr = larger.genes.get(shortSize+i);
             childGene.add(cr);
         }
-        Cell[][] childCellMap = StructureInterpreter.StructureGen(childGene.get(0));
+        Cell[][] childCellMap = StructureInterpreter.interpret(childGene.get(0));
         Creature child = new Creature(childCellMap, 0, childGene, x, y);
         return child;
     }

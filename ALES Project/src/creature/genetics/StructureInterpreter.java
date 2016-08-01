@@ -20,11 +20,12 @@ import static utility.Mapping.ADY4;
  */
 public class StructureInterpreter {
 
-    private static int left = 0;
+    private static int up = 0;
     private static int right = 1;
     private static int down = 2;
-    private static int up = 3;
-    public static final int CELL_TYPES = 11;
+    private static int left = 3;
+
+    public static final int CELL_TYPES = 12;
     private static List<Integer> weightedGenome = new ArrayList<>();
     private static List<Integer> geneRefList = new ArrayList<>();
 
@@ -62,19 +63,21 @@ public class StructureInterpreter {
             case 3:
                 return new HunterCell(x, y);
             case 4:
-                return new MotorCell(left, x, y);
+                return new MotorCell(up, x, y);
             case 5:
                 return new MotorCell(right, x, y);
             case 6:
                 return new MotorCell(down, x, y);
             case 7:
-                return new MotorCell(up, x, y);
+                return new MotorCell(left, x, y);
             case 8:
                 return new ReproductionCell(x, y);
             case 9:
                 return new StorageCell(x, y);
             case 10:
                 return new StructureCell(x, y);
+            case 11:
+                return new DetectorCell(x, y);
             default:
                 return null;
         }
