@@ -7,7 +7,6 @@ package sim;
 
 import creature.Creature;
 import static creature.Creature.SIDE_LENGTH;
-import creature.cells.Cell;
 import creature.genetics.Chromosome;
 import creature.genetics.StructureInterpreter;
 import java.util.ArrayList;
@@ -20,7 +19,7 @@ import static creature.genetics.StructureInterpreter.interpret;
  * @author Kosmic
  */
 public class TestGenMap {
-
+    
     public static void makeTestMap() {
 
         List<List<Boolean>> g = new ArrayList();
@@ -68,7 +67,7 @@ public class TestGenMap {
             for (int j = 0; j < 250; j++) {
 
                 if (Math.random() < 0.05) {
-                    ter[i][j] = (int) (Math.random() * 3 + 1);
+                    ter[i][j] = 0;//(int) (Math.random() * 3 + 1);
                 }
             }
         }

@@ -53,7 +53,6 @@ public class Simulation extends ComponentInputGUI{
         switch(string){
             
             case "plane":
-                
                 break;
         }
     }

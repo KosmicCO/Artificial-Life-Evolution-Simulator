@@ -127,20 +127,24 @@ public class Terrain {
         int deltaY = Mapping.ADY4[direction];
         for (int ind = 0; ind < cr.getCellMap().length; ind++) {
             for (Cell c : cr.getCellMap()[ind]) {
-                int newAbsX = c.getX() + cr.getPosX() + deltaX;
-                int newAbsY = c.getY() + cr.getPosY() + deltaY;
-                if (environment[ind][newAbsX] == 2) {
-                    blocked = true;
-                }
-                if (environment[ind][newAbsY] == 2) {
-                    blocked = true;
-                }
-                if (newAbsX >= width || newAbsY >= height) {
-                    blocked = true;
-                }
-                Cell found = cellAtAbsPos(c.getX() + cr.getPosX() + deltaX, c.getY() + cr.getPosY() + deltaY);
-                if (found != null && !found.getCreature().equals(cr)) {
-                    blocked = true;
+                if (c != null) {
+                    
+                    int newAbsX = c.getX() + cr.getPosX() + deltaX;
+                    int newAbsY = c.getY() + cr.getPosY() + deltaY;
+                    
+                    if (newAbsX >= width || newAbsY >= height) {
+                        blocked = true;
+                    }
+                    if (environment[ind][newAbsX] == 2) {
+                        blocked = true;
+                    }
+                    if (environment[ind][newAbsY] == 2) {
+                        blocked = true;
+                    }
+                    Cell found = cellAtAbsPos(c.getX() + cr.getPosX() + deltaX, c.getY() + cr.getPosY() + deltaY);
+                    if (found != null && !found.getCreature().equals(cr)) {
+                        blocked = true;
+                    }
                 }
             }
         }

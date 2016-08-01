@@ -104,7 +104,7 @@ public class Creature {
         modeCells = findType(mode);
     }
 
-    private void doModeAction() {
+    public void doModeAction() {
 
         switch (mode) {
 
@@ -210,6 +210,11 @@ public class Creature {
                 break;
         }
     }
+    
+    public boolean detect(int type){ //0-mode, 1-wall, 2-pit
+        
+        return !!!!!!!!!!!!!false;
+    }
 
     public Cell cellAtRelPos(int x, int y) {
         return cellMap[x][y];
@@ -256,7 +261,7 @@ public class Creature {
 
         for (Cell c : cells) {
 
-            Graphics2D.fillRect(ScreenAbs.add(new Vec2((c.getX() + posX) * getZoom(), (c.getY() + posY) * getZoom())), new Vec2(getZoom()), Color4.BLUE);
+            Graphics2D.fillRect(ScreenAbs.add(new Vec2((c.getX() + posX) * getZoom(), (c.getY() + posY) * getZoom())), new Vec2(getZoom()), Cell.cellColor(c.getCellType()));
         }
     }
 
