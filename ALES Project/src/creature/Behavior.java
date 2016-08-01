@@ -7,6 +7,7 @@
 package creature;
 
 import java.util.List;
+import static map.Terrain.currentT;
 
 /**
  *
@@ -37,22 +38,22 @@ public class Behavior {
         switch(comm){
             
             case 0:
-                //move up
+                currentT.move(0, creature);
                 break;
             case 1:
-                //move right
+                currentT.move(1, creature);
                 break;
             case 2:
-                //move down
+                currentT.move(2, creature);
                 break;
             case 3:
-                //move left
+                currentT.move(3, creature);
                 break;
             case 4:
                 //mode sense
                 break;
             case 5:
-                //mode action
+                creature.doModeAction();
                 break;
             case 6:
                 //sense wall
