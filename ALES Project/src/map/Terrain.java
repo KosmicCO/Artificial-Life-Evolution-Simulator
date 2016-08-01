@@ -151,6 +151,37 @@ public class Terrain {
             cr.setPosY(newY);
         }
     }
+    
+    /**
+     * 
+     * @param cr    the creature that is detecting objects within its vicinity
+     * @param type  type of object being detected, where 0 is any cell from another creature, 1 is any reproductive cell, 2 is any food particle, 3 is any walls, 4 is any pit
+     * @return if an object of the specified type is found within the creature's bounds
+     */
+    public boolean detect(Creature cr, int type){
+        boolean found = false;
+        for (int i = cr.getPosX(); i<cr.getPosX()+Creature.SIDE_LENGTH; i++){
+            for (int j = cr.getPosY(); j<cr.getPosY()+Creature.SIDE_LENGTH; j++){
+                Cell atLoc = cellAtAbsPos(i,j);
+                if(type == 0){
+                    if(atLoc!=null&&!(atLoc.getCreature().equals(cr))){
+                        found = true;
+                    }
+                }
+                else if(type == 1){
+                    if(atLoc!=null&&atLoc.getCellType()==8){
+                        found = true;
+                    }
+                }
+                else{
+                    if(environment[i][j]==type-1){
+                        found = true;
+                    }
+                }
+            }
+        }
+        return found;
+    }
 
     public Cell cellAtAbsPos(int x, int y) {
         List<Creature> creaturesAtPos = new ArrayList<Creature>();
