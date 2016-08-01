@@ -14,7 +14,7 @@ import java.util.List;
  */
 public class Chromosome {
 
-    public static double MUTATION_FACTOR = 0.02;
+    public static double MUTATION_FACTOR = 0.007;
     public static int VARIANCE = 3;
     private List<Boolean> gene;
 
