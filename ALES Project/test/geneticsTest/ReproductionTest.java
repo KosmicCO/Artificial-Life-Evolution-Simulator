@@ -80,9 +80,9 @@ public class ReproductionTest {
         for (Cell[] c : map) {
             for (int i = 0; i < c.length; i++) {
                 if (c[i] == null) {
-                    System.out.print("_ ");
+                    System.out.print(" ");
                 } else {
-                    System.out.print(c[i].getCellType() + " ");
+                    System.out.print("\u001B[" + (30 + c[i].getCellType()) + "mX\u001B[30m");
                 }
             }
             System.out.println("");
@@ -93,9 +93,9 @@ public class ReproductionTest {
         for (Cell[] c : mapa) {
             for (int i = 0; i < c.length; i++) {
                 if (c[i] == null) {
-                    System.out.print("_ ");
+                    System.out.print(" ");
                 } else {
-                    System.out.print(c[i].getCellType() + " ");
+                    System.out.print("\u001B[" + (30 + c[i].getCellType()) + "mX\u001B[30m");
                 }
             }
             System.out.println("");
@@ -106,9 +106,9 @@ public class ReproductionTest {
         for (Cell[] c : child.getCellMap()) {
             for (int i = 0; i < c.length; i++) {
                 if (c[i] == null) {
-                    System.out.print("_ ");
+                    System.out.print(" ");
                 } else {
-                    System.out.print(c[i].getCellType() + " ");
+                    System.out.print("\u001B[" + (30 + c[i].getCellType()) + "mX\u001B[30m");
                 }
             }
             System.out.println("");
