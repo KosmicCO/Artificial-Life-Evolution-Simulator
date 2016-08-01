@@ -189,30 +189,39 @@ public class Terrain {
     }
 
     public void spawn(Creature child) {
-        boolean inMap = false;
-        int x;
-        int y;
-        while (!inMap) {
+        //boolean inMap = false;
+        int finalX=-Creature.SIDE_LENGTH;
+        int finalY=-Creature.SIDE_LENGTH;
+        for (int h = 0; h < 20; h++) {
             boolean empty = true;
-            x = (int) (Math.random() * width-Creature.SIDE_LENGTH);
-            y = (int) (Math.random() * height-Creature.SIDE_LENGTH);
-            for (int i = x; i<x+Creature.SIDE_LENGTH; i++) {
-                for(int j = y; j<y+Creature.SIDE_LENGTH; j++){
-                    Cell atLoc = cellAtAbsPos(i,j);
-                    if(atLoc != null){
-                        empty = false;
-                    }
-                    if(environment[i][j]!=0){
-                        empty = false;
-                    }
+            int x = (int) (Math.random() * width-Creature.SIDE_LENGTH);
+            int y = (int) (Math.random() * height-Creature.SIDE_LENGTH);
+            for(Cell[] row : child.getCellMap()){
+                for(Cell c : row){
+                    int newCellX = x+c.getX();
+                    int newCellY = y+c.getY();
+                     Cell atLoc = cellAtAbsPos(newCellX,newCellY);
+                     if(atLoc!=null){
+                         empty = false;
+                     }
+                     if(environment[newCellX][newCellY]!=0){
+                         empty = false;
+                     }
                 }
             }
-            inMap = empty;
+            if(empty){
+                finalX = x;
+                finalY = y;
+                break;
+            }
         }
+        child.setPosX(finalX);
+        child.setPosY(finalY);
+        population.add(child);
     }
 
     public Cell cellAtAbsPos(int x, int y) {
-        List<Creature> creaturesAtPos = new ArrayList<Creature>();
+        List<Creature> creaturesAtPos = new ArrayList<>();
         for (Creature c : population) {
             int xDiff = x - c.getPosX();
             int yDiff = y - c.getPosY();
