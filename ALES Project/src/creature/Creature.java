@@ -163,7 +163,7 @@ public class Creature {
         //this refers to terrain for energy consumption
     }
 
-    public Creature reproduce(Creature other, int x, int y) {
+    public Creature reproduce(Creature other) {
         List<Chromosome> childGene = new ArrayList<>();
         int shortSize = this.genes.size();
         int slack = other.genes.size() - shortSize;
@@ -184,7 +184,7 @@ public class Creature {
             childGene.add(cr);
         }
         Cell[][] childCellMap = StructureInterpreter.interpret(childGene.get(0));
-        Creature child = new Creature(childCellMap, 0, childGene, x, y);
+        Creature child = new Creature(childCellMap, 0, childGene, 0, 0);
         return child;
     }
 }
