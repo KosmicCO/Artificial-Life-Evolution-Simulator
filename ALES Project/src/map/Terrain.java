@@ -120,6 +120,14 @@ public class Terrain {
         }
 
     }
+    
+    public void update(){
+        
+        for(Creature cre : population){
+            
+            cre.update();
+        }
+    }
 
     public void move(int direction, Creature cr) {
         boolean blocked = false;

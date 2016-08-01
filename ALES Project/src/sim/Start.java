@@ -10,6 +10,7 @@ import engine.Core;
 import graphics.Window2D;
 import gui.GUIController;
 import gui.TypingManager;
+import static map.Terrain.currentT;
 import static sim.TestGenMap.makeTestMap;
 import util.Color4;
 
@@ -20,7 +21,7 @@ import util.Color4;
 public class Start {
     
     private static long updates;
-    private static final int UPDATES_PER_TICK = 5;
+    private static final int UPDATES_PER_TICK = 20;
     
     public static void main(String[] args) {
         
@@ -53,7 +54,7 @@ public class Start {
             
             if(updates % UPDATES_PER_TICK == 0){
                 
-                //creature simulation;
+                currentT.update();
             }
             
             updates++;
