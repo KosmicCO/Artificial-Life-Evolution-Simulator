@@ -41,9 +41,7 @@ public class ChromosomeTest {
         Chromosome f = new Chromosome(h);
         System.out.println("MOTHER: "+m);
         System.out.println("FATHER: "+f);
-        List<Boolean> j = new ArrayList<>();
-        j = m.reproduce(f);
-        Chromosome child = new Chromosome(j);
+        Chromosome child = m.reproduce(f);
         aveLen+=child.getLength();
         System.out.println("CHILD:  "+child);
         counter++;
