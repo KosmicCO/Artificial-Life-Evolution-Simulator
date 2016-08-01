@@ -6,9 +6,7 @@
 package creature;
 
 import creature.cells.Cell;
-import creature.cells.ForagerCell;
 import creature.cells.HunterCell;
-import creature.cells.MotorCell;
 import creature.cells.ReproductionCell;
 import creature.genetics.Chromosome;
 import creature.genetics.StructureInterpreter;
@@ -40,7 +38,7 @@ public class Creature {
     private int posX;
     private int posY;
     private List<Cell> modeCells;
-    private List<MotorCell> motorCells;
+    private int[] usedCells; //up right down left detector
     private int mode;
     private int maxStore;
     private int energy;
@@ -53,6 +51,7 @@ public class Creature {
         maxStore = 0;
         posX = x;
         posY = y;
+        usedCells = new int[5];
 
         for (Cell[] cellRow : cellMap) {
 
@@ -63,6 +62,15 @@ public class Creature {
                     cell.setCreature(this);
                     maxStore += cell.getMaxStore();
                     cells.add(cell);
+
+                    if ((cell.getCellType() >= 4 && cell.getCellType() <= 7)) {
+
+                        usedCells[cell.getCellType() - 4]++;
+
+                    } else if (cell.getCellType() == 11) {
+
+                        usedCells[4]++;
+                    }
                 }
             }
         }
@@ -79,36 +87,15 @@ public class Creature {
 
         List<Cell> found = new ArrayList();
 
-        for (Cell cell : cells) {
+        for (Cell c : cells) {
 
-            boolean isType;
+            if (c.getCellType() == type) {
 
-            switch (type) {
-
-                case REPRODUCE:
-                    isType = cell instanceof ReproductionCell;
-                    break;
-                case HUNT:
-                    isType = cell instanceof HunterCell;
-                    break;
-                case FORAGE:
-                    isType = cell instanceof ForagerCell;
-                    break;
-                default:
-                    isType = false;
-            }
-
-            if (isType) {
-
-                found.add(cell);
+                found.add(c);
             }
         }
 
         return found;
-    }
-
-    public void update() {
-
     }
 
     private void changeMode(int mode) {
@@ -117,7 +104,7 @@ public class Creature {
         modeCells = findType(mode);
     }
 
-    private void checkFromMode() {
+    private void doModeAction() {
 
         switch (mode) {
 
@@ -142,7 +129,8 @@ public class Creature {
 
                                 if (c instanceof ReproductionCell) {
 
-                                    //reproduce methode with itself
+                                    //ask map to reproduce it
+                                    
                                 } else {
 
                                     //ask map, no boarder check needed
@@ -152,7 +140,7 @@ public class Creature {
 
                             //if in the map boarder
                             //if reproductive cell
-                            //if similar enough*
+                            //if similar enough* possibly add :/
                             //reproduce with other organism
                         }
                     }
@@ -263,25 +251,25 @@ public class Creature {
             Graphics2D.fillRect(ScreenAbs.add(new Vec2((c.getX() + posX) * getZoom(), (c.getY() + posY) * getZoom())), new Vec2(getZoom()), Color4.BLUE);
         }
     }
-    
-    public Creature reproduce(Creature other, int x, int y){
+
+    public Creature reproduce(Creature other, int x, int y) {
         List<Chromosome> childGene = new ArrayList<>();
         int shortSize = this.genes.size();
-        int slack = other.genes.size()-shortSize;
+        int slack = other.genes.size() - shortSize;
         Creature larger = other;
-        if(shortSize>other.genes.size()){
+        if (shortSize > other.genes.size()) {
             shortSize = other.genes.size();
-            slack = this.genes.size()-shortSize;
+            slack = this.genes.size() - shortSize;
             larger = this;
         }
-        for(int i = 0; i < shortSize; i++){
+        for (int i = 0; i < shortSize; i++) {
             Chromosome m = this.genes.get(i);
             Chromosome f = other.genes.get(i);
-            Chromosome cr = new Chromosome(m.reproduce(f));
+            Chromosome cr = m.reproduce(f);
             childGene.add(cr);
         }
-        for(int i = 0; i<slack; i++){
-            Chromosome cr = larger.genes.get(shortSize+i);
+        for (int i = 0; i < slack; i++) {
+            Chromosome cr = larger.genes.get(shortSize + i);
             childGene.add(cr);
         }
         Cell[][] childCellMap = StructureInterpreter.interpret(childGene.get(0));
