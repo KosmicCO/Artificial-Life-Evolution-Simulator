@@ -64,7 +64,7 @@ public class InterpreterTest {
         System.out.println(gRef);
         Chromosome f = new Chromosome(h);
         System.out.println(m);
-        Cell[][] map = StructureInterpreter.StructureGen(m);
+        Cell[][] map = StructureInterpreter.interpret(m);
         for (Cell[] c : map) {
             for(int i = 0; i<c.length; i++){
                 if(c[i] == null){

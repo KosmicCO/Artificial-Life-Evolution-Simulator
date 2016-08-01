@@ -10,10 +10,10 @@ import static creature.Creature.SIDE_LENGTH;
 import creature.cells.Cell;
 import creature.genetics.Chromosome;
 import creature.genetics.StructureInterpreter;
-import static creature.genetics.StructureInterpreter.StructureGen;
 import java.util.ArrayList;
 import java.util.List;
 import map.Terrain;
+import static creature.genetics.StructureInterpreter.interpret;
 
 /**
  *
@@ -58,7 +58,7 @@ public class TestGenMap {
             
             System.out.println();
 
-            lca.add(new Creature(StructureGen(new Chromosome(g.get(i))), 0, null, (int) (Math.random() * (250 - SIDE_LENGTH)), (int) (Math.random() * (250 - SIDE_LENGTH))));
+            lca.add(new Creature(interpret(new Chromosome(g.get(i))), 0, null, (int) (Math.random() * (250 - SIDE_LENGTH)), (int) (Math.random() * (250 - SIDE_LENGTH))));
         }
 
         int[][] ter = new int[250][250];
