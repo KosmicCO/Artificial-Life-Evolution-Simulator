@@ -13,6 +13,7 @@ import java.util.List;
 import static sim.guis.Simulation.getZoom;
 import util.Color4;
 import util.Vec2;
+import utility.Mapping;
 
 /**
  *
@@ -44,7 +45,7 @@ public class Terrain {
         population.add(c);
     }
 
-    public void move(int direction, Creature cr) {
+    public void moveCreature(int direction, Creature cr) {
         //directions: 0 is up, 1 is right, 2 is down, 3 is left
         boolean blocked = false;
         if (direction == 0) {
@@ -78,10 +79,10 @@ public class Terrain {
                     }
                 }
             }
-
-            int newX = cr.getPosX() + 1;
-            cr.setPosX(newX);
-
+            if (!blocked) {
+                int newX = cr.getPosX() + 1;
+                cr.setPosX(newX);
+            }
         }
         if (direction == 2) {
             for (int ind = 0; ind < cr.getCellMap().length; ind++) {
@@ -95,10 +96,10 @@ public class Terrain {
                     }
                 }
             }
-
-            int newY = cr.getPosY() - 1;
-            cr.setPosY(newY);
-
+            if (!blocked) {
+                int newY = cr.getPosY() - 1;
+                cr.setPosY(newY);
+            }
         }
         if (direction == 3) {
             for (int ind = 0; ind < cr.getCellMap().length; ind++) {
@@ -112,12 +113,43 @@ public class Terrain {
                     }
                 }
             }
-
-            int newX = cr.getPosX() - 1;
-            cr.setPosX(newX);
-
+            if (!blocked) {
+                int newX = cr.getPosX() - 1;
+                cr.setPosX(newX);
+            }
         }
 
+    }
+
+    public void move(int direction, Creature cr) {
+        boolean blocked = false;
+        int deltaX = Mapping.ADX4[direction];
+        int deltaY = Mapping.ADY4[direction];
+        for (int ind = 0; ind < cr.getCellMap().length; ind++) {
+            for (Cell c : cr.getCellMap()[ind]) {
+                int newAbsX = c.getX() + cr.getPosX() + deltaX;
+                int newAbsY = c.getY() + cr.getPosY() + deltaY;
+                if (environment[ind][newAbsX] == 2) {
+                    blocked = true;
+                }
+                if (environment[ind][newAbsY] == 2) {
+                    blocked = true;
+                }
+                if (newAbsX >= width || newAbsY >= height) {
+                    blocked = true;
+                }
+                Cell found = cellAtAbsPos(c.getX() + cr.getPosX() + deltaX, c.getY() + cr.getPosY() + deltaY);
+                if (found != null && !found.getCreature().equals(cr)) {
+                    blocked = true;
+                }
+            }
+        }
+        if (!blocked) {
+            int newX = cr.getPosX() + deltaX;
+            cr.setPosX(newX);
+            int newY = cr.getPosY() + deltaY;
+            cr.setPosY(newY);
+        }
     }
 
     public Cell cellAtAbsPos(int x, int y) {
