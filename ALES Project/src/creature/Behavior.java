@@ -16,6 +16,10 @@ import static map.Terrain.currentT;
  */
 public class Behavior {
 
+    public static int energyPerMove = -8;
+    public static int energyPerDetect = -4;
+
+    //User defined above
     private final List<Integer> mainBehavior;
     private final List<List<Integer>> subBehaviors;
     private Creature creature;
@@ -40,29 +44,51 @@ public class Behavior {
 
             case 0:
 
-                currentT.move(0, creature);
+                if (creature.getUsedCells()[0] > 0) {
+                    creature.addEnergy(energyPerMove / creature.getUsedCells()[0]);
+                    currentT.move(0, creature);
+                }
                 break;
             case 1:
 
-                currentT.move(1, creature);
+                if (creature.getUsedCells()[1] > 0) {
+                    creature.addEnergy(energyPerMove / creature.getUsedCells()[1]);
+                    currentT.move(1, creature);
+                }
                 break;
             case 2:
 
-                currentT.move(2, creature);
+                if (creature.getUsedCells()[2] > 0) {
+                    creature.addEnergy(energyPerMove / creature.getUsedCells()[2]);
+                    currentT.move(2, creature);
+                }
                 break;
             case 3:
 
-                currentT.move(3, creature);
+                if (creature.getUsedCells()[3] > 0) {
+                    creature.addEnergy(energyPerMove / creature.getUsedCells()[3]);
+                    currentT.move(3, creature);
+                }
                 break;
             case 4:
 
-                currentT.move((int) Math.random() * 4, creature);
+                int dir = (int) (Math.random() * 4);
+
+                if (creature.getUsedCells()[dir] > 0) {
+                    creature.addEnergy(energyPerMove / creature.getUsedCells()[dir]);
+                    currentT.move(dir, creature);
+                }
                 break;
             case 5:
 
-                if (creature.detectMode()) {
+                if (creature.getUsedCells()[4] > 0) {
+                    
+                    creature.addEnergy(energyPerDetect / creature.getUsedCells()[4]);
 
-                    redirect(redir);
+                    if (creature.detectMode()) {
+
+                        redirect(redir);
+                    }
                 }
                 break;
             case 6:
@@ -79,7 +105,7 @@ public class Behavior {
     private void redirect(int redir) {
 
         if (subBehaviors.size() > 0) {
-            
+
             commIndex = redir % subBehaviors.size() + 1;
             index = 0;
         } else {

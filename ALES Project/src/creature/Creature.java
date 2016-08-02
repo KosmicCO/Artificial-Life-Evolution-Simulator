@@ -40,6 +40,7 @@ public class Creature {
     private int mode;
     private int maxStore;
     private int energy;
+    private int energyPerTick;
 
     public Creature(Cell[][] cellMap, List<Behavior> behaviors, int energy, List<Chromosome> genes, int x, int y) {
 
@@ -54,6 +55,7 @@ public class Creature {
 
         this.genes = genes;
         maxStore = 0;
+        energyPerTick = 0;
         posX = x;
         posY = y;
         usedCells = new int[5];
@@ -66,6 +68,7 @@ public class Creature {
 
                     cell.setCreature(this);
                     maxStore += cell.getMaxStore();
+                    energyPerTick += cell.getEnergy();
                     cells.add(cell);
 
                     if ((cell.getCellType() >= 4 && cell.getCellType() <= 7)) {
@@ -107,6 +110,11 @@ public class Creature {
         maxStore -= ce.getMaxStore();
         checkVitality();
     }
+    
+    public void addEnergy(int en){
+        
+        energy += en;
+    }
 
     public void checkEnergy() {
 
@@ -116,14 +124,12 @@ public class Creature {
         }
 
         if (energy <= 0) {
-
-            //DIE
+            
+            currentT.kill(this);
         }
     }
 
     public void checkVitality() {
-
-        checkEnergy();
 
         boolean hasCore = false;
 
@@ -143,9 +149,16 @@ public class Creature {
         }
     }
 
+    public int[] getUsedCells() {
+        return usedCells;
+    }
+
     public void update() {
 
         behaviors.get(mode).step();
+        energy -= energyPerTick;
+        checkEnergy();
+        System.out.println(energy);
     }
 
     private List<Cell> findType(int type) {
