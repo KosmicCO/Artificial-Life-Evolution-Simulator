@@ -41,6 +41,11 @@ public class Terrain {
         population = pop;
     }
 
+    /**
+     * Adds a creature to the terrain-managed list of creatures, or population. Creatures can only be visualized if they are added to the population.
+     * 
+     * @param c the creature to be added to the population
+     */
     public void addCreature(Creature c) {
         population.add(c);
     }
@@ -129,6 +134,12 @@ public class Terrain {
         }
     }
 
+    /**
+     * Determines if a creature can be moved in a given direction, and if so, updates the creature's absolute position accordingly.
+     * 
+     * @param direction the direction in which Creature cr needs to move
+     * @param cr    the creature to move
+     */
     public void move(int direction, Creature cr) {
         boolean blocked = false;
         int deltaX = Mapping.ADX4[direction];
@@ -195,6 +206,12 @@ public class Terrain {
         return found;
     }
 
+    
+    /**
+     * Adds a newly generated creature to the map in a randomly assigned position. If all of the 20 attempts to find a position for the creature fail to locate an empty slot, then Creature will be added to the map off-screen
+     * 
+     * @param child     The given reproduced creature to be added to the map
+     */
     public void spawn(Creature child) {
         //boolean inMap = false;
         int finalX = -Creature.SIDE_LENGTH;
@@ -226,9 +243,17 @@ public class Terrain {
         }
         child.setPosX(finalX);
         child.setPosY(finalY);
-        population.add(child);
+        addCreature(child);
     }
 
+    
+    /**
+     * Returns the cell at a given position, designated by x and y coordinate parameters
+     * 
+     * @param x The x-coordinate of the position of inquiry
+     * @param y The y-coordinate of the position of inquiry
+     * @return The cell found at the given coordinates, or null if no cell is found.
+     */
     public Cell cellAtAbsPos(int x, int y) {
         List<Creature> creaturesAtPos = new ArrayList<>();
         for (Creature c : population) {
