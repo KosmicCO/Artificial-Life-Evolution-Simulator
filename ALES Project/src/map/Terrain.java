@@ -132,9 +132,9 @@ public class Terrain {
 
     public void update() {
 
-        for (Creature cre : population) {
+        for (int i = population.size() - 1; i >= 0; i--) {
 
-            cre.update();
+            population.get(i).update();
         }
     }
 
@@ -173,9 +173,9 @@ public class Terrain {
             cr.setPosX(newX);
             int newY = cr.getPosY() + deltaY;
             cr.setPosY(newY);
-            if(overPit(cr)){
-                kill(cr);
-            }
+        }
+        if (overPit(cr)) {
+            kill(cr);
         }
     }
 
@@ -246,9 +246,11 @@ public class Terrain {
                 break;
             }
         }
-        child.setPosX(finalX);
-        child.setPosY(finalY);
-        addCreature(child);
+        if (finalX >= 0 && finalY >= 0 && finalX < width && finalY < height) {
+            child.setPosX(finalX);
+            child.setPosY(finalY);
+            addCreature(child);
+        }
     }
 
     /**
@@ -314,10 +316,11 @@ public class Terrain {
     }
 
     /**
-     * Returns the nutrients gained from consuming a local cell in the vicinity of the creature
-     * 
-     * @param hunters   List of hunter cells from the hunting creature
-     * @return  The nutrients gained by consuming a local cell
+     * Returns the nutrients gained from consuming a local cell in the vicinity
+     * of the creature
+     *
+     * @param hunters List of hunter cells from the hunting creature
+     * @return The nutrients gained by consuming a local cell
      */
     public int hunt(List<Cell> hunters) {
         int nutrientsGained = 0;
@@ -328,10 +331,10 @@ public class Terrain {
             for (int k = 0; k < 4; k++) {
                 int newX = x + Mapping.ADX4[k];
                 int newY = y + Mapping.ADY4[k];
-                Cell prey = cellAtAbsPos(newX,newY);
+                Cell prey = cellAtAbsPos(newX, newY);
                 boolean inBounds = newX < width && newY < height && newX >= 0 && newY >= 0;
                 if (inBounds && prey != null) {
-                    nutrientsGained += (int)(hunterYield * prey.getMaxStore());
+                    nutrientsGained += (int) (hunterYield * prey.getMaxStore());
                     Creature victim = prey.getCreature();
                     victim.deleteCell(prey);
                 }
@@ -340,23 +343,22 @@ public class Terrain {
         return nutrientsGained;
     }
 
-    
     /**
      * Spawns a new child if two reproducing cells are adjacent
-     * 
-     * @param cr    The creature which is checking if reproduction is possible
+     *
+     * @param cr The creature which is checking if reproduction is possible
      */
-    public void reproduce(Creature cr){
+    public void reproduce(Creature cr) {
         List<Cell> reproductionCells = cr.getModeCells();
-        for(Cell ce : reproductionCells){
+        for (Cell ce : reproductionCells) {
             int x = ce.getX() + cr.getPosX();
             int y = ce.getY() + cr.getPosY();
             for (int k = 0; k < 4; k++) {
                 int newX = x + Mapping.ADX4[k];
                 int newY = y + Mapping.ADY4[k];
-                Cell partner = cellAtAbsPos(newX,newY);
+                Cell partner = cellAtAbsPos(newX, newY);
                 boolean inBounds = newX < width && newY < height && newX >= 0 && newY >= 0;
-                if(inBounds&&partner.getCellType()==8){
+                if (inBounds && partner.getCellType() == 8) {
                     Creature p = partner.getCreature();
                     Creature child = cr.reproduce(p);
                     spawn(child);
@@ -364,37 +366,43 @@ public class Terrain {
             }
         }
     }
-    
-    
+
     /**
      * Returns true if the creature is entirely over a pit
-     * 
-     * @param cr    Creature to be checked
-     * @return  whether or not the creature is over a pit
+     *
+     * @param cr Creature to be checked
+     * @return whether or not the creature is over a pit
      */
-    public boolean overPit(Creature cr){
+    public boolean overPit(Creature cr) {
         boolean toFall = true;
-        for(int i = 0; i < cr.getCellMap().length; i++){
-            for(int j = 0; j < cr.getCellMap()[i].length; j++){
-                int x = i + cr.getPosX();
-                int y = j + cr.getPosY();
-                if(environment[x][y]!=3){
-                    toFall = false;
+        
+        for(Cell c : cr.getCells()){
+            
+            toFall &= environment[c.getX() + cr.getPosX()][c.getY() + cr.getPosY()] == 3;
+        }
+        
+        /*for (Cell[] cellArray : cr.getCellMap()) {
+            for (Cell c : cellArray) {
+                if (c != null) {
+                    boolean inBound = c.getX() < width && c.getY() < height && c.getX() >= 0 && c.getY() >= 0;
+                    if (inBound && environment[c.getX()][c.getY()] != 3) {
+                        toFall = false;
+                    }
                 }
             }
-        }
+        }*/
         return toFall;
     }
-    
+
     /**
      * Removes a creature from the population
-     * 
+     *
      * @param cr creature to be removed from the map
      */
-    public void kill(Creature cr){
+    public void kill(Creature cr) {
         population.remove(cr);
     }
-    
+
     /**
      * Returns the cell at a given position, designated by x and y coordinate
      * parameters
