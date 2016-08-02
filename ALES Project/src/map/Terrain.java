@@ -316,23 +316,58 @@ public class Terrain {
             Creature cr = ce.getCreature();
             int x = ce.getX() + cr.getPosX();
             int y = ce.getY() + cr.getPosY();
-            if (cellAtAbsPos(x, y) != null) {
-                nutrientsGained += (int) (hunterYield * cellAtAbsPos(x, y).getMaxStore());
-                /*DELETE CONSUMED CELL*/
-            }
             for (int k = 0; k < 4; k++) {
                 int newX = x + Mapping.ADX4[k];
                 int newY = y + Mapping.ADY4[k];
+                Cell prey = cellAtAbsPos(newX,newY);
                 boolean inBounds = newX < width && newY < height && newX >= 0 && newY >= 0;
-                if (inBounds && cellAtAbsPos(x, y) != null) {
-                    nutrientsGained += (int) (hunterYield * cellAtAbsPos(x, y).getMaxStore());
-                    /*DELETE CONSUMED CELL*/
+                if (inBounds && prey != null) {
+                    nutrientsGained += (int)(hunterYield * prey.getMaxStore());
+                    Creature victim = prey.getCreature();
+                    victim.deleteCell(prey);
                 }
             }
         }
         return nutrientsGained;
     }
 
+    public void reproduce(Creature cr){
+        List<Cell> reproductionCells = cr.getModeCells();
+        for(Cell ce : reproductionCells){
+            int x = ce.getX() + cr.getPosX();
+            int y = ce.getY() + cr.getPosY();
+            for (int k = 0; k < 4; k++) {
+                int newX = x + Mapping.ADX4[k];
+                int newY = y + Mapping.ADY4[k];
+                Cell partner = cellAtAbsPos(newX,newY);
+                boolean inBounds = newX < width && newY < height && newX >= 0 && newY >= 0;
+                if(inBounds&&partner.getCellType()==8){
+                    Creature p = partner.getCreature();
+                    Creature child = cr.reproduce(p);
+                    spawn(child);
+                }
+            }
+        }
+    }
+    
+    public boolean overPit(Creature cr){
+        boolean toFall = true;
+        for(int i = 0; i < cr.getCellMap().length; i++){
+            for(int j = 0; j < cr.getCellMap()[i].length; j++){
+                int x = i + cr.getPosX();
+                int y = j + cr.getPosY();
+                if(environment[x][y]!=3){
+                    toFall = false;
+                }
+            }
+        }
+        return toFall;
+    }
+    
+    public void kill(Creature cr){
+        population.remove(cr);
+    }
+    
     /**
      * Returns the cell at a given position, designated by x and y coordinate
      * parameters
