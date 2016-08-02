@@ -6,8 +6,7 @@
 package creature;
 
 import creature.cells.Cell;
-import creature.cells.HunterCell;
-import creature.cells.ReproductionCell;
+import creature.genetics.BehaviorInterpreter;
 import creature.genetics.Chromosome;
 import creature.genetics.StructureInterpreter;
 import graphics.Graphics2D;
@@ -16,8 +15,6 @@ import java.util.List;
 import static map.Terrain.currentT;
 import static sim.guis.Simulation.getZoom;
 import util.Vec2;
-import static utility.Mapping.ADX4;
-import static utility.Mapping.ADY4;
 
 /**
  *
@@ -33,6 +30,7 @@ public class Creature {
 
     private final List<Cell> cells;
     private final Cell[][] cellMap;
+    private final List<Behavior> behaviors;
     private final List<Chromosome> genes;
 
     private int posX;
@@ -43,10 +41,17 @@ public class Creature {
     private int maxStore;
     private int energy;
 
-    public Creature(Cell[][] cellMap, int energy, List<Chromosome> genes, int x, int y) {
+    public Creature(Cell[][] cellMap, List<Behavior> behaviors, int energy, List<Chromosome> genes, int x, int y) {
 
         this.cellMap = cellMap;
         cells = new ArrayList();
+        this.behaviors = behaviors;
+        
+        for(Behavior b : behaviors){
+            
+            b.setCreature(this);
+        }
+        
         this.genes = genes;
         maxStore = 0;
         posX = x;
@@ -82,6 +87,11 @@ public class Creature {
             this.energy = maxStore;
         }
     }
+    
+    public void update(){
+        
+        behaviors.get(mode).step();
+    }
 
     private List<Cell> findType(int type) {
 
@@ -100,8 +110,8 @@ public class Creature {
 
     private void changeMode(int mode) {
 
+        behaviors.get(this.mode).reset();
         this.mode = mode;
-        modeCells = findType(mode);
     }
     
     public boolean detectMode(){
@@ -184,7 +194,14 @@ public class Creature {
             childGene.add(cr);
         }
         Cell[][] childCellMap = StructureInterpreter.interpret(childGene.get(0));
-        Creature child = new Creature(childCellMap, 0, childGene, 0, 0);
+        
+        List<Behavior> bhvs = new ArrayList();
+        
+        for (int i = 1; i < 4; i++) {
+            
+            bhvs.add(BehaviorInterpreter.interpret(childGene.get(i)));
+        }
+        Creature child = new Creature(childCellMap, bhvs, 0, childGene, 0, 0);
         return child;
     }
 }
