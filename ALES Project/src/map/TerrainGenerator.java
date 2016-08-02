@@ -15,7 +15,7 @@ import util.Noise;
  */
 public class TerrainGenerator {
     
-    public final static double FOOD_SPAWN_RATE = 0.02;
+    public final static double FOOD_SPAWN_RATE = 0.005;
     
     public static Terrain generate(int size, double seed){
         
@@ -34,7 +34,7 @@ public class TerrainGenerator {
                     map[i][j] = h > 0 ? 2 : 3;
                 }else{
                     
-                    if((new Random()).nextDouble() < FOOD_SPAWN_RATE){
+                    if((Math.abs((new Random()).nextDouble() * h)) < FOOD_SPAWN_RATE){
                         
                         map[i][j] = 1;
                     }

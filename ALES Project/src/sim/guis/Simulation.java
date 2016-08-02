@@ -26,8 +26,9 @@ public class Simulation extends ComponentInputGUI{
     
     private static int zoom = 2;
     private Vec2 start = new Vec2(0, -150);
+    private MainMenu parent;
     
-    public Simulation(String n) {
+    public Simulation(String n, MainMenu parent) {
         
         super(n);
         
@@ -36,6 +37,8 @@ public class Simulation extends ComponentInputGUI{
         
         inputs.add(new GUIButton("plane", this, new Vec2(-500, -250), new Vec2(500), " ", Color.transparent));
         components.add(new GUIPanel("planeP", new Vec2(-500, -250), new Vec2(500), getColor(2)));
+        
+        this.parent = parent;
     }
 
     public static int getZoom() {
@@ -59,6 +62,11 @@ public class Simulation extends ComponentInputGUI{
     public void recieve(String string, Object o) {
         
         switch(string){
+            
+            case "back":
+                setRunning(false);
+                this.setVisible(false);
+                parent.start();
             
             case "plane":
                 break;

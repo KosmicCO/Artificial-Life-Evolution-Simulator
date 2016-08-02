@@ -47,7 +47,7 @@ public class MainMenu extends ComponentInputGUI {
         components.add(new GUIPanel("bottom", nextPlace(start, 0, 1), BUTTON_SIZE, getColor(1).multiply(0.6)));
 
         pre = new Presets("presets", this);
-        sim = new Simulation("simulation");
+        sim = new Simulation("simulation", this);
         GUIController.add(pre, sim);
     }
 
@@ -59,7 +59,6 @@ public class MainMenu extends ComponentInputGUI {
     public void start() {
 
         this.setVisible(true);
-        Mouse.setGrabbed(false);
         typing(this, true);
     }
 
