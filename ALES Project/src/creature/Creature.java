@@ -38,9 +38,12 @@ public class Creature {
 
     private int posX;
     private int posY;
+    
     private List<Cell> modeCells;
     private int[] usedCells; //up right down left detector
     private int mode;
+    private boolean modeToggle;
+    
     private int maxStore;
     private int energy;
     private int energyPerTick;
@@ -51,7 +54,7 @@ public class Creature {
         cells = new ArrayList();
         this.behaviors = behaviors;
         modeCells = new ArrayList();
-        changeMode(0);
+        changeMode(FORAGE);
 
         for (Behavior b : behaviors) {
 
@@ -64,6 +67,7 @@ public class Creature {
         posX = x;
         posY = y;
         usedCells = new int[5];
+        modeToggle = false;
 
         for (Cell[] cellRow : cellMap) {
 
@@ -87,7 +91,7 @@ public class Creature {
                 }
             }
         }
-
+        
         this.energy = energy;
 
         if (maxStore < energy) {
@@ -113,7 +117,23 @@ public class Creature {
 
         cellMap[ce.getX()][ce.getY()] = null;
         maxStore -= ce.getMaxStore();
+        energyPerTick -= ce.getEnergy();
         checkVitality();
+    }
+    
+    public void toggleMode(){
+        
+        modeToggle = !modeToggle;
+    }
+
+    public boolean isModeToggle() {
+        
+        return modeToggle;
+    }
+
+    public void setModeToggle(boolean modeToggle) {
+        
+        this.modeToggle = modeToggle;
     }
     
     public void addEnergy(int en){
@@ -160,10 +180,14 @@ public class Creature {
 
     public void update() {
 
+        if(modeToggle){
+            
+            doModeAction();
+        }
+        
         behaviors.get(mode).step();
         energy -= energyPerTick;
         checkEnergy();
-        System.out.println(energy);
     }
 
     private List<Cell> findType(int type) {
@@ -190,6 +214,7 @@ public class Creature {
     private void changeMode(int mode) {
 
         behaviors.get(this.mode).reset();
+        modeToggle = false;
         this.mode = mode;
     }
 
@@ -252,15 +277,24 @@ public class Creature {
     }
 
     public void doModeAction() {
-        if (mode==HUNT){
-            energy += currentT.hunt(modeCells) - energyCostPerHunt; 
-        }
-        else if (mode==FORAGE){
-             energy += currentT.forage(modeCells) - energyCostPerForage;
-        }
-        else if (mode == REPRODUCE){
-            currentT.reproduce(this);
-            energy -= energyCostPerRepro;
+        
+        switch (mode) {
+            
+            case HUNT:
+                
+                energy += currentT.hunt(modeCells) - energyCostPerHunt;
+                break;
+                
+            case FORAGE:
+
+                energy += currentT.forage(modeCells) - energyCostPerForage;
+                break;
+                
+            case REPRODUCE:
+                
+                currentT.reproduce(this);
+                energy -= energyCostPerRepro;
+                break;
         }
     }
 

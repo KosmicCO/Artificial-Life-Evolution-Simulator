@@ -93,7 +93,7 @@ public class Behavior {
                 break;
             case 6:
 
-                creature.doModeAction();
+                creature.toggleMode();
                 break;
             case 8:
 
