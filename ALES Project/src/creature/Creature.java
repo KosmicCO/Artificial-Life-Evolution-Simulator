@@ -129,6 +129,10 @@ public class Creature {
         return posX;
     }
 
+    public List<Cell> getModeCells() {
+        return modeCells;
+    }
+    
     public int getPosY() {
         return posY;
     }
