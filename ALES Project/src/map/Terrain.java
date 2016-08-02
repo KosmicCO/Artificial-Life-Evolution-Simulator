@@ -21,7 +21,7 @@ import utility.Mapping;
  */
 public class Terrain {
 
-    public static int nutrientsPerFood = 1;
+    public static int nutrientsPerFood = 100;
     public static double hunterYield = 0.60;
 
     public static Terrain currentT;

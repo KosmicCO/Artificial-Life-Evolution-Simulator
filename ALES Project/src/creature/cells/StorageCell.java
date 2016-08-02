@@ -19,7 +19,7 @@ public class StorageCell extends Cell {
      */
     public StorageCell(int x, int y) {
 
-        super(4, 25, 3, x, y);
+        super(4, 500, 1, x, y);
     }
 
     @Override

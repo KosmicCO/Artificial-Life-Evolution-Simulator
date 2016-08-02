@@ -19,7 +19,7 @@ public class HunterCell extends Cell {
      */
     public HunterCell(int x, int y) {
 
-        super(3, 5, 1, x, y);
+        super(3, 50, 1, x, y);
     }
 
     @Override
