@@ -24,6 +24,15 @@ public abstract class Cell {
     private final int maxStore;
     private final int energy;
 
+    /**
+     * Constructs a cell with the given parameters.
+     * 
+     * @param maxHP The maximum health of the cell
+     * @param maxStore The maximum amount of energy the cell can contain at a given time
+     * @param energy    The initial amount of energy of the cell
+     * @param x The x-coordinate of the initial position of the cell
+     * @param y The y-coordinate of the initial position of the cell
+     */
     public Cell(int maxHP, int maxStore, int energy, int x, int y) {
 
         this.maxHP = hp = maxHP;

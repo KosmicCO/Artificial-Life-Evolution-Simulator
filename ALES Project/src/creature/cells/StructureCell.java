@@ -11,6 +11,12 @@ package creature.cells;
  */
 public class StructureCell extends Cell {
 
+    /**
+     * Constructs a structure cell at the given position. This cell is solely a structural component of the creature.
+     * 
+     * @param x The x-coordinate of the initial position of the cell
+     * @param y The y-coordinate of the initial position of the cell
+     */
     public StructureCell(int x, int y) {
 
         super(4, 2, 1, x, y);

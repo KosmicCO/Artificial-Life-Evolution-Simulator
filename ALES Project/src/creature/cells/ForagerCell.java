@@ -11,6 +11,12 @@ package creature.cells;
  */
 public class ForagerCell extends Cell {
 
+    /**
+     * Constructs a forager cell at the given position, which will consume food around the cell.
+     * 
+     * @param x The x-coordinate of the initial position of the cell
+     * @param y The y-coordinate of the initial position of the cell
+     */
     public ForagerCell(int x, int y) {
 
         super(2, 4, 1, x, y);

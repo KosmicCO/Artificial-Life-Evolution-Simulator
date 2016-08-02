@@ -11,6 +11,12 @@ package creature.cells;
  */
 public class HunterCell extends Cell {
 
+    /**
+     * Constructs a hunter cell at the given position. The cell will function to hunt other cells.
+     * 
+     * @param x The x-coordinate of the initial position of the cell
+     * @param y The y-coordinate of the initial position of the cell
+     */
     public HunterCell(int x, int y) {
 
         super(3, 2, 1, x, y);
