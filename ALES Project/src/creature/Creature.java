@@ -87,7 +87,7 @@ public class Creature {
             this.energy = maxStore;
         }
     }
-
+    
     public void deleteCell(Cell ce) {
 
         if (ce.getCellType() >= 4 && ce.getCellType() < 8) {
@@ -117,7 +117,7 @@ public class Creature {
 
         if (energy <= 0) {
 
-            //DIE
+            currentT.kill(this);
         }
     }
 
@@ -162,6 +162,12 @@ public class Creature {
 
         return found;
     }
+
+    public List<Cell> getCells() {
+        return cells;
+    }
+    
+    
 
     private void changeMode(int mode) {
 
