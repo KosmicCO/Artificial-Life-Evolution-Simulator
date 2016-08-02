@@ -110,7 +110,7 @@ public abstract class Cell {
         //switch goes here
         switch (type) {
             case 0:
-                return Color4.BLUE;
+                return Color4.BLUE.withG(1);
             case 1:
                 return Color4.GREEN;
             case 2:
@@ -118,13 +118,13 @@ public abstract class Cell {
             case 3:
                 return Color4.PURPLE;
             case 4:
-                return Color4.BLUE.withG(1);
+                return Color4.BLUE.multiply(0.4);
             case 5:
-                return Color4.BLUE.withG(1);
+                return Color4.BLUE.multiply(0.6);
             case 6:
-                return Color4.BLUE.withG(1);
+                return Color4.BLUE.multiply(0.8);
             case 7:
-                return Color4.BLUE.withG(1);
+                return Color4.BLUE;
             case 8:
                 return Color4.RED;
             case 9:

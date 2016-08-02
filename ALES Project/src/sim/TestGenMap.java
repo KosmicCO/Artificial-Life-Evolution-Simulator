@@ -31,7 +31,7 @@ public class TestGenMap {
         List<Integer> w = new ArrayList<>();
 
         int sum = 0;
-        for (int i = 0; i < 9; i++) {
+        for (int i = 0; i < 8; i++) {
             int r = (int) (Math.random() * 60);
             w.add(r);
             sum += r;
@@ -77,13 +77,6 @@ public class TestGenMap {
 
                 beh.add(BehaviorInterpreter.interpret(new Chromosome(b)));
             }
-
-            for (int j = 0; j < 444; j++) {
-
-                System.out.print(g.get(i).get(j) ? "1" : "0");
-            }
-
-            System.out.println();
 
             lca.add(new Creature(interpret(new Chromosome(g.get(i))), beh, 0, null, 0, 0));
         }
