@@ -5,14 +5,16 @@
  */
 package sim.guis;
 
-import graphics.Graphics2D;
+import gui.GUIController;
 import static gui.TypingManager.typing;
 import gui.components.GUIButton;
 import gui.components.GUIPanel;
 import gui.types.ComponentInputGUI;
 import gui.types.GUIInputComponent;
+import java.util.ArrayList;
+import java.util.List;
 import org.newdawn.slick.Color;
-import util.Color4;
+import sim.Preset;
 import util.Vec2;
 import static utility.GUIs.BUTTON_SIZE;
 import static utility.GUIs.getColor;
@@ -25,30 +27,45 @@ import static utility.GUIs.nextPlace;
 public class Presets extends ComponentInputGUI {
 
     private MainMenu parent;
-    private int selected;
+    private NewPreset newPre;
+    
+    private List<Preset> presets;
+    private List<GUIButton> buttons;
+    private List<GUIPanel> panels;
+    private int panIndex;
 
     public Presets(String name, MainMenu parent) {
 
         super(name);
 
-        selected = 0;
-
         this.parent = parent;
-
-        inputs.add(new GUIButton("pre0", this, nextPlace(parent.getStartPos(), 1, -2), BUTTON_SIZE, "Plenty Preset", Color.white));
-        inputs.add(new GUIButton("pre1", this, nextPlace(parent.getStartPos(), 1, -1), BUTTON_SIZE, "Uneven Preset", Color.white));
-        inputs.add(new GUIButton("custom", this, nextPlace(parent.getStartPos(), 1, 0), BUTTON_SIZE, "Custom Preset", Color.white));
-
-        inputs.add(new GUIButton("back", this, nextPlace(parent.getStartPos(), 1, 1), BUTTON_SIZE, "Back", Color.white));
-
-        for (int i = 0; i < 3; i++) {
-
-            components.add(new GUIPanel("top" + i, nextPlace(parent.getStartPos(), 1, -i), BUTTON_SIZE, getColor(0).multiply(0.7 - 0.1 * i)));
+        presets = new ArrayList();
+        buttons = new ArrayList();
+        inputs.addAll(buttons);
+        panels = new ArrayList();
+        panIndex = 0;
+        
+        for (int i = 0; i < 6; i++) {
+            
+            buttons.add(new GUIButton("button" + i, this, nextPlace(parent.getStartPos(), 1, -i), BUTTON_SIZE, "-None-", Color.white));
+            panels.add(new GUIPanel("panel" + i, nextPlace(parent.getStartPos(), 1, -i), BUTTON_SIZE, getColor(0).multiply(0.7 - 0.1 * i)));
         }
 
-        components.add(new GUIPanel("bottom", nextPlace(parent.getStartPos(), 1, 1), BUTTON_SIZE, getColor(1).multiply(0.7)));
+        inputs.add(new GUIButton("new", this, nextPlace(parent.getStartPos(), 1, 1), BUTTON_SIZE, "New Preset", Color.white));
+        inputs.add(new GUIButton("back", this, nextPlace(parent.getStartPos(), 1, 2), BUTTON_SIZE, "Back", Color.white));
+
+        components.add(new GUIPanel("middle", nextPlace(parent.getStartPos(), 1, 1), BUTTON_SIZE, getColor(1).multiply(0.7)));
+        components.add(new GUIPanel("bottom", nextPlace(parent.getStartPos(), 1, 2), BUTTON_SIZE, getColor(1).multiply(0.6)));
+        
+        newPre = new NewPreset("presetCreate", this);
+        GUIController.add(newPre);
     }
 
+    public Vec2 getStartPos(){
+        
+        return parent.getStartPos();
+    }
+    
     public void start() {
 
         this.setVisible(true);
@@ -59,17 +76,19 @@ public class Presets extends ComponentInputGUI {
     public void draw() {
 
         super.draw();
-        Graphics2D.drawWideLine(nextPlace(parent.getStartPos(), 1, -3), nextPlace(parent.getStartPos(), 1, 1), Color4.YELLOW, 2);
-        Graphics2D.drawWideLine(nextPlace(parent.getStartPos(), 2, selected - 3).subtract(new Vec2(5, 0)), nextPlace(parent.getStartPos(), 2, selected - 2).subtract(new Vec2(5, 0)), Color4.RED.multiply(0.6), 2);
+        panels.forEach(GUIPanel::draw);
+        buttons.forEach(GUIButton::draw);
     }
 
     @Override
     public void recieve(String string, Object o) {
 
-        if (string.contains("pre")) {
-
-            selected = Integer.parseInt(string.substring(3));
-        } else if (string.equals("back")) {
+        if(string.equals("new")){
+            
+            newPre.start();
+        }
+        
+        if (string.equals("back")) {
             
             setVisible(false);
             typing(parent, true);

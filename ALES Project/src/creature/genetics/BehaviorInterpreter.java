@@ -21,12 +21,13 @@ public class BehaviorInterpreter {
     public final static int MOVE_RIGHT = 1;
     public final static int MOVE_DOWN = 2;
     public final static int MOVE_LEFT = 3;
-    public final static int MODE_SENSE = 4;
-    public final static int MODE_ACTION = 5;
-    public final static int SENSE_WALL = 6;
-    public final static int SENSE_PIT = 7;
-    public final static int GOTO_FUNC = 8;
-    public final static int NEW_FUNC = 9;
+    public final static int MOVE_RAND = 4;
+    public final static int MODE_SENSE = 5;
+    public final static int MODE_ACTION = 6;
+    public final static int GOTO_FUNC = 7;
+    public final static int NEW_FUNC = 8;
+    
+    public final static int COMM_NUM = 9;
     
     private static List<Integer> weightedGenome = new ArrayList();
     private static List<Integer> geneRefList = new ArrayList();
@@ -85,7 +86,7 @@ public class BehaviorInterpreter {
             }else{
                 
                 subs.get(index).add(gene);
-                if (gene == GOTO_FUNC || gene == MODE_SENSE || gene == SENSE_WALL || gene == SENSE_PIT){
+                if (gene == GOTO_FUNC || gene == MODE_SENSE){
                     
                     subs.get(index).add(Conversions.byteToInt(c.getSegment(i)));
                 }
