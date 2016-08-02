@@ -173,6 +173,9 @@ public class Terrain {
             cr.setPosX(newX);
             int newY = cr.getPosY() + deltaY;
             cr.setPosY(newY);
+            if(overPit(cr)){
+                kill(cr);
+            }
         }
     }
 
