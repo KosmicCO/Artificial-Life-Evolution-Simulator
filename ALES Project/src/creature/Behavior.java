@@ -90,8 +90,14 @@ public class Behavior {
 
     private void redirect(int redir) {
 
-        commIndex = redir % subBehaviors.size() + 1;
-        index = 0;
+        if (subBehaviors.size() > 0) {
+            
+            commIndex = redir % subBehaviors.size() + 1;
+            index = 0;
+        } else {
+
+            reset();
+        }
     }
 
     public void reset() {
@@ -123,24 +129,23 @@ public class Behavior {
                 doComm(comm, 0);
                 index++;
             }
-        }else{
-            
+        } else {
+
             reset();
         }
     }
 
     @Override
     public String toString() {
-        
+
         String s = mainBehavior.toString();
-        
+
         for (List<Integer> bhv : subBehaviors) {
-            
+
             s += "\n- " + bhv.toString();
         }
-        
+
         return s;
     }
-    
-    
+
 }

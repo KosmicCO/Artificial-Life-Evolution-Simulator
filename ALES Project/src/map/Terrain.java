@@ -120,11 +120,11 @@ public class Terrain {
         }
 
     }
-    
-    public void update(){
-        
-        for(Creature cre : population){
-            
+
+    public void update() {
+
+        for (Creature cre : population) {
+
             cre.update();
         }
     }
@@ -136,18 +136,19 @@ public class Terrain {
         for (int ind = 0; ind < cr.getCellMap().length; ind++) {
             for (Cell c : cr.getCellMap()[ind]) {
                 if (c != null) {
-                    
+
                     int newAbsX = c.getX() + cr.getPosX() + deltaX;
                     int newAbsY = c.getY() + cr.getPosY() + deltaY;
-                    
-                    if (newAbsX >= width || newAbsY >= height) {
+
+                    if (newAbsX >= width || newAbsY >= height || newAbsX < 0 || newAbsY < 0) {
                         blocked = true;
-                    }
-                    if (environment[ind][newAbsX] == 2) {
-                        blocked = true;
-                    }
-                    if (environment[ind][newAbsY] == 2) {
-                        blocked = true;
+                    } else {
+                        if (environment[ind][newAbsX] == 2) {
+                            blocked = true;
+                        }
+                        if (environment[ind][newAbsY] == 2) {
+                            blocked = true;
+                        }
                     }
                     Cell found = cellAtAbsPos(c.getX() + cr.getPosX() + deltaX, c.getY() + cr.getPosY() + deltaY);
                     if (found != null && !found.getCreature().equals(cr)) {
@@ -186,10 +187,8 @@ public class Terrain {
                     if (atLoc != null && atLoc.getCellType() == 8) {
                         found = true;
                     }
-                } else {
-                    if (environment[i][j] == type - 1) {
-                        found = true;
-                    }
+                } else if (i >= 0 && j >= 0 && i < width && j < height && environment[i][j] == type - 1) {
+                    found = true;
                 }
             }
         }
@@ -198,26 +197,28 @@ public class Terrain {
 
     public void spawn(Creature child) {
         //boolean inMap = false;
-        int finalX=-Creature.SIDE_LENGTH;
-        int finalY=-Creature.SIDE_LENGTH;
+        int finalX = -Creature.SIDE_LENGTH;
+        int finalY = -Creature.SIDE_LENGTH;
         for (int h = 0; h < 20; h++) {
             boolean empty = true;
-            int x = (int) (Math.random() * width-Creature.SIDE_LENGTH);
-            int y = (int) (Math.random() * height-Creature.SIDE_LENGTH);
-            for(Cell[] row : child.getCellMap()){
-                for(Cell c : row){
-                    int newCellX = x+c.getX();
-                    int newCellY = y+c.getY();
-                     Cell atLoc = cellAtAbsPos(newCellX,newCellY);
-                     if(atLoc!=null){
-                         empty = false;
-                     }
-                     if(environment[newCellX][newCellY]!=0){
-                         empty = false;
-                     }
+            int x = (int) (Math.random() * width - Creature.SIDE_LENGTH);
+            int y = (int) (Math.random() * height - Creature.SIDE_LENGTH);
+            for (Cell[] row : child.getCellMap()) {
+                for (Cell c : row) {
+                    if (c != null) {
+                        int newCellX = x + c.getX();
+                        int newCellY = y + c.getY();
+                        Cell atLoc = cellAtAbsPos(newCellX, newCellY);
+                        if (atLoc != null) {
+                            empty = false;
+                        }
+                        if (newCellX < 0 || newCellY < 0 || newCellX >= width || newCellY >= height || environment[newCellX][newCellY] != 0) {
+                            empty = false;
+                        }
+                    }
                 }
             }
-            if(empty){
+            if (empty) {
                 finalX = x;
                 finalY = y;
                 break;
