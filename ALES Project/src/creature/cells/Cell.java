@@ -109,19 +109,21 @@ public abstract class Cell {
             case 3:
                 return Color4.PURPLE;
             case 4:
-                return Color4.ORANGE;
+                return Color4.BLUE.withG(1);
             case 5:
-                return Color4.ORANGE;
+                return Color4.BLUE.withG(1);
             case 6:
-                return Color4.ORANGE;
+                return Color4.BLUE.withG(1);
             case 7:
-                return Color4.ORANGE;
+                return Color4.BLUE.withG(1);
             case 8:
                 return Color4.RED;
             case 9:
                 return Color4.BLACK;
             case 10:
                 return Color4.RED.withR(.144);
+            case 11:
+                return Color4.GREEN.withB(0.5);
             default:
                 return Color4.WHITE;
         }

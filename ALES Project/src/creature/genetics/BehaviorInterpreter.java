@@ -85,6 +85,10 @@ public class BehaviorInterpreter {
             }else{
                 
                 subs.get(index).add(gene);
+                if (gene == GOTO_FUNC || gene == MODE_SENSE || gene == SENSE_WALL || gene == SENSE_PIT){
+                    
+                    subs.get(index).add(Conversions.byteToInt(c.getSegment(i)));
+                }
             }
         }
         
