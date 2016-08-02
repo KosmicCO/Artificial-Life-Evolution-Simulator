@@ -153,13 +153,8 @@ public class Terrain {
 
                     if (newAbsX >= width || newAbsY >= height || newAbsX < 0 || newAbsY < 0) {
                         blocked = true;
-                    } else {
-                        if (environment[ind][newAbsX] == 2) {
+                    } else if (environment[newAbsX][newAbsY] == 2) {
                             blocked = true;
-                        }
-                        if (environment[ind][newAbsY] == 2) {
-                            blocked = true;
-                        }
                     }
                     Cell found = cellAtAbsPos(c.getX() + cr.getPosX() + deltaX, c.getY() + cr.getPosY() + deltaY);
                     if (found != null && !found.getCreature().equals(cr)) {
