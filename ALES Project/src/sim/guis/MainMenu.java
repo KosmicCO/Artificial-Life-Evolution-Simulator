@@ -24,7 +24,7 @@ import util.Vec2;
  */
 public class MainMenu extends ComponentInputGUI {
 
-    private Vec2 start = new Vec2(-500, -125);
+    private Vec2 start = new Vec2(-500, -150);
 
     private Presets pre;
     private Simulation sim;
@@ -41,13 +41,13 @@ public class MainMenu extends ComponentInputGUI {
 
         for (int i = 0; i < 3; i++) {
 
-            components.add(new GUIPanel("top" + i, nextPlace(start, 0, -i), BUTTON_SIZE, getColor(0).multiply(0.8 - 0.1 * i)));
+            components.add(new GUIPanel("top" + i, nextPlace(start, 0, -i), BUTTON_SIZE, getColor(0).multiply(0.6 - 0.1 * i)));
         }
 
         components.add(new GUIPanel("bottom", nextPlace(start, 0, 1), BUTTON_SIZE, getColor(1).multiply(0.6)));
 
         pre = new Presets("presets", this);
-        sim = new Simulation("simulation");
+        sim = new Simulation("simulation", this);
         GUIController.add(pre, sim);
     }
 
@@ -59,7 +59,6 @@ public class MainMenu extends ComponentInputGUI {
     public void start() {
 
         this.setVisible(true);
-        Mouse.setGrabbed(false);
         typing(this, true);
     }
 

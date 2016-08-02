@@ -18,13 +18,14 @@ import static utility.Mapping.ADY4;
  *
  * @author bhargav
  */
-public class GeneInterpreter {
+public class StructureInterpreter {
 
-    private static int left = 0;
+    private static int up = 0;
     private static int right = 1;
     private static int down = 2;
-    private static int up = 3;
-    public static final int CELL_TYPES = 11;
+    private static int left = 3;
+
+    public static final int CELL_TYPES = 12;
     private static List<Integer> weightedGenome = new ArrayList<>();
     private static List<Integer> geneRefList = new ArrayList<>();
 
@@ -62,25 +63,27 @@ public class GeneInterpreter {
             case 3:
                 return new HunterCell(x, y);
             case 4:
-                return new MotorCell(left, x, y);
+                return new MotorCell(up, x, y);
             case 5:
                 return new MotorCell(right, x, y);
             case 6:
                 return new MotorCell(down, x, y);
             case 7:
-                return new MotorCell(up, x, y);
+                return new MotorCell(left, x, y);
             case 8:
                 return new ReproductionCell(x, y);
             case 9:
                 return new StorageCell(x, y);
             case 10:
                 return new StructureCell(x, y);
+            case 11:
+                return new DetectorCell(x, y);
             default:
                 return null;
         }
     }
 
-    public static Cell[][] StructureGen(Chromosome c) {
+    public static Cell[][] interpret(Chromosome c) {
         List<Vec2> nodes = new ArrayList();
         nodes.add(new Vec2(Creature.SIDE_LENGTH / 2));
         int[][] cellMap = new int[Creature.SIDE_LENGTH][Creature.SIDE_LENGTH];
@@ -91,7 +94,7 @@ public class GeneInterpreter {
         }
         cellMap[Creature.SIDE_LENGTH / 2][Creature.SIDE_LENGTH / 2] = -2;
         for (int i = 0; i < c.geneCount(); i++) {
-            int gene = geneToCell(Conversions.byteToInt(c.getSegment(i)));
+            int gene = geneToCode(Conversions.byteToInt(c.getSegment(i)));
             if (nodes.size() <= i) {
                 break;
             }
@@ -120,14 +123,6 @@ public class GeneInterpreter {
         return creatureStructure;
     }
 
-    private static int geneToCell(int i, int cellNum) {
-        int mod = i % cellNum;
-        int diff = i / cellNum;
-        int sum = mod + diff + cellNum;
-        int cellTag = sum % cellNum;
-        return cellTag;
-    }
-
     private static void geneReferenceGen() {
         for (int j = 0; j < weightedGenome.size(); j++) {
             for (int k = 0; k < weightedGenome.get(j); k++) {
@@ -137,7 +132,7 @@ public class GeneInterpreter {
         }
     }
 
-    private static int geneToCell(int ind) {
+    private static int geneToCode(int ind) {
         int j = geneRefList.get(ind);
         return j;
     }

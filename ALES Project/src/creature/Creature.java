@@ -6,19 +6,14 @@
 package creature;
 
 import creature.cells.Cell;
-import creature.cells.ForagerCell;
-import creature.cells.HunterCell;
-import creature.cells.MotorCell;
-import creature.cells.ReproductionCell;
+import creature.genetics.BehaviorInterpreter;
 import creature.genetics.Chromosome;
+import creature.genetics.StructureInterpreter;
 import graphics.Graphics2D;
 import java.util.ArrayList;
 import java.util.List;
-import static sim.guis.Simulation.getZoom;
-import util.Color4;
+import static map.Terrain.currentT;
 import util.Vec2;
-import static utility.Mapping.ADX4;
-import static utility.Mapping.ADY4;
 
 /**
  *
@@ -26,32 +21,53 @@ import static utility.Mapping.ADY4;
  */
 public class Creature {
 
-    public static final int REPRODUCE = 0;
-    public static final int HUNT = 1;
-    public static final int FORAGE = 2;
-
     public static final int SIDE_LENGTH = 21;
+    public static int energyCostPerHunt = 4;
+    public static int energyCostPerForage = 2;
+    public static int energyCostPerRepro = 10;
+    //USER VARIABLES ABOVE
+            
+    public static final int HUNT = 0;
+    public static final int REPRODUCE = 1;
+    public static final int FORAGE = 2;
 
     private final List<Cell> cells;
     private final Cell[][] cellMap;
+    private final List<Behavior> behaviors;
     private final List<Chromosome> genes;
 
     private int posX;
     private int posY;
+    
     private List<Cell> modeCells;
-    private List<MotorCell> motorCells;
+    private int[] usedCells; //up right down left detector
     private int mode;
+    private boolean modeToggle;
+    
     private int maxStore;
     private int energy;
+    private int energyPerTick;
 
-    public Creature(Cell[][] cellMap, int energy, List<Chromosome> genes, int x, int y) {
+    public Creature(Cell[][] cellMap, List<Behavior> behaviors, int energy, List<Chromosome> genes, int x, int y) {
 
         this.cellMap = cellMap;
         cells = new ArrayList();
+        this.behaviors = behaviors;
+        modeCells = new ArrayList();
+        changeMode(FORAGE);
+
+        for (Behavior b : behaviors) {
+
+            b.setCreature(this);
+        }
+
         this.genes = genes;
         maxStore = 0;
+        energyPerTick = 0;
         posX = x;
         posY = y;
+        usedCells = new int[5];
+        modeToggle = false;
 
         for (Cell[] cellRow : cellMap) {
 
@@ -61,11 +77,21 @@ public class Creature {
 
                     cell.setCreature(this);
                     maxStore += cell.getMaxStore();
+                    energyPerTick += cell.getEnergy();
                     cells.add(cell);
+
+                    if ((cell.getCellType() >= 4 && cell.getCellType() <= 7)) {
+
+                        usedCells[cell.getCellType() - 4]++;
+
+                    } else if (cell.getCellType() == 11) {
+
+                        usedCells[4]++;
+                    }
                 }
             }
         }
-
+        
         this.energy = energy;
 
         if (maxStore < energy) {
@@ -73,153 +99,128 @@ public class Creature {
             this.energy = maxStore;
         }
     }
+    
+    public void deleteCell(Cell ce) {
+
+        if (ce.getCellType() >= 4 && ce.getCellType() < 8) {
+
+            usedCells[ce.getCellType() - 4]--;
+        }
+
+        if (ce.getCellType() == 11) {
+
+            usedCells[4]--;
+        }
+
+        modeCells.remove(ce);
+        cells.remove(ce);
+
+        cellMap[ce.getX()][ce.getY()] = null;
+        maxStore -= ce.getMaxStore();
+        energyPerTick -= ce.getEnergy();
+        checkVitality();
+    }
+    
+    public void toggleMode(){
+        
+        modeToggle = !modeToggle;
+    }
+
+    public boolean isModeToggle() {
+        
+        return modeToggle;
+    }
+
+    public void setModeToggle(boolean modeToggle) {
+        
+        this.modeToggle = modeToggle;
+    }
+    
+    public void addEnergy(int en){
+        
+        energy += en;
+    }
+
+    public void checkEnergy() {
+
+        if (maxStore < energy) {
+
+            energy = maxStore;
+        }
+
+        if (energy <= 0) {
+            
+            currentT.kill(this);
+        }
+    }
+
+    public void checkVitality() {
+
+        boolean hasCore = false;
+
+        for (Cell c : cells) {
+
+            hasCore |= c.getCellType() == 0;
+
+            if (hasCore) {
+
+                break;
+            }
+        }
+
+        if (!hasCore) {
+
+            currentT.kill(this);
+        }
+    }
+
+    public int[] getUsedCells() {
+        return usedCells;
+    }
+
+    public void update() {
+
+        if(modeToggle){
+            
+            doModeAction();
+        }
+        
+        behaviors.get(mode).step();
+        energy -= energyPerTick;
+        checkEnergy();
+    }
 
     private List<Cell> findType(int type) {
 
         List<Cell> found = new ArrayList();
 
-        for (Cell cell : cells) {
+        for (Cell c : cells) {
 
-            boolean isType;
+            if (c.getCellType() == type) {
 
-            switch (type) {
-
-                case REPRODUCE:
-                    isType = cell instanceof ReproductionCell;
-                    break;
-                case HUNT:
-                    isType = cell instanceof HunterCell;
-                    break;
-                case FORAGE:
-                    isType = cell instanceof ForagerCell;
-                    break;
-                default:
-                    isType = false;
-            }
-
-            if (isType) {
-
-                found.add(cell);
+                found.add(c);
             }
         }
 
         return found;
     }
 
-    public void update() {
-
+    public List<Cell> getCells() {
+        return cells;
     }
+    
+    
 
     private void changeMode(int mode) {
 
+        behaviors.get(this.mode).reset();
+        modeToggle = false;
         this.mode = mode;
-        modeCells = findType(mode);
     }
 
-    private void checkFromMode() {
+    public boolean detectMode() {
 
-        switch (mode) {
-
-            case REPRODUCE:
-
-                for (Cell rc : modeCells) {
-
-                    ReproductionCell r = (ReproductionCell) rc;
-                    int x = r.getX();
-                    int y = r.getY();
-
-                    for (int i = 0; i < 4; i++) {
-
-                        int rx = x + ADX4[i];
-                        int ry = y + ADY4[i];
-
-                        if (rx >= 0 && rx < cellMap.length && ry >= 0 && ry < cellMap[0].length) {
-
-                            Cell c = cellMap[rx][ry];
-
-                            if (c != null) {
-
-                                if (c instanceof ReproductionCell) {
-
-                                    //reproduce methode with itself
-                                } else {
-
-                                    //ask map, no boarder check needed
-                                }
-                            }
-                        } else {
-
-                            //if in the map boarder
-                            //if reproductive cell
-                            //if similar enough*
-                            //reproduce with other organism
-                        }
-                    }
-                }
-
-                break;
-
-            case HUNT:
-
-                for (Cell hc : modeCells) {
-
-                    HunterCell h = (HunterCell) hc;
-
-                    int x = h.getX();
-                    int y = h.getY();
-
-                    for (int i = 0; i < 4; i++) {
-
-                        int hx = x + ADX4[i];
-                        int hy = y + ADY4[i];
-
-                        if (/*inside map*/true) {
-
-                            Cell c = cellMap[hx][hy];
-
-                            if (!cells.contains(c)) {
-
-                                //ask map to do damage to sell and return food value
-                            }
-                        }
-                    }
-                }
-
-                break;
-
-            case FORAGE:
-
-                for (Cell fc : modeCells) {
-
-                    HunterCell f = (HunterCell) fc;
-
-                    int x = f.getX();
-                    int y = f.getY();
-
-                    for (int i = 0; i < 5; i++) {
-
-                        int hx;
-                        int hy;
-
-                        if (i == 5) {
-
-                            hx = x;
-                            hy = y;
-                        } else {
-
-                            hx = x + ADX4[i];
-                            hy = y + ADY4[i];
-                        }
-
-                        if (/*inside map && map at pos has food*/true) {
-
-                            //collect food
-                        }
-                    }
-                }
-
-                break;
-        }
+        return currentT.detect(this, mode);
     }
 
     public Cell cellAtRelPos(int x, int y) {
@@ -230,8 +231,28 @@ public class Creature {
         return posX;
     }
 
+    public List<Cell> getModeCells() {
+        return modeCells;
+    }
+
     public int getPosY() {
         return posY;
+    }
+
+    public void setPosX(int posX) {
+        this.posX = posX;
+    }
+
+    public void setPosY(int posY) {
+        this.posY = posY;
+    }
+
+    public Cell[][] getCellMap() {
+        return cellMap;
+    }
+
+    public List<Chromosome> getGenes() {
+        return genes;
     }
 
     @Override
@@ -247,11 +268,75 @@ public class Creature {
         return s;
     }
 
-    public void draw(Vec2 ScreenAbs) {
+    public void draw(Vec2 ScreenAbs, int zoom) {
 
         for (Cell c : cells) {
 
-            Graphics2D.fillRect(ScreenAbs.add(new Vec2((c.getX() + posX) * getZoom(), (c.getY() + posY) * getZoom())), new Vec2(getZoom()), Color4.BLUE);
+            Graphics2D.fillRect(ScreenAbs.add(new Vec2((c.getX() + posX) * zoom, (c.getY() + posY) * zoom)), new Vec2(zoom), Cell.cellColor(c.getCellType()));
         }
+    }
+
+    public void doModeAction() {
+        
+        switch (mode) {
+            
+            case HUNT:
+                
+                energy += currentT.hunt(modeCells) - energyCostPerHunt;
+                break;
+                
+            case FORAGE:
+
+                energy += currentT.forage(modeCells) - energyCostPerForage;
+                break;
+                
+            case REPRODUCE:
+                
+                currentT.reproduce(this);
+                energy -= energyCostPerRepro;
+                break;
+        }
+    }
+
+    /**
+     * Generates a child creature given two creatures by combining chromosomes.
+     * Mutations are handled at the chromosomal level.
+     *
+     * @param other The creature's partner, the genetic material of which will
+     * be used to produce the child creature
+     * @return A child creature generated by combining the chromosomes from each
+     * creature, the chromosomes of which are combined with the chromosomal
+     * reproduce method
+     */
+    public Creature reproduce(Creature other) {
+        List<Chromosome> childGene = new ArrayList<>();
+        int shortSize = this.genes.size();
+        int slack = other.genes.size() - shortSize;
+        Creature larger = other;
+        if (shortSize > other.genes.size()) {
+            shortSize = other.genes.size();
+            slack = this.genes.size() - shortSize;
+            larger = this;
+        }
+        for (int i = 0; i < shortSize; i++) {
+            Chromosome m = this.genes.get(i);
+            Chromosome f = other.genes.get(i);
+            Chromosome cr = m.reproduce(f);
+            childGene.add(cr);
+        }
+        for (int i = 0; i < slack; i++) {
+            Chromosome cr = larger.genes.get(shortSize + i);
+            childGene.add(cr);
+        }
+        Cell[][] childCellMap = StructureInterpreter.interpret(childGene.get(0));
+
+        List<Behavior> bhvs = new ArrayList();
+
+        for (int i = 1; i < 4; i++) {
+
+            bhvs.add(BehaviorInterpreter.interpret(childGene.get(i)));
+        }
+        Creature child = new Creature(childCellMap, bhvs, 0, childGene, 0, 0);
+        return child;
     }
 }

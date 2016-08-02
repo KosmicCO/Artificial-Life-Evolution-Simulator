@@ -7,7 +7,7 @@ package geneticsTest;
 
 import creature.cells.Cell;
 import creature.genetics.Chromosome;
-import creature.genetics.GeneInterpreter;
+import creature.genetics.StructureInterpreter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -42,7 +42,7 @@ public class InterpreterTest {
         List<Integer> w = new ArrayList<>();
         int sum = 5;
         w.add(5);
-        for(int i = 0; i<10; i++){
+        for(int i = 0; i<11; i++){
             int r = (int)(Math.random()*33);
             w.add(r);
             sum+=r;
@@ -59,12 +59,12 @@ public class InterpreterTest {
 //        w.add(128);
         
         System.out.println(w);
-        GeneInterpreter.setWeightedGenome(w);
-        List<Integer> gRef = GeneInterpreter.getRefList();
+        StructureInterpreter.setWeightedGenome(w);
+        List<Integer> gRef = StructureInterpreter.getRefList();
         System.out.println(gRef);
         Chromosome f = new Chromosome(h);
         System.out.println(m);
-        Cell[][] map = GeneInterpreter.StructureGen(m);
+        Cell[][] map = StructureInterpreter.interpret(m);
         for (Cell[] c : map) {
             for(int i = 0; i<c.length; i++){
                 if(c[i] == null){

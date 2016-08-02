@@ -14,6 +14,9 @@ import org.newdawn.slick.Color;
 import util.Vec2;
 import static utility.GUIs.getColor;
 import static gui.TypingManager.typing;
+import static sim.Start.setRunning;
+import static utility.GUIs.BUTTON_SIZE;
+import static utility.GUIs.nextPlace;
 
 /**
  *
@@ -22,13 +25,20 @@ import static gui.TypingManager.typing;
 public class Simulation extends ComponentInputGUI{
     
     private static int zoom = 2;
+    private Vec2 start = new Vec2(0, -150);
+    private MainMenu parent;
     
-    public Simulation(String n) {
+    public Simulation(String n, MainMenu parent) {
         
         super(n);
         
+        inputs.add(new GUIButton("back", this, nextPlace(start, 0, 1), BUTTON_SIZE, "Main Menu", Color.white));
+        components.add(new GUIPanel("bottom", nextPlace(start, 0, 1), BUTTON_SIZE, getColor(1).multiply(0.6)));
+        
         inputs.add(new GUIButton("plane", this, new Vec2(-500, -250), new Vec2(500), " ", Color.transparent));
         components.add(new GUIPanel("planeP", new Vec2(-500, -250), new Vec2(500), getColor(2)));
+        
+        this.parent = parent;
     }
 
     public static int getZoom() {
@@ -45,6 +55,7 @@ public class Simulation extends ComponentInputGUI{
         
         this.setVisible(true);
         typing(this, true);
+        setRunning(true);
     }
 
     @Override
@@ -52,8 +63,12 @@ public class Simulation extends ComponentInputGUI{
         
         switch(string){
             
+            case "back":
+                setRunning(false);
+                this.setVisible(false);
+                parent.start();
+            
             case "plane":
-                
                 break;
         }
     }

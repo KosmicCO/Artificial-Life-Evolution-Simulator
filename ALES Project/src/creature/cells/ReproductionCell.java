@@ -11,9 +11,15 @@ package creature.cells;
  */
 public class ReproductionCell extends Cell {
 
+    /**
+     * Constructs a reproduction cell at the given position. This cell will reproduce with other cells to create child creatures and facilitate evolution.
+     * 
+     * @param x The x-coordinate of the initial position of the cell
+     * @param y The y-coordinate of the initial position of the cell
+     */
     public ReproductionCell(int x, int y) {
 
-        super(1, 2, 3, x, y);
+        super(1, 50, 3, x, y);
     }
 
     @Override

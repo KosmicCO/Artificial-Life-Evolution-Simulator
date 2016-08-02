@@ -7,24 +7,25 @@ package creature.cells;
 
 /**
  *
- * @author bhargav
+ * @author Kosmic
  */
-public class StorageCell extends Cell {
+public class DetectorCell extends Cell{
 
     /**
-     * Constructs a storage cell at the given position.
+     * Constructs a detector cell at the given position, which will detect other objects or cells in the vicinity of the creature..
      * 
      * @param x The x-coordinate of the initial position of the cell
      * @param y The y-coordinate of the initial position of the cell
      */
-    public StorageCell(int x, int y) {
-
-        super(4, 500, 1, x, y);
+    public DetectorCell(int x, int y) {
+        
+        super(2, 50, 1, x, y);
     }
 
     @Override
     public int getCellType() {
 
-        return 9;
+        return 11;
     }
+    
 }

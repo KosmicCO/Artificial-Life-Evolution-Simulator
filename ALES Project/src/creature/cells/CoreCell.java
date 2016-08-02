@@ -9,16 +9,22 @@ package creature.cells;
  *
  * @author bhargav
  */
+
 public class CoreCell extends Cell {
 
+    /**
+     * Constructs a core cell with the given position
+     * 
+     * @param x The x-coordinate of the initial position of the cell
+     * @param y The y-coordinate of the initial position of the cell
+     */
     public CoreCell(int x, int y) {
 
-        super(1, 6, 4, x, y);
+        super(1, 200, 4, x, y);
     }
 
     @Override
     public int getCellType() {
-
         return 0;
     }
 }
