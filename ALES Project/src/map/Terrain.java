@@ -21,6 +21,8 @@ import utility.Mapping;
  */
 public class Terrain {
 
+    public static int nutrientsPerFood = 1;
+    
     public static Terrain currentT;
 
     private final static Vec2 ORIGIN = new Vec2(-500, -250);
@@ -241,6 +243,36 @@ public class Terrain {
         addCreature(child);
     }
 
+    /**
+     * Returns the amount of nutrients gained by consuming the food directly adjacent to the creature.
+     * 
+     * @param cr The creature gaining nutrients.
+     * @return  The amount of nutrients gained from consuming the food around the creature.
+     */
+    public int forage(Creature cr){
+        int nutrientsGained = 0;
+        for(int i = 0; i< cr.getCellMap().length; i++){
+            for(int j = 0; j<cr.getCellMap()[i].length;j++){
+                Cell ce = cr.getCellMap()[i][j];
+                int x = ce.getX()+cr.getPosX();
+                int y = ce.getY()+cr.getPosY();
+                if(environment[x][y]==1){
+                    nutrientsGained+=nutrientsPerFood;
+                    environment[x][y]=0;
+                }
+                for(int k = 0; k<4; k++){
+                    int newX = x+Mapping.ADX4[k];
+                    int newY = y+Mapping.ADY4[k];
+                    boolean inBounds = newX<width&&newY<height&&newX>=0&&newY>=0;
+                    if(inBounds&&environment[newX][newY]==1){
+                        nutrientsGained+=nutrientsPerFood;
+                        environment[newX][newY]=0;
+                    }
+                }
+            }
+        }
+        return nutrientsGained;
+    }
     
     /**
      * Returns the cell at a given position, designated by x and y coordinate parameters
@@ -267,6 +299,10 @@ public class Terrain {
             }
         }
         return null;
+    }
+
+    public static void setNutrientsPerFood(int nutrientsPerFood) {
+        Terrain.nutrientsPerFood = nutrientsPerFood;
     }
 
     private static Color4 getTerColor(int type) {
