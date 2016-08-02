@@ -7,8 +7,6 @@ package creature;
 
 import static creature.genetics.BehaviorInterpreter.GOTO_FUNC;
 import static creature.genetics.BehaviorInterpreter.MODE_SENSE;
-import static creature.genetics.BehaviorInterpreter.SENSE_PIT;
-import static creature.genetics.BehaviorInterpreter.SENSE_WALL;
 import java.util.List;
 import static map.Terrain.currentT;
 
@@ -58,28 +56,18 @@ public class Behavior {
                 break;
             case 4:
 
+                currentT.move((int) Math.random() * 4, creature);
+                break;
+            case 5:
+
                 if (creature.detectMode()) {
 
                     redirect(redir);
                 }
                 break;
-            case 5:
-
-                creature.doModeAction();
-                break;
             case 6:
 
-                if (currentT.detect(creature, 3)) {
-
-                    redirect(redir);
-                }
-                break;
-            case 7:
-
-                if (currentT.detect(creature, 4)) {
-
-                    redirect(redir);
-                }
+                creature.doModeAction();
                 break;
             case 8:
 
@@ -114,7 +102,7 @@ public class Behavior {
 
             int comm = bhv.get(index);
 
-            if (comm == GOTO_FUNC || comm == MODE_SENSE || comm == SENSE_WALL || comm == SENSE_PIT) {
+            if (comm == GOTO_FUNC || comm == MODE_SENSE) {
 
                 if (bhv.size() > index + 1) {
 

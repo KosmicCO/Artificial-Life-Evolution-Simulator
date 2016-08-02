@@ -17,15 +17,11 @@ public class TerrainGenerator {
     
     public final static double FOOD_SPAWN_RATE = 0.02;
     
-    public static void main(String[] args) {
-        
-        generate(7, 6);
-    }
-    
-    public static Terrain generate(int size, int seed){
+    public static Terrain generate(int size, double seed){
         
         int[][] map = new int[size][size];
         Noise n = new Noise(1.0);
+        n.seed = seed;
         
         for (int i = 0; i < size; i++) {
             

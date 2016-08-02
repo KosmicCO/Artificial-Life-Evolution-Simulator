@@ -89,9 +89,42 @@ public class Creature {
             this.energy = maxStore;
         }
     }
-
-    public void update() {
-
+    
+    public void deleteCell(Cell ce){
+        
+        if(ce.getCellType() >= 4 && ce.getCellType() < 8){
+            
+            usedCells[ce.getCellType() - 4]--;
+        }
+        
+        if(ce.getCellType() == 11){
+            
+            usedCells[4]--;
+        }
+        
+        modeCells.remove(ce);
+        cells.remove(ce);
+        
+        cellMap[ce.getX()][ce.getY()] = null;
+        maxStore -= ce.getMaxStore();
+        checkVitality();
+    }
+    
+    public void checkVitality(){
+        
+        if(maxStore < energy){
+            
+            energy = maxStore;
+        }
+        
+        if(energy <= 0){
+            
+            //DIE
+        }
+    }
+    
+    public void update(){
+        
         behaviors.get(mode).step();
     }
 
