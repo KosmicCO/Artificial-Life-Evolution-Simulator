@@ -398,7 +398,11 @@ public class Terrain {
 
         for (Creature cre : population) {
 
-            cre.draw(ORIGIN);
+            cre.draw(ORIGIN, getZoom());
         }
+    }
+    
+    public void kill(Creature cr){
+        
     }
 }
