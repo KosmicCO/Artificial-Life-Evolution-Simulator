@@ -310,6 +310,12 @@ public class Terrain {
         return nutrientsGained;
     }
 
+    /**
+     * Returns the nutrients gained from consuming a local cell in the vicinity of the creature
+     * 
+     * @param hunters   List of hunter cells from the hunting creature
+     * @return  The nutrients gained by consuming a local cell
+     */
     public int hunt(List<Cell> hunters) {
         int nutrientsGained = 0;
         for (Cell ce : hunters) {
@@ -331,6 +337,12 @@ public class Terrain {
         return nutrientsGained;
     }
 
+    
+    /**
+     * Spawns a new child if two reproducing cells are adjacent
+     * 
+     * @param cr    The creature which is checking if reproduction is possible
+     */
     public void reproduce(Creature cr){
         List<Cell> reproductionCells = cr.getModeCells();
         for(Cell ce : reproductionCells){
@@ -350,6 +362,13 @@ public class Terrain {
         }
     }
     
+    
+    /**
+     * Returns true if the creature is entirely over a pit
+     * 
+     * @param cr    Creature to be checked
+     * @return  whether or not the creature is over a pit
+     */
     public boolean overPit(Creature cr){
         boolean toFall = true;
         for(int i = 0; i < cr.getCellMap().length; i++){
@@ -364,6 +383,11 @@ public class Terrain {
         return toFall;
     }
     
+    /**
+     * Removes a creature from the population
+     * 
+     * @param cr creature to be removed from the map
+     */
     public void kill(Creature cr){
         population.remove(cr);
     }
@@ -435,9 +459,5 @@ public class Terrain {
 
             cre.draw(ORIGIN, getZoom());
         }
-    }
-    
-    public void kill(Creature cr){
-        
     }
 }
