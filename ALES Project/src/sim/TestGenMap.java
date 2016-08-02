@@ -88,7 +88,7 @@ public class TestGenMap {
             lca.add(new Creature(interpret(new Chromosome(g.get(i))), beh, 0, null, 0, 0));
         }
 
-        Terrain t = TerrainGenerator.generate(250, 250);
+        Terrain t = TerrainGenerator.generate(250, Math.random());
 
         for (Creature c : lca) {
             
