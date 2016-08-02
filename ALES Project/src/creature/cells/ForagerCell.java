@@ -19,7 +19,7 @@ public class ForagerCell extends Cell {
      */
     public ForagerCell(int x, int y) {
 
-        super(2, 4, 1, x, y);
+        super(2, 10, 1, x, y);
     }
 
     @Override

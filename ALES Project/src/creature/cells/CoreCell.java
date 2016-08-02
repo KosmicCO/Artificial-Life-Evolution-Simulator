@@ -20,7 +20,7 @@ public class CoreCell extends Cell {
      */
     public CoreCell(int x, int y) {
 
-        super(1, 6, 4, x, y);
+        super(1, 20, 4, x, y);
     }
 
     @Override

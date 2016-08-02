@@ -22,8 +22,11 @@ import util.Vec2;
 public class Creature {
 
     public static final int SIDE_LENGTH = 21;
-
+    public static int energyCostPerHunt = 4;
+    public static int energyCostPerForage = 2;
+    public static int energyCostPerRepro = 10;
     //USER VARIABLES ABOVE
+            
     public static final int HUNT = 0;
     public static final int REPRODUCE = 1;
     public static final int FORAGE = 2;
@@ -234,8 +237,16 @@ public class Creature {
     }
 
     public void doModeAction() {
-
-        //this refers to terrain for energy consumption
+        if (mode==HUNT){
+            energy += currentT.hunt(modeCells) - energyCostPerHunt; 
+        }
+        else if (mode==FORAGE){
+             energy += currentT.forage(modeCells) - energyCostPerForage;
+        }
+        else if (mode == REPRODUCE){
+            currentT.reproduce(this);
+            energy -= energyCostPerRepro;
+        }
     }
 
     /**

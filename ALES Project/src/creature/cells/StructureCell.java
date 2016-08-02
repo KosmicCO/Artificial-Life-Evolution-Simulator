@@ -19,7 +19,7 @@ public class StructureCell extends Cell {
      */
     public StructureCell(int x, int y) {
 
-        super(4, 2, 1, x, y);
+        super(4, 5, 1, x, y);
     }
 
     @Override

@@ -127,7 +127,6 @@ public class Terrain {
                 cr.setPosX(newX);
             }
         }
-
     }
 
     public void update() {
@@ -335,8 +334,11 @@ public class Terrain {
                 boolean inBounds = newX < width && newY < height && newX >= 0 && newY >= 0;
                 if (inBounds && prey != null) {
                     nutrientsGained += (int) (hunterYield * prey.getMaxStore());
-                    Creature victim = prey.getCreature();
-                    victim.deleteCell(prey);
+                    prey.damage();
+                    if(prey.getHp() <= 0){
+                        Creature victim = prey.getCreature();
+                        victim.deleteCell(prey);
+                    }
                 }
             }
         }
