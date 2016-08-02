@@ -21,6 +21,9 @@ import utility.Mapping;
  */
 public class Terrain {
 
+    public static int nutrientsPerFood = 1;
+    public static double hunterYield = 0.60;
+
     public static Terrain currentT;
 
     private final static Vec2 ORIGIN = new Vec2(-500, -250);
@@ -42,8 +45,9 @@ public class Terrain {
     }
 
     /**
-     * Adds a creature to the terrain-managed list of creatures, or population. Creatures can only be visualized if they are added to the population.
-     * 
+     * Adds a creature to the terrain-managed list of creatures, or population.
+     * Creatures can only be visualized if they are added to the population.
+     *
      * @param c the creature to be added to the population
      */
     public void addCreature(Creature c) {
@@ -135,10 +139,11 @@ public class Terrain {
     }
 
     /**
-     * Determines if a creature can be moved in a given direction, and if so, updates the creature's absolute position accordingly.
-     * 
+     * Determines if a creature can be moved in a given direction, and if so,
+     * updates the creature's absolute position accordingly.
+     *
      * @param direction the direction in which Creature cr needs to move
-     * @param cr    the creature to move
+     * @param cr the creature to move
      */
     public void move(int direction, Creature cr) {
         boolean blocked = false;
@@ -154,7 +159,7 @@ public class Terrain {
                     if (newAbsX >= width || newAbsY >= height || newAbsX < 0 || newAbsY < 0) {
                         blocked = true;
                     } else if (environment[newAbsX][newAbsY] == 2) {
-                            blocked = true;
+                        blocked = true;
                     }
                     Cell found = cellAtAbsPos(c.getX() + cr.getPosX() + deltaX, c.getY() + cr.getPosY() + deltaY);
                     if (found != null && !found.getCreature().equals(cr)) {
@@ -201,11 +206,13 @@ public class Terrain {
         return found;
     }
 
-    
     /**
-     * Adds a newly generated creature to the map in a randomly assigned position. If all of the 20 attempts to find a position for the creature fail to locate an empty slot, then Creature will be added to the map off-screen
-     * 
-     * @param child     The given reproduced creature to be added to the map
+     * Adds a newly generated creature to the map in a randomly assigned
+     * position. If all of the 20 attempts to find a position for the creature
+     * fail to locate an empty slot, then Creature will be added to the map
+     * off-screen
+     *
+     * @param child The given reproduced creature to be added to the map
      */
     public void spawn(Creature child) {
         //boolean inMap = false;
@@ -241,13 +248,99 @@ public class Terrain {
         addCreature(child);
     }
 
-    
     /**
-     * Returns the cell at a given position, designated by x and y coordinate parameters
-     * 
+     * Returns the amount of nutrients gained by consuming the food directly
+     * adjacent to the creature's forager cells.
+     *
+     * @param cr The creature gaining nutrients.
+     * @return The amount of nutrients gained from consuming the food around the
+     * creature.
+     */
+    public int forage(Creature cr) {
+        int nutrientsGained = 0;
+        List<Cell> foragers = cr.getModeCells();
+        for (Cell ce : foragers) {
+            int x = ce.getX() + cr.getPosX();
+            int y = ce.getY() + cr.getPosY();
+            if (environment[x][y] == 1) {
+                nutrientsGained += nutrientsPerFood;
+                environment[x][y] = 0;
+            }
+            for (int k = 0; k < 4; k++) {
+                int newX = x + Mapping.ADX4[k];
+                int newY = y + Mapping.ADY4[k];
+                boolean inBounds = newX < width && newY < height && newX >= 0 && newY >= 0;
+                if (inBounds && environment[newX][newY] == 1) {
+                    nutrientsGained += nutrientsPerFood;
+                    environment[newX][newY] = 0;
+                }
+            }
+        }
+        return nutrientsGained;
+    }
+
+    /**
+     * Returns the amount of nutrients gained by consuming the food directly
+     * adjacent to the creature's forager cells.
+     *
+     * @param forageCells The forage cells in the creature gaining nutrients.
+     * @return The amount of nutrients gained from consuming the food around the
+     * creature.
+     */
+    public int forage(List<Cell> forageCells) {
+        int nutrientsGained = 0;
+        for (Cell ce : forageCells) {
+            Creature cr = ce.getCreature();
+            int x = ce.getX() + cr.getPosX();
+            int y = ce.getY() + cr.getPosY();
+            if (environment[x][y] == 1) {
+                nutrientsGained += nutrientsPerFood;
+                environment[x][y] = 0;
+            }
+            for (int k = 0; k < 4; k++) {
+                int newX = x + Mapping.ADX4[k];
+                int newY = y + Mapping.ADY4[k];
+                boolean inBounds = newX < width && newY < height && newX >= 0 && newY >= 0;
+                if (inBounds && environment[newX][newY] == 1) {
+                    nutrientsGained += nutrientsPerFood;
+                    environment[newX][newY] = 0;
+                }
+            }
+        }
+        return nutrientsGained;
+    }
+
+    public int hunt(List<Cell> hunters) {
+        int nutrientsGained = 0;
+        for (Cell ce : hunters) {
+            Creature cr = ce.getCreature();
+            int x = ce.getX() + cr.getPosX();
+            int y = ce.getY() + cr.getPosY();
+            if (cellAtAbsPos(x, y) != null) {
+                nutrientsGained += (int) (hunterYield * cellAtAbsPos(x, y).getMaxStore());
+                /*DELETE CONSUMED CELL*/
+            }
+            for (int k = 0; k < 4; k++) {
+                int newX = x + Mapping.ADX4[k];
+                int newY = y + Mapping.ADY4[k];
+                boolean inBounds = newX < width && newY < height && newX >= 0 && newY >= 0;
+                if (inBounds && cellAtAbsPos(x, y) != null) {
+                    nutrientsGained += (int) (hunterYield * cellAtAbsPos(x, y).getMaxStore());
+                    /*DELETE CONSUMED CELL*/
+                }
+            }
+        }
+        return nutrientsGained;
+    }
+
+    /**
+     * Returns the cell at a given position, designated by x and y coordinate
+     * parameters
+     *
      * @param x The x-coordinate of the position of inquiry
      * @param y The y-coordinate of the position of inquiry
-     * @return The cell found at the given coordinates, or null if no cell is found.
+     * @return The cell found at the given coordinates, or null if no cell is
+     * found.
      */
     public Cell cellAtAbsPos(int x, int y) {
         List<Creature> creaturesAtPos = new ArrayList<>();
@@ -267,6 +360,10 @@ public class Terrain {
             }
         }
         return null;
+    }
+
+    public static void setNutrientsPerFood(int nutrientsPerFood) {
+        Terrain.nutrientsPerFood = nutrientsPerFood;
     }
 
     private static Color4 getTerColor(int type) {
