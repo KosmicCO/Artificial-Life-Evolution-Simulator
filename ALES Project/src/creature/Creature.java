@@ -50,6 +50,8 @@ public class Creature {
         this.cellMap = cellMap;
         cells = new ArrayList();
         this.behaviors = behaviors;
+        modeCells = new ArrayList();
+        changeMode(0);
 
         for (Behavior b : behaviors) {
 
