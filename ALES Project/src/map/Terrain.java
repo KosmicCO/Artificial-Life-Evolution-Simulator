@@ -240,7 +240,7 @@ public class Terrain {
                         if (atLoc != null) {
                             empty = false;
                         }
-                        if (newCellX < 0 || newCellY < 0 || newCellX >= width || newCellY >= height || environment[newCellX][newCellY] != 0) {
+                        if (newCellX < 0 || newCellY < 0 || newCellX >= width || newCellY >= height || environment[newCellX][newCellY] > 1) {
                             empty = false;
                         }
                     }
@@ -346,22 +346,27 @@ public class Terrain {
      */
     public int hunt(List<Cell> hunters) {
         int nutrientsGained = 0;
-        for (int i = hunters.size() - 1; i >= 0; i--) {
+        if (hunters.size() <= 0) {
+            return 0;
+        }
+        for (int i = 0; i < hunters.size(); i++) {
             Cell ce = hunters.get(i);
             Creature cr = ce.getCreature();
             int x = ce.getX() + cr.getPosX();
             int y = ce.getY() + cr.getPosY();
-            for (int k = 0; k < 4; k++) {
-                int newX = x + Mapping.ADX4[k];
-                int newY = y + Mapping.ADY4[k];
-                Cell prey = cellAtAbsPos(newX, newY);
-                boolean inBounds = newX < width && newY < height && newX >= 0 && newY >= 0;
-                if (inBounds && prey != null) {
-                    nutrientsGained += (int) (hunterYield * prey.getMaxStore());
-                    prey.damage();
-                    if (prey.getHp() <= 0) {
-                        Creature victim = prey.getCreature();
-                        victim.deleteCell(prey);
+            for (int count = -2; count <= 2; count++) {
+                int newX = x + count;
+                for (int j = -2; j <= 2; j++) {
+                    int newY = y + j;
+                    Cell prey = cellAtAbsPos(newX, newY);
+                    boolean inBounds = newX < width && newY < height && newX >= 0 && newY >= 0;
+                    if (inBounds && prey != null) {
+                        nutrientsGained += (int) (hunterYield * prey.getMaxStore());
+                        prey.damage();
+                        if (prey.getHp() <= 0) {
+                            Creature victim = prey.getCreature();
+                            victim.deleteCell(prey);
+                        }
                     }
                 }
             }
@@ -494,6 +499,16 @@ public class Terrain {
         }
 
         return null;
+    }
+
+    public int[][] enviroSegment(Vec2 position) {
+        int[][] seg = new int[Creature.SIDE_LENGTH][Creature.SIDE_LENGTH];
+        for (int i = 0; i < 0 + Creature.SIDE_LENGTH; i++) {
+            for (int j = 0; j < 0 + Creature.SIDE_LENGTH; j++) {
+                seg[i][j] = environment[i+(int)position.x][j+(int)position.y];
+            }
+        }
+        return seg;
     }
 
     public void draw() {
