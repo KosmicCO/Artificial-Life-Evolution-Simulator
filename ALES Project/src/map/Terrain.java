@@ -233,7 +233,7 @@ public class Terrain {
                         if (atLoc != null) {
                             empty = false;
                         }
-                        if (newCellX < 0 || newCellY < 0 || newCellX >= width || newCellY >= height || environment[newCellX][newCellY] != 0) {
+                        if (newCellX < 0 || newCellY < 0 || newCellX >= width || newCellY >= height || environment[newCellX][newCellY] > 1) {
                             empty = false;
                         }
                     }
