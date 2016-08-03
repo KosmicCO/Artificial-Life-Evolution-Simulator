@@ -25,6 +25,9 @@ public class Creature {
     public static int energyCostPerHunt = 4;
     public static int energyCostPerForage = 2;
     public static int energyCostPerRepro = 10;
+    
+    public static double reproductionThreshold = 0.8;
+    public static double huntThreshold = 0.4;
     //USER VARIABLES ABOVE
             
     public static final int HUNT = 0;
@@ -184,10 +187,24 @@ public class Creature {
             
             doModeAction();
         }
-        
+        if(getEnergyMode()!=mode){
+            changeMode(getEnergyMode());
+        }
         behaviors.get(mode).step();
         energy -= energyPerTick;
         checkEnergy();
+    }
+    
+    private int getEnergyMode(){
+        if(energy>maxStore*reproductionThreshold){
+            return REPRODUCE;
+        }
+        else if (energy>maxStore*huntThreshold){
+            return HUNT;
+        }
+        else{
+            return FORAGE;
+        }
     }
 
     private List<Cell> findType(int type) {
