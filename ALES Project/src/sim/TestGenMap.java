@@ -20,6 +20,8 @@ import map.TerrainGenerator;
  */
 public class TestGenMap {
 
+    
+    
     public static void makeTestMap() {
 
         List<List<Boolean>> g = new ArrayList();
@@ -72,7 +74,7 @@ public class TestGenMap {
 
             t.spawn(c);
         }
-
+        
         Terrain.currentT = t;
     }
 }
