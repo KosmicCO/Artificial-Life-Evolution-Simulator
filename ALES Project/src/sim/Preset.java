@@ -78,4 +78,5 @@ public class Preset {
         Chromosome.variance = lenVariance;
         StructureInterpreter.setWeightedGenome(wGenome);
     }
+}
  
