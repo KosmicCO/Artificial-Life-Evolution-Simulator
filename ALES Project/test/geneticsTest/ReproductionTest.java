@@ -88,7 +88,7 @@ public class ReproductionTest {
             System.out.println("");
         }
         System.out.println("");
-        Creature mother = new Creature(map, null, 5, moGene, 0, 0);
+        Creature mother = new Creature(map, 5, moGene, 0, 0);
         Cell[][] mapa = StructureInterpreter.interpret(faGene.get(0));
         for (Cell[] c : mapa) {
             for (int i = 0; i < c.length; i++) {
@@ -101,7 +101,7 @@ public class ReproductionTest {
             System.out.println("");
         }
         System.out.println("");
-        Creature father = new Creature(mapa, null, 5, faGene, 0, 0);
+        Creature father = new Creature(mapa, 5, faGene, 0, 0);
         Creature child = mother.reproduce(father);
         for (Cell[] c : child.getCellMap()) {
             for (int i = 0; i < c.length; i++) {

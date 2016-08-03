@@ -5,10 +5,7 @@
  */
 package sim;
 
-import creature.Behavior;
 import creature.Creature;
-import static creature.Creature.SIDE_LENGTH;
-import creature.genetics.BehaviorInterpreter;
 import creature.genetics.Chromosome;
 import creature.genetics.StructureInterpreter;
 import java.util.ArrayList;
@@ -28,16 +25,6 @@ public class TestGenMap {
         List<List<Boolean>> g = new ArrayList();
         List<Creature> lca = new ArrayList();
         int deNum = 100;
-        List<Integer> w = new ArrayList<>();
-
-        int sum = 0;
-        for (int i = 0; i < 8; i++) {
-            int r = (int) (Math.random() * 60);
-            w.add(r);
-            sum += r;
-        }
-        w.add(256 - sum);
-        System.out.println(w + "\n");
 
         List<Integer> o = new ArrayList<>();
         int bum = 0;
@@ -51,7 +38,6 @@ public class TestGenMap {
         System.out.println(o + "\n");
 
         StructureInterpreter.setWeightedGenome(o);
-        BehaviorInterpreter.setWeightedGenome(w);
         for (int i = 0; i < deNum; i++) {
             List<Boolean> chr = new ArrayList<>();
             for (int j = 0; j < 444; j++) {
@@ -64,8 +50,6 @@ public class TestGenMap {
             }
             g.add(chr);
 
-            List<Behavior> beh = new ArrayList();
-
             for (int j = 0; j < 3; j++) {
 
                 List<Boolean> b = new ArrayList();
@@ -74,14 +58,12 @@ public class TestGenMap {
                     double random = Math.random();
                     b.add(random < 0.5);
                 }
-
-                beh.add(BehaviorInterpreter.interpret(new Chromosome(b)));
             }
             List<Chromosome> gene = new ArrayList<>();
             for (int count = 0; count < g.size(); count++) {
                 gene.add(new Chromosome(g.get(count)));
             }
-            lca.add(new Creature(interpret(new Chromosome(g.get(i))), beh, 100000, gene, 0, 0));
+            lca.add(new Creature(interpret(new Chromosome(g.get(i))), 100000, gene, 0, 0));
         }
 
         Terrain t = TerrainGenerator.generate(250, Math.random());
