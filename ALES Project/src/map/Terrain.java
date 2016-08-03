@@ -25,6 +25,8 @@ public class Terrain {
     public static int nutrientsPerFood = 100;
     public static double hunterYield = 0.60;
 
+    //USER VARIABLES ABOVE
+    
     public static Terrain currentT;
 
     public final static Vec2 ORIGIN = new Vec2(-500, -250);
@@ -33,7 +35,7 @@ public class Terrain {
     public final static int WALL = 2;
     public final static int PIT = 3;
 
-    public final int[][] environment; //JUST FOR TESTING; MAKE PRIVATE AGAIN
+    private final int[][] environment; 
     private int width;
     private int height;
     private List<Creature> population;
