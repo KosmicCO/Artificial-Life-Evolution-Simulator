@@ -16,6 +16,8 @@ public class NewBehavior {
     public static int energyPerDetect = -4;
     public static int energyPerMove = -8;
     
+    //USER VARIABLES ABOVE
+    
     private static void move(int dir, Creature cre) {
         
         if (cre.getUsedCells()[dir] > 0) {

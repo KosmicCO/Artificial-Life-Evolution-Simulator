@@ -14,8 +14,8 @@ import java.util.List;
  */
 public class Chromosome {
 
-    public static double MUTATION_FACTOR = 0.007;
-    public static int VARIANCE = 3;
+    public static double mutationFactor = 0.007;
+    public static int variance = 3;
     //USER VARIABLES END HERE
     
     private List<Boolean> gene;
@@ -106,16 +106,16 @@ public class Chromosome {
 
         for (int m = 0; m < child.size(); m++) {
             double c = Math.random();
-            if (c <= MUTATION_FACTOR) {
+            if (c <= mutationFactor) {
                 boolean switched = child.remove(m);
                 boolean ins = !switched;
                 child.add(m, ins);
             }
         }
 
-        int rand = (int) (Math.random() * ((2 * VARIANCE) + (larger.getLength() - shortSize)));
-        rand -= ((larger.getLength() - shortSize) + VARIANCE);
-        if (rand >= 0 || child.size() < VARIANCE) {
+        int rand = (int) (Math.random() * ((2 * variance) + (larger.getLength() - shortSize)));
+        rand -= ((larger.getLength() - shortSize) + variance);
+        if (rand >= 0 || child.size() < variance) {
             for (int i = 0; i < rand; i++) {
                 double random = Math.random();
                 if (random < 0.5) {
