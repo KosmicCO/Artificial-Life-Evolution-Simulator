@@ -7,10 +7,12 @@ package sim;
 
 import sim.guis.MainMenu;
 import engine.Core;
+import engine.Input;
 import graphics.Window2D;
 import gui.GUIController;
 import gui.TypingManager;
 import static map.Terrain.currentT;
+import org.lwjgl.input.Keyboard;
 import static sim.TestGenMap.makeTestMap;
 import util.Color4;
 
@@ -37,7 +39,7 @@ public class Start {
         Core.is3D = false;
 
         Core.init();
-
+        
         Window2D.background = Color4.BLACK;
 
         //testing graphics start
