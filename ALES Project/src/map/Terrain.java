@@ -7,11 +7,10 @@ package map;
 
 import creature.cells.Cell;
 import creature.Creature;
+import static creature.Creature.SIDE_LENGTH;
 import graphics.Graphics2D;
-import gui.GUIController;
 import java.util.ArrayList;
 import java.util.List;
-import sim.guis.Simulation;
 import static sim.guis.Simulation.getZoom;
 import util.Color4;
 import util.Vec2;
@@ -57,9 +56,9 @@ public class Terrain {
     public void addCreature(Creature c) {
         population.add(c);
     }
-    
-    public boolean isAlive(Creature c){
-        
+
+    public boolean isAlive(Creature c) {
+
         return population.contains(c);
     }
 
@@ -453,7 +452,27 @@ public class Terrain {
         population.remove(cr);
     }
 
-    /**
+   
+    
+    public List<Creature> creaturesInSec(Vec2 pos, Vec2 dim){
+        
+        List<Creature> cis = new ArrayList();
+        
+        pos = pos.subtract(new Vec2(SIDE_LENGTH));
+        dim = dim.add(new Vec2(SIDE_LENGTH));
+        
+        for(Creature c : population){
+            
+            if(pos.x <= c.getPosX() && c.getPosX() < pos.x + dim.x && pos.y <= c.getPosY() && c.getPosY() < pos.y + dim.y){
+                
+                cis.add(c);
+            }
+        }
+        
+        return cis;
+    }
+    
+     /**
      * Returns the cell at a given position, designated by x and y coordinate
      * parameters
      *
@@ -463,7 +482,8 @@ public class Terrain {
      * found.
      */
     public Cell cellAtAbsPos(int x, int y) {
-        List<Creature> creaturesAtPos = new ArrayList<>();
+        
+        List<Creature> creaturesAtPos = new ArrayList();
         for (Creature c : population) {
             int xDiff = x - c.getPosX();
             int yDiff = y - c.getPosY();
@@ -473,6 +493,7 @@ public class Terrain {
                 }
             }
         }
+        
         for (Creature c : creaturesAtPos) {
             Cell found = c.cellAtRelPos(x - c.getPosX(), y - c.getPosY());
             if (found != null) {
@@ -503,14 +524,22 @@ public class Terrain {
         return null;
     }
 
-    public int[][] enviroSegment(Vec2 position) {
-        int[][] seg = new int[Creature.SIDE_LENGTH][Creature.SIDE_LENGTH];
-        for (int i = 0; i < 0 + Creature.SIDE_LENGTH; i++) {
-            for (int j = 0; j < 0 + Creature.SIDE_LENGTH; j++) {
-                seg[i][j] = environment[i+(int)position.x][j+(int)position.y];
+    public void drawSection(Vec2 pos, Vec2 from, int s, int zoom) {
+
+        for (int i = 0; i < s; i++) {
+            for (int j = 0; j < s; j++) {
+
+                int t = WALL;
+                if ((i + (int) from.x) >= 0 && (j + (int) from.y) >= 0 && (i + (int) from.x) < width && (j + (int) from.y) < height) {
+                    t = environment[(i + (int) from.x)][j + (int) from.y];
+                }
+
+                if (t != 0) {
+                    
+                    Graphics2D.fillRect(pos.add(new Vec2(zoom * i, zoom * j)), new Vec2(zoom), getTerColor(t));
+                }
             }
         }
-        return seg;
     }
 
     public void draw() {
