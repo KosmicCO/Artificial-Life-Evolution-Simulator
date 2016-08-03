@@ -24,11 +24,13 @@ public class Creature {
     public static int energyCostPerHunt = 4;
     public static int energyCostPerForage = 2;
     public static int energyCostPerRepro = 10;
-    
+
+    public static int childStarterFood = 2000;
+
     public static double reproductionThreshold = 0.8;
     public static double huntThreshold = 0.4;
     //USER VARIABLES ABOVE
-            
+
     public static final int HUNT = 0;
     public static final int REPRODUCE = 1;
     public static final int FORAGE = 2;
@@ -41,12 +43,12 @@ public class Creature {
     private int posX;
     private int posY;
     private int curDir;
-    
+
     private List<Cell> modeCells;
     private int[] usedCells; //up right down left detector
     private int mode;
 //    private boolean modeToggle;
-    
+
     private int maxStore;
     private int energy;
     private int energyPerTick;
@@ -64,7 +66,6 @@ public class Creature {
 //
 //            b.setCreature(this);
 //        }
-
         this.genes = genes;
         maxStore = 0;
         energyPerTick = 0;
@@ -95,7 +96,7 @@ public class Creature {
                 }
             }
         }
-        
+
         changeMode(FORAGE);
         this.energy = energy;
 
@@ -104,7 +105,7 @@ public class Creature {
             this.energy = maxStore;
         }
     }
-    
+
     public void deleteCell(Cell ce) {
 
         if (ce.getCellType() >= 4 && ce.getCellType() < 8) {
@@ -127,15 +128,15 @@ public class Creature {
     }
 
     public int getCurDir() {
-        
+
         return curDir;
     }
 
     public void setCurDir(int curDir) {
-        
+
         this.curDir = curDir;
     }
-    
+
 //    public void toggleMode(){
 //        
 //        modeToggle = !modeToggle;
@@ -150,9 +151,8 @@ public class Creature {
 //        
 //        this.modeToggle = modeToggle;
 //    }
-    
-    public void addEnergy(int en){
-        
+    public void addEnergy(int en) {
+
         energy += en;
     }
 
@@ -194,23 +194,21 @@ public class Creature {
 
     public void update() {
 
-        if(getEnergyMode()!=mode){
+        if (getEnergyMode() != mode) {
             changeMode(getEnergyMode());
         }
-        
+
         NewBehavior.step(this);
         energy -= energyPerTick;
         checkEnergy();
     }
-    
-    private int getEnergyMode(){
-        if(energy>maxStore*reproductionThreshold){
+
+    private int getEnergyMode() {
+        if (energy > maxStore * reproductionThreshold) {
             return REPRODUCE;
-        }
-        else if (energy>maxStore*huntThreshold){
+        } else if (energy > maxStore * huntThreshold) {
             return HUNT;
-        }
-        else{
+        } else {
             return FORAGE;
         }
     }
@@ -233,8 +231,6 @@ public class Creature {
     public List<Cell> getCells() {
         return cells;
     }
-    
-    
 
     private void changeMode(int mode) {
 
@@ -299,22 +295,30 @@ public class Creature {
             Graphics2D.fillRect(ScreenAbs.add(new Vec2((c.getX() + posX) * zoom, (c.getY() + posY) * zoom)), new Vec2(zoom), Cell.cellColor(c.getCellType()));
         }
     }
+    
+    public void drawNoPos(Vec2 ScreenAbs, int zoom) {
+
+        for (Cell c : cells) {
+
+            Graphics2D.fillRect(ScreenAbs.add(new Vec2(c.getX() * zoom, c.getY() * zoom)), new Vec2(zoom), Cell.cellColor(c.getCellType()));
+        }
+    }
 
     public void doModeAction() {
-        
+
         switch (mode) {
-            
+
             case HUNT:
-                
+
                 this.addEnergy(currentT.hunt(modeCells) - energyCostPerHunt);
                 break;
-                
+
             case FORAGE:
                 this.addEnergy(currentT.forage(modeCells) - energyCostPerForage);
                 break;
-                
+
             case REPRODUCE:
-                
+
                 currentT.reproduce(this);
                 energy -= energyCostPerRepro;
                 break;
@@ -359,7 +363,7 @@ public class Creature {
 //
 //            bhvs.add(BehaviorInterpreter.interpret(childGene.get(i)));
 //        }
-        Creature child = new Creature(childCellMap, /*bhvs,*/ 0, childGene, 0, 0);
+        Creature child = new Creature(childCellMap, childStarterFood, childGene, 0, 0);
         return child;
     }
 }

@@ -5,6 +5,9 @@
  */
 package sim.guis;
 
+import creature.Creature;
+import creature.cells.Cell;
+import engine.Input;
 import gui.components.GUIButton;
 import gui.components.GUIPanel;
 import gui.types.ComponentInputGUI;
@@ -14,6 +17,7 @@ import org.newdawn.slick.Color;
 import util.Vec2;
 import static utility.GUIs.getColor;
 import static gui.TypingManager.typing;
+import static map.Terrain.ORIGIN;
 import static sim.Start.setRunning;
 import static utility.GUIs.BUTTON_SIZE;
 import static utility.GUIs.nextPlace;
@@ -27,6 +31,7 @@ public class Simulation extends ComponentInputGUI{
     private static int zoom = 2;
     private Vec2 start = new Vec2(0, -150);
     private MainMenu parent;
+    private Creature toDraw;
     
     public Simulation(String n, MainMenu parent) {
         
@@ -69,7 +74,30 @@ public class Simulation extends ComponentInputGUI{
                 parent.start();
             
             case "plane":
+                
+                Cell c = currentT.cellAtAbsPos((int) (Input.getMouse().x - ORIGIN.x) / 2, (int) (Input.getMouse().y - ORIGIN.y) / 2);
+                System.out.println(Input.getMouse() + " " + (Input.getMouse().subtract(ORIGIN)).divide(2));
+                if(c != null){
+                    
+                    toDraw = c.getCreature();
+                }
                 break;
+        }
+    }
+    
+    public void setInspect(Creature c){
+        
+        toDraw = c;
+    }
+    
+    @Override
+    public void update(){
+        
+        super.update();
+        
+        if(!currentT.isAlive(toDraw)){
+            
+            toDraw = null;
         }
     }
 
@@ -78,6 +106,11 @@ public class Simulation extends ComponentInputGUI{
         
         super.draw();
         currentT.draw();
+        
+        if(toDraw != null){
+            
+            toDraw.drawNoPos(Vec2.ZERO, 8);
+        }
     }
     
     
@@ -87,6 +120,4 @@ public class Simulation extends ComponentInputGUI{
 
         return null;
     }
-    
-    
 }

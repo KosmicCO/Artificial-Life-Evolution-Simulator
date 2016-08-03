@@ -8,8 +8,10 @@ package map;
 import creature.cells.Cell;
 import creature.Creature;
 import graphics.Graphics2D;
+import gui.GUIController;
 import java.util.ArrayList;
 import java.util.List;
+import sim.guis.Simulation;
 import static sim.guis.Simulation.getZoom;
 import util.Color4;
 import util.Vec2;
@@ -26,7 +28,7 @@ public class Terrain {
 
     public static Terrain currentT;
 
-    private final static Vec2 ORIGIN = new Vec2(-500, -250);
+    public final static Vec2 ORIGIN = new Vec2(-500, -250);
 
     public final static int FOOD = 1;
     public final static int WALL = 2;
@@ -52,6 +54,11 @@ public class Terrain {
      */
     public void addCreature(Creature c) {
         population.add(c);
+    }
+    
+    public boolean isAlive(Creature c){
+        
+        return population.contains(c);
     }
 
     public void moveCreature(int direction, Creature cr) {
@@ -339,7 +346,7 @@ public class Terrain {
      */
     public int hunt(List<Cell> hunters) {
         int nutrientsGained = 0;
-        for (int i = hunters.size()-1; i>=0; i--) {
+        for (int i = hunters.size() - 1; i >= 0; i--) {
             Cell ce = hunters.get(i);
             Creature cr = ce.getCreature();
             int x = ce.getX() + cr.getPosX();
@@ -395,7 +402,7 @@ public class Terrain {
                         if (!p.equals(cr)) {
                             Creature child = cr.reproduce(p);
                             spawn(child);
-                            System.out.println("New Creature at x: " + child.getPosX() + ", y: " + child.getPosY());
+//                            System.out.println("New Creature at x: " + child.getPosX() + ", y: " + child.getPosY());
                         }
                     }
                 }
