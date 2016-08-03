@@ -295,7 +295,20 @@ public class Creature {
             Graphics2D.fillRect(ScreenAbs.add(new Vec2((c.getX() + posX) * zoom, (c.getY() + posY) * zoom)), new Vec2(zoom), Cell.cellColor(c.getCellType()));
         }
     }
-    
+
+    public void drawCut(Vec2 start, Vec2 end, Vec2 ScreenAbs, int zoom) {
+
+        for (Cell c : cells) {
+
+            Vec2 cPos = new Vec2(c.getX() + posX, c.getY() + posY);
+
+            if (cPos.containedBy(start, end)) {
+
+                Graphics2D.fillRect(ScreenAbs.add(new Vec2(c.getX() * zoom, c.getY() * zoom)), new Vec2(zoom), Cell.cellColor(c.getCellType()));
+            }
+        }
+    }
+
     public void drawNoPos(Vec2 ScreenAbs, int zoom) {
 
         for (Cell c : cells) {
