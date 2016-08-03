@@ -79,4 +79,3 @@ public class Preset {
         StructureInterpreter.setWeightedGenome(wGenome);
     }
  
-}
