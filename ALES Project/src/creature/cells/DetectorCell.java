@@ -19,7 +19,7 @@ public class DetectorCell extends Cell{
      */
     public DetectorCell(int x, int y) {
         
-        super(2, 50, 1, x, y);
+        super(2, 500, 1, x, y);
     }
 
     @Override

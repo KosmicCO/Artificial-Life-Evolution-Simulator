@@ -23,7 +23,7 @@ public class MotorCell extends Cell {
      */
     public MotorCell(int direction, int x, int y) {
 
-        super(3, 50, 1, x, y);
+        super(3, 250, 1, x, y);
         this.direction = direction;
     }
 
