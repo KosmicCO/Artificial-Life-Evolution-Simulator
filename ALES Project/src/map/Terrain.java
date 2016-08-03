@@ -32,7 +32,7 @@ public class Terrain {
     public final static int WALL = 2;
     public final static int PIT = 3;
 
-    private final int[][] environment;
+    public final int[][] environment; //JUST FOR TESTING; MAKE PRIVATE AGAIN
     private int width;
     private int height;
     private List<Creature> population;
@@ -292,7 +292,7 @@ public class Terrain {
      * creature.
      */
     public int forage(List<Cell> forageCells) {
-        int nutrientsGained = 0;
+        int nutrientsGained = Creature.energyCostPerForage;
         for (Cell ce : forageCells) {
             Creature cr = ce.getCreature();
             int x = ce.getX() + cr.getPosX();

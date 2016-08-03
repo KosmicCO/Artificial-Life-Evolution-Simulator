@@ -54,7 +54,7 @@ public class Creature {
         cells = new ArrayList();
         this.behaviors = behaviors;
         modeCells = new ArrayList();
-        changeMode(FORAGE);
+        
 
         for (Behavior b : behaviors) {
 
@@ -92,6 +92,7 @@ public class Creature {
             }
         }
         
+        changeMode(FORAGE);
         this.energy = energy;
 
         if (maxStore < energy) {
@@ -149,7 +150,6 @@ public class Creature {
         }
 
         if (energy <= 0) {
-            
             currentT.kill(this);
         }
     }
@@ -214,6 +214,7 @@ public class Creature {
     private void changeMode(int mode) {
 
         behaviors.get(this.mode).reset();
+        modeCells = findType(mode == FORAGE ? 2 : (mode == HUNT ? 3 : 8));
         modeToggle = false;
         this.mode = mode;
     }
@@ -282,12 +283,11 @@ public class Creature {
             
             case HUNT:
                 
-                energy += currentT.hunt(modeCells) - energyCostPerHunt;
+                this.addEnergy(currentT.hunt(modeCells) - energyCostPerHunt);
                 break;
                 
             case FORAGE:
-
-                energy += currentT.forage(modeCells) - energyCostPerForage;
+                this.addEnergy(currentT.forage(modeCells) - energyCostPerForage);
                 break;
                 
             case REPRODUCE:
