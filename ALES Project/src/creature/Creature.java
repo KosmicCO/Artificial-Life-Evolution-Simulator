@@ -6,7 +6,6 @@
 package creature;
 
 import creature.cells.Cell;
-import creature.genetics.BehaviorInterpreter;
 import creature.genetics.Chromosome;
 import creature.genetics.StructureInterpreter;
 import graphics.Graphics2D;
@@ -36,33 +35,35 @@ public class Creature {
 
     private final List<Cell> cells;
     private final Cell[][] cellMap;
-    private final List<Behavior> behaviors;
+//    private final List<Behavior> behaviors;
     private final List<Chromosome> genes;
 
     private int posX;
     private int posY;
+    private int curDir;
     
     private List<Cell> modeCells;
     private int[] usedCells; //up right down left detector
     private int mode;
-    private boolean modeToggle;
+//    private boolean modeToggle;
     
     private int maxStore;
     private int energy;
     private int energyPerTick;
 
-    public Creature(Cell[][] cellMap, List<Behavior> behaviors, int energy, List<Chromosome> genes, int x, int y) {
+    public Creature(Cell[][] cellMap, /*List<Behavior> behaviors,*/ int energy, List<Chromosome> genes, int x, int y) {
 
         this.cellMap = cellMap;
         cells = new ArrayList();
-        this.behaviors = behaviors;
+//        this.behaviors = behaviors;
         modeCells = new ArrayList();
-        
+        changeMode(FORAGE);
+        curDir = (int) (Math.random() * 4);
 
-        for (Behavior b : behaviors) {
-
-            b.setCreature(this);
-        }
+//        for (Behavior b : behaviors) {
+//
+//            b.setCreature(this);
+//        }
 
         this.genes = genes;
         maxStore = 0;
@@ -70,7 +71,7 @@ public class Creature {
         posX = x;
         posY = y;
         usedCells = new int[5];
-        modeToggle = false;
+//        modeToggle = false;
 
         for (Cell[] cellRow : cellMap) {
 
@@ -124,21 +125,31 @@ public class Creature {
         energyPerTick -= ce.getEnergy();
         checkVitality();
     }
+
+    public int getCurDir() {
+        
+        return curDir;
+    }
+
+    public void setCurDir(int curDir) {
+        
+        this.curDir = curDir;
+    }
     
-    public void toggleMode(){
-        
-        modeToggle = !modeToggle;
-    }
-
-    public boolean isModeToggle() {
-        
-        return modeToggle;
-    }
-
-    public void setModeToggle(boolean modeToggle) {
-        
-        this.modeToggle = modeToggle;
-    }
+//    public void toggleMode(){
+//        
+//        modeToggle = !modeToggle;
+//    }
+//
+//    public boolean isModeToggle() {
+//        
+//        return modeToggle;
+//    }
+//
+//    public void setModeToggle(boolean modeToggle) {
+//        
+//        this.modeToggle = modeToggle;
+//    }
     
     public void addEnergy(int en){
         
@@ -183,14 +194,11 @@ public class Creature {
 
     public void update() {
 
-        if(modeToggle){
-            
-            doModeAction();
-        }
         if(getEnergyMode()!=mode){
             changeMode(getEnergyMode());
         }
-        behaviors.get(mode).step();
+        
+        NewBehavior.step(this);
         energy -= energyPerTick;
         checkEnergy();
     }
@@ -230,9 +238,7 @@ public class Creature {
 
     private void changeMode(int mode) {
 
-        behaviors.get(this.mode).reset();
         modeCells = findType(mode == FORAGE ? 2 : (mode == HUNT ? 3 : 8));
-        modeToggle = false;
         this.mode = mode;
     }
 
@@ -347,13 +353,13 @@ public class Creature {
         }
         Cell[][] childCellMap = StructureInterpreter.interpret(childGene.get(0));
 
-        List<Behavior> bhvs = new ArrayList();
-
-        for (int i = 1; i < 4; i++) {
-
-            bhvs.add(BehaviorInterpreter.interpret(childGene.get(i)));
-        }
-        Creature child = new Creature(childCellMap, bhvs, 0, childGene, 0, 0);
+//        List<Behavior> bhvs = new ArrayList();
+//
+//        for (int i = 1; i < 4; i++) {
+//
+//            bhvs.add(BehaviorInterpreter.interpret(childGene.get(i)));
+//        }
+        Creature child = new Creature(childCellMap, /*bhvs,*/ 0, childGene, 0, 0);
         return child;
     }
 }
