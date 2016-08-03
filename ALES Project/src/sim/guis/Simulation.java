@@ -76,7 +76,6 @@ public class Simulation extends ComponentInputGUI{
             case "plane":
                 
                 Cell c = currentT.cellAtAbsPos((int) (Input.getMouse().x - ORIGIN.x) / 2, (int) (Input.getMouse().y - ORIGIN.y) / 2);
-                System.out.println(Input.getMouse() + " " + (Input.getMouse().subtract(ORIGIN)).divide(2));
                 if(c != null){
                     
                     toDraw = c.getCreature();
