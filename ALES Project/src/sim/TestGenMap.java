@@ -34,32 +34,45 @@ public class TestGenMap {
             bum += r;
         }
         o.add(256 - bum);
-        
+
         System.out.println(o + "\n");
 
         StructureInterpreter.setWeightedGenome(o);
         for (int i = 0; i < deNum; i++) {
-
-            g.add(new ArrayList());
+            List<Boolean> chr = new ArrayList<>();
             for (int j = 0; j < 444; j++) {
                 double random = Math.random();
                 if (random < 0.5) {
-                    g.get(i).add(true);
+                    chr.add(true);
                 } else {
-                    g.get(i).add(false);
+                    chr.add(false);
                 }
             }
+            g.add(chr);
 
-            lca.add(new Creature(interpret(new Chromosome(g.get(i))), /*beh,*/ 100000, null, 0, 0));
+            for (int j = 0; j < 3; j++) {
+
+                List<Boolean> b = new ArrayList();
+
+                for (int k = 0; k < 444; k++) {
+                    double random = Math.random();
+                    b.add(random < 0.5);
+                }
+            }
+            List<Chromosome> gene = new ArrayList<>();
+            for (int count = 0; count < g.size(); count++) {
+                gene.add(new Chromosome(g.get(count)));
+            }
+            lca.add(new Creature(interpret(new Chromosome(g.get(i))), 100000, gene, 0, 0));
         }
 
         Terrain t = TerrainGenerator.generate(250, Math.random());
 
         for (Creature c : lca) {
-            
+
             t.spawn(c);
         }
-        
+
         Terrain.currentT = t;
     }
 }
