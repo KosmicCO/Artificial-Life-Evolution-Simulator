@@ -25,6 +25,9 @@ public class Creature {
     public static int energyCostPerHunt = 4;
     public static int energyCostPerForage = 2;
     public static int energyCostPerRepro = 10;
+    
+    public static double reproductionThreshold = 0.8;
+    public static double huntThreshold = 0.4;
     //USER VARIABLES ABOVE
             
     public static final int HUNT = 0;
@@ -54,7 +57,7 @@ public class Creature {
         cells = new ArrayList();
         this.behaviors = behaviors;
         modeCells = new ArrayList();
-        changeMode(FORAGE);
+        
 
         for (Behavior b : behaviors) {
 
@@ -92,6 +95,7 @@ public class Creature {
             }
         }
         
+        changeMode(FORAGE);
         this.energy = energy;
 
         if (maxStore < energy) {
@@ -149,7 +153,6 @@ public class Creature {
         }
 
         if (energy <= 0) {
-            
             currentT.kill(this);
         }
     }
@@ -184,10 +187,24 @@ public class Creature {
             
             doModeAction();
         }
-        
+        if(getEnergyMode()!=mode){
+            changeMode(getEnergyMode());
+        }
         behaviors.get(mode).step();
         energy -= energyPerTick;
         checkEnergy();
+    }
+    
+    private int getEnergyMode(){
+        if(energy>maxStore*reproductionThreshold){
+            return REPRODUCE;
+        }
+        else if (energy>maxStore*huntThreshold){
+            return HUNT;
+        }
+        else{
+            return FORAGE;
+        }
     }
 
     private List<Cell> findType(int type) {
@@ -214,6 +231,7 @@ public class Creature {
     private void changeMode(int mode) {
 
         behaviors.get(this.mode).reset();
+        modeCells = findType(mode == FORAGE ? 2 : (mode == HUNT ? 3 : 8));
         modeToggle = false;
         this.mode = mode;
     }
@@ -282,12 +300,11 @@ public class Creature {
             
             case HUNT:
                 
-                energy += currentT.hunt(modeCells) - energyCostPerHunt;
+                this.addEnergy(currentT.hunt(modeCells) - energyCostPerHunt);
                 break;
                 
             case FORAGE:
-
-                energy += currentT.forage(modeCells) - energyCostPerForage;
+                this.addEnergy(currentT.forage(modeCells) - energyCostPerForage);
                 break;
                 
             case REPRODUCE:

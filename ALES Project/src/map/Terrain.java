@@ -32,7 +32,7 @@ public class Terrain {
     public final static int WALL = 2;
     public final static int PIT = 3;
 
-    private final int[][] environment;
+    public final int[][] environment; //JUST FOR TESTING; MAKE PRIVATE AGAIN
     private int width;
     private int height;
     private List<Creature> population;
@@ -292,22 +292,38 @@ public class Terrain {
      * creature.
      */
     public int forage(List<Cell> forageCells) {
-        int nutrientsGained = 0;
+        int nutrientsGained = Creature.energyCostPerForage;
+        /*for (Cell ce : forageCells) {
+         Creature cr = ce.getCreature();
+         int x = ce.getX() + cr.getPosX();
+         int y = ce.getY() + cr.getPosY();
+         if (environment[x][y] == 1) {
+         nutrientsGained += nutrientsPerFood;
+         environment[x][y] = 0;
+         }
+         for (int k = 0; k < 4; k++) {
+         int newX = x + Mapping.ADX4[k];
+         int newY = y + Mapping.ADY4[k];
+         boolean inBounds = newX < width && newY < height && newX >= 0 && newY >= 0;
+         if (inBounds && environment[newX][newY] == 1) {
+         nutrientsGained += nutrientsPerFood;
+         environment[newX][newY] = 0;
+         }
+         }
+         }*/
         for (Cell ce : forageCells) {
             Creature cr = ce.getCreature();
             int x = ce.getX() + cr.getPosX();
             int y = ce.getY() + cr.getPosY();
-            if (environment[x][y] == 1) {
-                nutrientsGained += nutrientsPerFood;
-                environment[x][y] = 0;
-            }
-            for (int k = 0; k < 4; k++) {
-                int newX = x + Mapping.ADX4[k];
-                int newY = y + Mapping.ADY4[k];
-                boolean inBounds = newX < width && newY < height && newX >= 0 && newY >= 0;
-                if (inBounds && environment[newX][newY] == 1) {
-                    nutrientsGained += nutrientsPerFood;
-                    environment[newX][newY] = 0;
+            for (int i = -2; i <= 2; i++) {
+                int newX = x + i;
+                for (int j = -2; j <= 2; j++) {
+                    int newY = y + j;
+                    boolean inBounds = newX < width && newY < height && newX >= 0 && newY >= 0;
+                    if (inBounds && environment[newX][newY] == 1) {
+                        nutrientsGained += nutrientsPerFood;
+                        environment[newX][newY] = 0;
+                    }
                 }
             }
         }
@@ -323,7 +339,8 @@ public class Terrain {
      */
     public int hunt(List<Cell> hunters) {
         int nutrientsGained = 0;
-        for (Cell ce : hunters) {
+        for (int i = hunters.size()-1; i>=0; i--) {
+            Cell ce = hunters.get(i);
             Creature cr = ce.getCreature();
             int x = ce.getX() + cr.getPosX();
             int y = ce.getY() + cr.getPosY();
@@ -335,7 +352,7 @@ public class Terrain {
                 if (inBounds && prey != null) {
                     nutrientsGained += (int) (hunterYield * prey.getMaxStore());
                     prey.damage();
-                    if(prey.getHp() <= 0){
+                    if (prey.getHp() <= 0) {
                         Creature victim = prey.getCreature();
                         victim.deleteCell(prey);
                     }
@@ -355,15 +372,32 @@ public class Terrain {
         for (Cell ce : reproductionCells) {
             int x = ce.getX() + cr.getPosX();
             int y = ce.getY() + cr.getPosY();
-            for (int k = 0; k < 4; k++) {
-                int newX = x + Mapping.ADX4[k];
-                int newY = y + Mapping.ADY4[k];
-                Cell partner = cellAtAbsPos(newX, newY);
-                boolean inBounds = newX < width && newY < height && newX >= 0 && newY >= 0;
-                if (inBounds && partner.getCellType() == 8) {
-                    Creature p = partner.getCreature();
-                    Creature child = cr.reproduce(p);
-                    spawn(child);
+            /*for (int k = 0; k < 4; k++) {
+             int newX = x + Mapping.ADX4[k];
+             int newY = y + Mapping.ADY4[k];
+             Cell partner = cellAtAbsPos(newX, newY);
+             boolean inBounds = newX < width && newY < height && newX >= 0 && newY >= 0;
+             if (partner!=null&&inBounds && partner.getCellType() == 8) {
+             Creature p = partner.getCreature();
+             Creature child = cr.reproduce(p);
+             spawn(child);
+             System.out.println("New Creature at x: " + child.getPosX()+", y: "+child.getPosY());
+             }
+             }*/
+            for (int i = -2; i <= 2; i++) {
+                int newX = x + i;
+                for (int j = -2; j <= 2; j++) {
+                    int newY = y + j;
+                    Cell partner = cellAtAbsPos(newX, newY);
+                    boolean inBounds = newX < width && newY < height && newX >= 0 && newY >= 0;
+                    if (partner != null && inBounds && partner.getCellType() == 8) {
+                        Creature p = partner.getCreature();
+                        if (!p.equals(cr)) {
+                            Creature child = cr.reproduce(p);
+                            spawn(child);
+                            System.out.println("New Creature at x: " + child.getPosX() + ", y: " + child.getPosY());
+                        }
+                    }
                 }
             }
         }
@@ -377,22 +411,22 @@ public class Terrain {
      */
     public boolean overPit(Creature cr) {
         boolean toFall = true;
-        
-        for(Cell c : cr.getCells()){
-            
+
+        for (Cell c : cr.getCells()) {
+
             toFall &= environment[c.getX() + cr.getPosX()][c.getY() + cr.getPosY()] == 3;
         }
-        
+
         /*for (Cell[] cellArray : cr.getCellMap()) {
-            for (Cell c : cellArray) {
-                if (c != null) {
-                    boolean inBound = c.getX() < width && c.getY() < height && c.getX() >= 0 && c.getY() >= 0;
-                    if (inBound && environment[c.getX()][c.getY()] != 3) {
-                        toFall = false;
-                    }
-                }
-            }
-        }*/
+         for (Cell c : cellArray) {
+         if (c != null) {
+         boolean inBound = c.getX() < width && c.getY() < height && c.getX() >= 0 && c.getY() >= 0;
+         if (inBound && environment[c.getX()][c.getY()] != 3) {
+         toFall = false;
+         }
+         }
+         }
+         }*/
         return toFall;
     }
 

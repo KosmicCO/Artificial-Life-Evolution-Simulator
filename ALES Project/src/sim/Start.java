@@ -59,7 +59,7 @@ public class Start {
             if (isRunning) {
                 
                 if (updates % UPDATES_PER_TICK == 0) {
-
+                   
                     currentT.update();
                 }
 
