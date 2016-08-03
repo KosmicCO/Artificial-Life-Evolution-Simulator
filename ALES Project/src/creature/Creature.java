@@ -20,7 +20,7 @@ import util.Vec2;
  */
 public class Creature {
 
-    public static final int SIDE_LENGTH = 21;
+    public static int sideLength = 21;
     public static int energyCostPerHunt = 4;
     public static int energyCostPerForage = 2;
     public static int energyCostPerRepro = 10;

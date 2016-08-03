@@ -20,7 +20,7 @@ import map.Terrain;
 public class TerrainTest {
     public static void main(String[] args) {
         int[][] env = new int[20][20];
-        Cell[][] cellArray = new Cell[Creature.SIDE_LENGTH][Creature.SIDE_LENGTH];
+        Cell[][] cellArray = new Cell[Creature.sideLength][Creature.sideLength];
         for (int row = 0; row<cellArray.length; row++){
             for(int c = 0; c<cellArray[0].length; c++){
                 cellArray[row][c] = new StructureCell(row,c);
