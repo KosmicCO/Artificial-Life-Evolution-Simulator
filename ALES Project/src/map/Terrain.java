@@ -198,8 +198,8 @@ public class Terrain {
      */
     public boolean detect(Creature cr, int type) {
         boolean found = false;
-        for (int i = cr.getPosX(); i < cr.getPosX() + Creature.sideLength; i++) {
-            for (int j = cr.getPosY(); j < cr.getPosY() + Creature.sideLength; j++) {
+        for (int i = cr.getPosX(); i < cr.getPosX() + Creature.SIDE_LENGTH; i++) {
+            for (int j = cr.getPosY(); j < cr.getPosY() + Creature.SIDE_LENGTH; j++) {
                 Cell atLoc = cellAtAbsPos(i, j);
                 if (type == 0) {
                     if (atLoc != null && !(atLoc.getCreature().equals(cr))) {
@@ -227,12 +227,12 @@ public class Terrain {
      */
     public void spawn(Creature child) {
         //boolean inMap = false;
-        int finalX = -Creature.sideLength;
-        int finalY = -Creature.sideLength;
+        int finalX = -Creature.SIDE_LENGTH;
+        int finalY = -Creature.SIDE_LENGTH;
         for (int h = 0; h < 20; h++) {
             boolean empty = true;
-            int x = (int) (Math.random() * width - Creature.sideLength);
-            int y = (int) (Math.random() * height - Creature.sideLength);
+            int x = (int) (Math.random() * width - Creature.SIDE_LENGTH);
+            int y = (int) (Math.random() * height - Creature.SIDE_LENGTH);
             for (Cell[] row : child.getCellMap()) {
                 for (Cell c : row) {
                     if (c != null) {
@@ -467,8 +467,8 @@ public class Terrain {
         for (Creature c : population) {
             int xDiff = x - c.getPosX();
             int yDiff = y - c.getPosY();
-            if (xDiff < Creature.sideLength && xDiff >= 0) {
-                if (yDiff < Creature.sideLength && yDiff >= 0) {
+            if (xDiff < Creature.SIDE_LENGTH && xDiff >= 0) {
+                if (yDiff < Creature.SIDE_LENGTH && yDiff >= 0) {
                     creaturesAtPos.add(c);
                 }
             }
@@ -504,9 +504,9 @@ public class Terrain {
     }
 
     public int[][] enviroSegment(Vec2 position) {
-        int[][] seg = new int[Creature.sideLength][Creature.sideLength];
-        for (int i = 0; i < 0 + Creature.sideLength; i++) {
-            for (int j = 0; j < 0 + Creature.sideLength; j++) {
+        int[][] seg = new int[Creature.SIDE_LENGTH][Creature.SIDE_LENGTH];
+        for (int i = 0; i < 0 + Creature.SIDE_LENGTH; i++) {
+            for (int j = 0; j < 0 + Creature.SIDE_LENGTH; j++) {
                 seg[i][j] = environment[i+(int)position.x][j+(int)position.y];
             }
         }

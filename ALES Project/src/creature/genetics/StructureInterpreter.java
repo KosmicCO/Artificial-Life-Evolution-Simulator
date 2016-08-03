@@ -85,14 +85,14 @@ public class StructureInterpreter {
 
     public static Cell[][] interpret(Chromosome c) {
         List<Vec2> nodes = new ArrayList();
-        nodes.add(new Vec2(Creature.sideLength / 2));
-        int[][] cellMap = new int[Creature.sideLength][Creature.sideLength];
+        nodes.add(new Vec2(Creature.SIDE_LENGTH / 2));
+        int[][] cellMap = new int[Creature.SIDE_LENGTH][Creature.SIDE_LENGTH];
         for (int[] i : cellMap) {
             for (int j = 0; j < i.length; j++) {
                 i[j] = -1;
             }
         }
-        cellMap[Creature.sideLength / 2][Creature.sideLength / 2] = -2;
+        cellMap[Creature.SIDE_LENGTH / 2][Creature.SIDE_LENGTH / 2] = -2;
         for (int i = 0; i < c.geneCount(); i++) {
             int gene = geneToCode(Conversions.byteToInt(c.getSegment(i)));
             if (nodes.size() <= i) {
@@ -103,7 +103,7 @@ public class StructureInterpreter {
                 for (int j = 0; j < 4; j++) {
 
                     Vec2 adj = nodes.get(i).add(new Vec2(ADX4[j], ADY4[j]));
-                    boolean inBounds = adj.x < Creature.sideLength && adj.y < Creature.sideLength && adj.x > 0 && adj.y > 0;
+                    boolean inBounds = adj.x < Creature.SIDE_LENGTH && adj.y < Creature.SIDE_LENGTH && adj.x > 0 && adj.y > 0;
                     if (inBounds && cellMap[(int) adj.x][(int) adj.y] == -1) {
                         nodes.add(adj);
                         cellMap[(int) adj.x][(int) adj.y] = -2;
@@ -114,9 +114,9 @@ public class StructureInterpreter {
 
             cellMap[(int) nodes.get(i).x][(int) nodes.get(i).y] = gene;
         }
-        Cell[][] creatureStructure = new Cell[Creature.sideLength][Creature.sideLength];
-        for (int row = 0; row < Creature.sideLength; row++) {
-            for (int cell = 0; cell < Creature.sideLength; cell++) {
+        Cell[][] creatureStructure = new Cell[Creature.SIDE_LENGTH][Creature.SIDE_LENGTH];
+        for (int row = 0; row < Creature.SIDE_LENGTH; row++) {
+            for (int cell = 0; cell < Creature.SIDE_LENGTH; cell++) {
                 creatureStructure[row][cell] = newCell(cellMap[row][cell], row, cell);
             }
         }

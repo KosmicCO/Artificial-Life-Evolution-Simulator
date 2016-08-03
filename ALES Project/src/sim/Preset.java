@@ -20,7 +20,6 @@ import map.TerrainGenerator;
 public class Preset {
 
     //Creature
-    private int sideLen;
     private int eCostHunt;
     private int eCostForage;
     private int eCostRepro;
@@ -46,7 +45,6 @@ public class Preset {
     private List<Integer> wGenome;
 
     public Preset(int sLen, int costHunt, int costForage, int costRepro, double repThresh, double huntThresh, int costDetect, int costMove, int nutrientsPF, int hYield, int fSR, double mFactor, int lenV, List<Integer> wGen) {
-        sideLen = sLen;
         eCostHunt = costHunt;
         eCostForage = costForage;
         eCostRepro = costRepro;
@@ -63,7 +61,6 @@ public class Preset {
     }
 
     public void set() {
-        Creature.sideLength = sideLen;
         Creature.energyCostPerHunt = eCostHunt;
         Creature.energyCostPerForage = eCostForage;
         Creature.energyCostPerRepro = eCostRepro;
@@ -71,7 +68,7 @@ public class Preset {
         Creature.huntThreshold = hunterThreshold;
         NewBehavior.energyPerDetect = eCostDetect;
         NewBehavior.energyPerMove = eCostMove;
-        Terrain.nutrientsPerFood = nutrientsPerFood;
+        Terrain.nutrientsPerFood = this.nutrientsPerFood;
         Terrain.hunterYield = huntYield;
         TerrainGenerator.foodSpawnRate = foodSR;
         Chromosome.mutationFactor = mutantFactor;
