@@ -26,6 +26,7 @@ public class Terrain {
 
     public static int actionRadius = 2;
     public static int nutrientsPerFood = 100;
+    public static int foodSpawnAmount = 1;
     public static double hunterYield = 0.60;
     public static int foodRespawnTime = 1;
 
@@ -44,6 +45,7 @@ public class Terrain {
     private List<Creature> population;
     private double[][] probabilityMap;
     private int frCounter;
+    private int foodCount;
 
     public Terrain(int[][] generated, List<Creature> pop, double[][] probMap) {
         environment = generated;
@@ -52,6 +54,7 @@ public class Terrain {
         population = pop;
         probabilityMap = probMap;
         frCounter = 0;
+        foodCount = 0;
     }
 
     /**
@@ -72,26 +75,30 @@ public class Terrain {
     public void respawnFood() {
         int finalX = -1;
         int finalY = -1;
-        for (int h = 0; h < 20; h++) {
-            boolean empty = true;
-            int x = (int) (Math.random() * width);
-            int y = (int) (Math.random() * height);
-                    Cell atLoc = cellAtAbsPos(x, y);
-                    if (atLoc != null) {
-                        empty = false;
-                    }
-                    if (environment[x][y] != 0 || (probabilityMap[x][y])*Math.random()>=TerrainGenerator.foodSpawnRate) {
-                        empty = false;
+        for (int c = 0; c < foodSpawnAmount; c++) {
+            for (int h = 0; h < 20; h++) {
+                boolean empty = true;
+                int x = (int) (Math.random() * width);
+                int y = (int) (Math.random() * height);
+                Cell atLoc = cellAtAbsPos(x, y);
+                if (atLoc != null) {
+                    empty = false;
+                }
+                if (environment[x][y] != 0 || (probabilityMap[x][y]) * Math.random() >= TerrainGenerator.foodSpawnRate) {
+                    empty = false;
 
+                }
+                if (empty) {
+                    finalX = x;
+                    finalY = y;
+                    break;
+                }
             }
-            if (empty) {
-                finalX = x;
-                finalY = y;
-                break;
+            if (finalX >= 0 && finalY >= 0) {
+                environment[finalX][finalY] = 1;
+                foodCount++;
+                //System.out.println("FOOD SPAWNED at x: "+finalX+", y: "+finalY);
             }
-        }
-        if (finalX >= 0 && finalY >= 0) {
-            environment[finalX][finalY] = 1;
         }
     }
 
@@ -182,6 +189,15 @@ public class Terrain {
             frCounter = 0;
             respawnFood();
         }
+        System.out.println("There are "+foodCount+" food particles on the map.");
+    }
+    
+    public int getFoodCount(){
+        return foodCount;
+    }
+    
+    public void alterFoodCount(int diff){
+        foodCount+=diff;
     }
 
     /**
@@ -324,6 +340,7 @@ public class Terrain {
                             environment[newX][newY] = 0;
                             int fEaten = cr.getFoodParticlesConsumed();
                             cr.setFoodParticlesConsumed(fEaten + 1);
+                            foodCount--;
                         }
                     }
                 }

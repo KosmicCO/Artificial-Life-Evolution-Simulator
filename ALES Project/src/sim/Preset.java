@@ -35,6 +35,7 @@ public class Preset {
     private int actionRad;
     private int nutrientsPerFood;
     private double huntYield;
+    private int fRespawnAmount;
 
     //TerrainGenerator
     private double foodSR;
@@ -46,7 +47,7 @@ public class Preset {
     //StructureInterpreter
     private List<Integer> wGenome;
 
-    public Preset(int sLen, int costHunt, int costForage, int costRepro, double repThresh, double repBuffer, double huntThresh, int costDetect, int costMove, int actRad, int nutrientsPF, int hYield, int fSR, double mFactor, int lenV, List<Integer> wGen) {
+    public Preset(int sLen, int costHunt, int costForage, int costRepro, double repThresh, double repBuffer, double huntThresh, int costDetect, int costMove, int actRad, int nutrientsPF, int hYield, int fRSAmount, int fSR, double mFactor, int lenV, List<Integer> wGen) {
         eCostHunt = costHunt;
         eCostForage = costForage;
         eCostRepro = costRepro;
@@ -58,6 +59,7 @@ public class Preset {
         actionRad = actRad;
         nutrientsPerFood = nutrientsPF;
         huntYield = hYield;
+        fRespawnAmount = fRSAmount;
         foodSR = fSR;
         mutantFactor = mFactor;
         lenVariance = lenV;
@@ -76,6 +78,7 @@ public class Preset {
         Terrain.actionRadius = actionRad;
         Terrain.nutrientsPerFood = this.nutrientsPerFood;
         Terrain.hunterYield = huntYield;
+        Terrain.foodSpawnAmount = fRespawnAmount;
         TerrainGenerator.foodSpawnRate = foodSR;
         Chromosome.mutationFactor = mutantFactor;
         Chromosome.variance = lenVariance;
