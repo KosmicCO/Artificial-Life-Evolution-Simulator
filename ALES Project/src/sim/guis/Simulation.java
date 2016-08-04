@@ -54,7 +54,7 @@ public class Simulation extends ComponentInputGUI {
 
         stats = new ArrayList();
         
-        for (int i = 0; i < 6; i++) {
+        for (int i = 0; i < 7; i++) {
             
             stats.add(new GUILabel("stat" + i, new Vec2(SIDE_LENGTH * 8 + offsetToDraw.x * 2, 225 - 25 * i), "Stat " + i, Color.white));
         }
@@ -119,6 +119,9 @@ public class Simulation extends ComponentInputGUI {
             stats.get(1).setLabel("E Loss / Tick: " + toDraw.getEnergyPerTick());
             stats.get(2).setLabel("Energy Stored: " + toDraw.getEnergy());
             stats.get(3).setLabel("Max E Storage: " + toDraw.getMaxStore());
+            stats.get(4).setLabel("Children Spawned: " + toDraw.getChildrenSpawned());
+            stats.get(5).setLabel("Cells Eaten: " + toDraw.getCellsEaten());
+            stats.get(6).setLabel("Food Particles Consumed: " + toDraw.getFoodParticlesConsumed());
             //more total stats
         }
     }
