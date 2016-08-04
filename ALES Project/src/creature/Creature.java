@@ -27,7 +27,8 @@ public class Creature {
 
     public static int childStarterFood = 2000;
 
-    public static double reproductionThreshold = 0.8;
+    public static double reproductionThreshold = 0.7;
+    public static double reproductionBuffer = 0.2;
     public static double huntThreshold = 0.4;
     //USER VARIABLES ABOVE
 
@@ -135,20 +136,6 @@ public class Creature {
         this.curDir = curDir;
     }
 
-//    public void toggleMode(){
-//        
-//        modeToggle = !modeToggle;
-//    }
-//
-//    public boolean isModeToggle() {
-//        
-//        return modeToggle;
-//    }
-//
-//    public void setModeToggle(boolean modeToggle) {
-//        
-//        this.modeToggle = modeToggle;
-//    }
     public void addEnergy(int en) {
 
         energy += en;
@@ -202,9 +189,12 @@ public class Creature {
     }
 
     private int getEnergyMode() {
-        if (energy > maxStore * reproductionThreshold) {
+        
+        if(energy > maxStore * (reproductionThreshold + (mode == EAT ? reproductionBuffer : 0))){
+            
             return REPRODUCE;
-        } else {
+        }else{
+            
             return EAT;
         }
     }
@@ -264,7 +254,18 @@ public class Creature {
 
     public boolean detectMode() {
 
-        return currentT.detect(this, mode);
+        boolean found = false;
+        
+        if(mode == EAT){
+            
+            found = currentT.detect(this, 0);
+            found |= currentT.detect(this, 2);
+        }else{
+            
+            found = currentT.detect(this, 1);
+        }
+        
+        return found;
     }
 
     public Cell cellAtRelPos(int x, int y) {
