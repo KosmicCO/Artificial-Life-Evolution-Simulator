@@ -44,6 +44,10 @@ public class Creature {
     private int posY;
     private int curDir;
 
+    private int childrenSpawned;
+    private int cellsEaten;
+    private int foodParticlesConsumed;
+
     private List<Cell> modeCells;
     private int[] usedCells; //up right down left detector
     private int mode;
@@ -69,6 +73,9 @@ public class Creature {
         this.genes = genes;
         maxStore = 0;
         energyPerTick = 0;
+        childrenSpawned = 0;
+        cellsEaten = 0;
+        foodParticlesConsumed = 0;
         posX = x;
         posY = y;
         usedCells = new int[5];
@@ -206,10 +213,13 @@ public class Creature {
     private int getEnergyMode() {
         if (energy > maxStore * reproductionThreshold) {
             return REPRODUCE;
-        } else if (energy > maxStore * huntThreshold) {
-            return HUNT;
         } else {
-            return FORAGE;
+            double rand = Math.random();
+            if (rand < 0.5) {
+                return HUNT;
+            } else {
+                return FORAGE;
+            }
         }
     }
 
@@ -293,6 +303,30 @@ public class Creature {
 
     public List<Chromosome> getGenes() {
         return genes;
+    }
+
+    public int getChildrenSpawned() {
+        return childrenSpawned;
+    }
+
+    public void setChildrenSpawned(int childrenSpawned) {
+        this.childrenSpawned = childrenSpawned;
+    }
+
+    public int getCellsEaten() {
+        return cellsEaten;
+    }
+
+    public void setCellsEaten(int cellsEaten) {
+        this.cellsEaten = cellsEaten;
+    }
+
+    public int getFoodParticlesConsumed() {
+        return foodParticlesConsumed;
+    }
+
+    public void setFoodParticlesConsumed(int foodParticlesConsumed) {
+        this.foodParticlesConsumed = foodParticlesConsumed;
     }
 
     @Override
