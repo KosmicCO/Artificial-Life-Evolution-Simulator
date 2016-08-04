@@ -241,6 +241,26 @@ public class Creature {
     public List<Cell> getCells() {
         return cells;
     }
+    
+    public int getEnergy(){
+        
+        return energy;
+    }
+
+    public int getMaxStore() {
+        
+        return maxStore;
+    }
+
+    public int getEnergyPerTick() {
+        
+        return energyPerTick;
+    }
+    
+    public String getModeName(){
+        
+        return mode == FORAGE ? "Foraging" : (mode == HUNT ? "Hunting" : "Reproducing");
+    }
 
     private void changeMode(int mode) {
 
