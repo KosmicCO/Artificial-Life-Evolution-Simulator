@@ -43,21 +43,23 @@ public class Simulation extends ComponentInputGUI {
     private Creature toDraw;
     private List<GUILabel> stats;
     private List<GUIButton> goToParents;
-    private List<GUIPanel> gtpPanels;
+    private GUIPanel gtpPanel;
+    private GUILabel noParents;
 
     public Simulation(String n, MainMenu parent) {
 
         super(n);
 
         goToParents = new ArrayList();
-        gtpPanels = new ArrayList();
 
         for (int i = 0; i < 2; i++) {
 
             goToParents.add(new GUIButton("parent" + (i + 1), this, new Vec2(i * (SIDE_LENGTH * 8) / 2 + offsetToDraw.x, 50), new Vec2((SIDE_LENGTH * 8) / 2, 32), "Parent " + (i + 1), Color.white));
-            gtpPanels.add(new GUIPanel("pp" + (i + 1), new Vec2(i * (SIDE_LENGTH * 8) / 2 + offsetToDraw.x, 50), new Vec2((SIDE_LENGTH * 8) / 2, 32), getColor(0).multiply(0.8 - 0.1 * i)));
         }
 
+        gtpPanel = new GUIPanel("pp", new Vec2(offsetToDraw.x, 50), new Vec2(SIDE_LENGTH * 8, 32), getColor(0).multiply(0.8));
+        noParents = new GUILabel("np", new Vec2(offsetToDraw.x, 50), new Vec2(SIDE_LENGTH * 8, 32), "No Parents", Color.white);
+        
         inputs.add(new GUIButton("back", this, nextPlace(start, 0, 1), BUTTON_SIZE, "Main Menu", Color.white));
         components.add(new GUIPanel("bottom", nextPlace(start, 0, 1), BUTTON_SIZE, getColor(1).multiply(0.6)));
 
@@ -98,14 +100,12 @@ public class Simulation extends ComponentInputGUI {
 
             case "parent1":
 
-                //toDraw = the parent 1
-                System.out.println("p1");
+                toDraw = toDraw.getParent1();
                 break;
 
             case "parent2":
 
-                //toDraw = the parent 2
-                System.out.println("p2");
+                toDraw = toDraw.getParent2();
                 break;
 
             case "back":
@@ -168,7 +168,7 @@ public class Simulation extends ComponentInputGUI {
         List<GUIComponent> pressed = new ArrayList();
         pressed = super.mousePressed(p);
 
-        if (toDraw != null) {
+        if (toDraw != null && toDraw.getParent1() != null) {
 
             for (GUIButton gip : goToParents) {
 
@@ -191,9 +191,15 @@ public class Simulation extends ComponentInputGUI {
         if (toDraw != null) {
 
             stats.forEach(GUILabel::draw);
+            gtpPanel.draw();
 
-            gtpPanels.forEach(GUIPanel::draw);
-            goToParents.forEach(GUIButton::draw);
+            if (toDraw.getParent1() != null) {
+
+                goToParents.forEach(GUIButton::draw);
+            }else{
+                
+                noParents.draw();
+            }
 
             Graphics2D.fillRect(offsetToDraw, new Vec2(SIDE_LENGTH * 8), getColor(2));
             currentT.drawSection(offsetToDraw, new Vec2(toDraw.getPosX(), toDraw.getPosY()), SIDE_LENGTH, 8);
