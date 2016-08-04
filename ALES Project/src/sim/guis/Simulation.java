@@ -23,6 +23,8 @@ import static sim.Start.setRunning;
 import static utility.GUIs.BUTTON_SIZE;
 import static utility.GUIs.nextPlace;
 import static gui.TypingManager.typing;
+import gui.components.GUILabel;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -38,6 +40,7 @@ public class Simulation extends ComponentInputGUI {
     
     private static Vec2 offsetToDraw = new Vec2(2, 250 - SIDE_LENGTH * 8);
     private Creature toDraw;
+    private List<GUILabel> stats;
 
     public Simulation(String n, MainMenu parent) {
 
@@ -49,6 +52,13 @@ public class Simulation extends ComponentInputGUI {
         inputs.add(new GUIButton("plane", this, new Vec2(-500, -250), new Vec2(500), " ", Color.transparent));
         components.add(new GUIPanel("planeP", new Vec2(-500, -250), new Vec2(500), getColor(2)));
 
+        stats = new ArrayList();
+        
+        for (int i = 0; i < 6; i++) {
+            
+            stats.add(new GUILabel("stat" + i, new Vec2(SIDE_LENGTH * 8 + offsetToDraw.x * 2, 225 - 25 * i), "Stat " + i, Color.white));
+        }
+        
         this.parent = parent;
     }
 
@@ -103,6 +113,13 @@ public class Simulation extends ComponentInputGUI {
         if (!currentT.isAlive(toDraw)) {
 
             toDraw = null;
+        }else{
+            
+            stats.get(0).setLabel("Creature Mode: " + toDraw.getModeName());//this is to change
+            stats.get(1).setLabel("E Loss / Tick: " + toDraw.getEnergyPerTick());
+            stats.get(2).setLabel("Energy Stored: " + toDraw.getEnergy());
+            stats.get(3).setLabel("Max E Storage: " + toDraw.getMaxStore());
+            //more total stats
         }
     }
 
@@ -114,6 +131,8 @@ public class Simulation extends ComponentInputGUI {
 
         if (toDraw != null) {
 
+            stats.forEach(GUILabel::draw);
+            
             Graphics2D.fillRect(offsetToDraw, new Vec2(SIDE_LENGTH * 8), getColor(2));
             currentT.drawSection(offsetToDraw, new Vec2(toDraw.getPosX(), toDraw.getPosY()), SIDE_LENGTH, 8);
             Vec2 tdPos = new Vec2(toDraw.getPosX(), toDraw.getPosY());
