@@ -34,10 +34,10 @@ import java.util.List;
 public class Simulation extends ComponentInputGUI {
 
     private static int zoom = 2;
-    
+
     private Vec2 start = new Vec2(0, -150);
     private MainMenu parent;
-    
+
     private static Vec2 offsetToDraw = new Vec2(2, 250 - SIDE_LENGTH * 8);
     private Creature toDraw;
     private List<GUILabel> stats;
@@ -53,12 +53,12 @@ public class Simulation extends ComponentInputGUI {
         components.add(new GUIPanel("planeP", new Vec2(-500, -250), new Vec2(500), getColor(2)));
 
         stats = new ArrayList();
-        
-        for (int i = 0; i < 7; i++) {
-            
+
+        for (int i = 0; i < 8; i++) {
+
             stats.add(new GUILabel("stat" + i, new Vec2(SIDE_LENGTH * 8 + offsetToDraw.x * 2, 225 - 25 * i), "Stat " + i, Color.white));
         }
-        
+
         this.parent = parent;
     }
 
@@ -113,16 +113,16 @@ public class Simulation extends ComponentInputGUI {
         if (!currentT.isAlive(toDraw)) {
 
             toDraw = null;
-        }else{
+        } else {
             
-            stats.get(0).setLabel("Creature Mode: " + toDraw.getModeName());//this is to change
-            stats.get(1).setLabel("E Loss / Tick: " + toDraw.getEnergyPerTick());
-            stats.get(2).setLabel("Energy Stored: " + toDraw.getEnergy());
-            stats.get(3).setLabel("Max E Storage: " + toDraw.getMaxStore());
-            stats.get(4).setLabel("Children Spawned: " + toDraw.getChildrenSpawned());
-            stats.get(5).setLabel("Cells Eaten: " + toDraw.getCellsEaten());
-            stats.get(6).setLabel("Food Particles Consumed: " + toDraw.getFoodParticlesConsumed());
-            //more total stats
+            stats.get(0).setLabel("Creature Mode:      " + toDraw.getModeName());
+            stats.get(1).setLabel("Energy Loss/Tick:   " + toDraw.getEnergyPerTick());
+            stats.get(2).setLabel("Energy Stored:      " + toDraw.getEnergy());
+            stats.get(3).setLabel("% Max Energy:       " + ((int) (((double) toDraw.getEnergy() / toDraw.getMaxStore()) * 100)) + "%");
+            stats.get(4).setLabel("Max Energy Storage: " + toDraw.getMaxStore());
+            stats.get(5).setLabel("Children Spawned:   " + toDraw.getChildrenSpawned());
+            stats.get(6).setLabel("Cells Eaten:        " + toDraw.getCellsEaten());
+            stats.get(7).setLabel("Food Eaten:         " + toDraw.getFoodParticlesConsumed());
         }
     }
 
@@ -135,7 +135,7 @@ public class Simulation extends ComponentInputGUI {
         if (toDraw != null) {
 
             stats.forEach(GUILabel::draw);
-            
+
             Graphics2D.fillRect(offsetToDraw, new Vec2(SIDE_LENGTH * 8), getColor(2));
             currentT.drawSection(offsetToDraw, new Vec2(toDraw.getPosX(), toDraw.getPosY()), SIDE_LENGTH, 8);
             Vec2 tdPos = new Vec2(toDraw.getPosX(), toDraw.getPosY());
