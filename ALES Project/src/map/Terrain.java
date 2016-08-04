@@ -22,11 +22,11 @@ import utility.Mapping;
  */
 public class Terrain {
 
+    public static int actionRadius = 2;
     public static int nutrientsPerFood = 100;
     public static double hunterYield = 0.60;
 
     //USER VARIABLES ABOVE
-    
     public static Terrain currentT;
 
     public final static Vec2 ORIGIN = new Vec2(-500, -250);
@@ -35,7 +35,7 @@ public class Terrain {
     public final static int WALL = 2;
     public final static int PIT = 3;
 
-    private final int[][] environment; 
+    private final int[][] environment;
     private int width;
     private int height;
     private List<Creature> population;
@@ -285,6 +285,8 @@ public class Terrain {
                 if (inBounds && environment[newX][newY] == 1) {
                     nutrientsGained += nutrientsPerFood;
                     environment[newX][newY] = 0;
+                    int fEaten = cr.getFoodParticlesConsumed();
+                    cr.setFoodParticlesConsumed(fEaten + 1);
                 }
             }
         }
@@ -323,14 +325,16 @@ public class Terrain {
             Creature cr = ce.getCreature();
             int x = ce.getX() + cr.getPosX();
             int y = ce.getY() + cr.getPosY();
-            for (int i = -2; i <= 2; i++) {
+            for (int i = -actionRadius; i <= actionRadius; i++) {
                 int newX = x + i;
-                for (int j = -2; j <= 2; j++) {
+                for (int j = -actionRadius; j <= actionRadius; j++) {
                     int newY = y + j;
                     boolean inBounds = newX < width && newY < height && newX >= 0 && newY >= 0;
                     if (inBounds && environment[newX][newY] == 1) {
                         nutrientsGained += nutrientsPerFood;
                         environment[newX][newY] = 0;
+                        int fEaten = cr.getFoodParticlesConsumed();
+                        cr.setFoodParticlesConsumed(fEaten + 1);
                     }
                 }
             }
@@ -355,9 +359,9 @@ public class Terrain {
             Creature cr = ce.getCreature();
             int x = ce.getX() + cr.getPosX();
             int y = ce.getY() + cr.getPosY();
-            for (int count = -2; count <= 2; count++) {
+            for (int count = -actionRadius; count <= actionRadius; count++) {
                 int newX = x + count;
-                for (int j = -2; j <= 2; j++) {
+                for (int j = -actionRadius; j <= actionRadius; j++) {
                     int newY = y + j;
                     Cell prey = cellAtAbsPos(newX, newY);
                     boolean inBounds = newX < width && newY < height && newX >= 0 && newY >= 0;
@@ -367,6 +371,8 @@ public class Terrain {
                         if (prey.getHp() <= 0) {
                             Creature victim = prey.getCreature();
                             victim.deleteCell(prey);
+                            int cEaten = cr.getCellsEaten();
+                            cr.setCellsEaten(cEaten + 1);
                         }
                     }
                 }
@@ -397,9 +403,9 @@ public class Terrain {
              System.out.println("New Creature at x: " + child.getPosX()+", y: "+child.getPosY());
              }
              }*/
-            for (int i = -2; i <= 2; i++) {
+            for (int i = -actionRadius; i <= actionRadius; i++) {
                 int newX = x + i;
-                for (int j = -2; j <= 2; j++) {
+                for (int j = -actionRadius; j <= actionRadius; j++) {
                     int newY = y + j;
                     Cell partner = cellAtAbsPos(newX, newY);
                     boolean inBounds = newX < width && newY < height && newX >= 0 && newY >= 0;
@@ -408,6 +414,8 @@ public class Terrain {
                         if (!p.equals(cr)) {
                             Creature child = cr.reproduce(p);
                             spawn(child);
+                            int cSpawned = cr.getChildrenSpawned();
+                            cr.setChildrenSpawned(cSpawned + 1);
 //                            System.out.println("New Creature at x: " + child.getPosX() + ", y: " + child.getPosY());
                         }
                     }
@@ -452,27 +460,25 @@ public class Terrain {
         population.remove(cr);
     }
 
-   
-    
-    public List<Creature> creaturesInSec(Vec2 pos, Vec2 dim){
-        
+    public List<Creature> creaturesInSec(Vec2 pos, Vec2 dim) {
+
         List<Creature> cis = new ArrayList();
-        
+
         pos = pos.subtract(new Vec2(SIDE_LENGTH));
         dim = dim.add(new Vec2(SIDE_LENGTH));
-        
-        for(Creature c : population){
-            
-            if(pos.x <= c.getPosX() && c.getPosX() < pos.x + dim.x && pos.y <= c.getPosY() && c.getPosY() < pos.y + dim.y){
-                
+
+        for (Creature c : population) {
+
+            if (pos.x <= c.getPosX() && c.getPosX() < pos.x + dim.x && pos.y <= c.getPosY() && c.getPosY() < pos.y + dim.y) {
+
                 cis.add(c);
             }
         }
-        
+
         return cis;
     }
-    
-     /**
+
+    /**
      * Returns the cell at a given position, designated by x and y coordinate
      * parameters
      *
@@ -482,7 +488,7 @@ public class Terrain {
      * found.
      */
     public Cell cellAtAbsPos(int x, int y) {
-        
+
         List<Creature> creaturesAtPos = new ArrayList();
         for (Creature c : population) {
             int xDiff = x - c.getPosX();
@@ -493,7 +499,7 @@ public class Terrain {
                 }
             }
         }
-        
+
         for (Creature c : creaturesAtPos) {
             Cell found = c.cellAtRelPos(x - c.getPosX(), y - c.getPosY());
             if (found != null) {
@@ -535,7 +541,7 @@ public class Terrain {
                 }
 
                 if (t != 0) {
-                    
+
                     Graphics2D.fillRect(pos.add(new Vec2(zoom * i, zoom * j)), new Vec2(zoom), getTerColor(t));
                 }
             }
