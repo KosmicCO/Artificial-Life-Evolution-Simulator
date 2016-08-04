@@ -24,6 +24,7 @@ import static utility.GUIs.BUTTON_SIZE;
 import static utility.GUIs.nextPlace;
 import static gui.TypingManager.typing;
 import gui.components.GUILabel;
+import gui.types.GUIComponent;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -41,10 +42,21 @@ public class Simulation extends ComponentInputGUI {
     private static Vec2 offsetToDraw = new Vec2(2, 250 - SIDE_LENGTH * 8);
     private Creature toDraw;
     private List<GUILabel> stats;
+    private List<GUIButton> goToParents;
+    private List<GUIPanel> gtpPanels;
 
     public Simulation(String n, MainMenu parent) {
 
         super(n);
+
+        goToParents = new ArrayList();
+        gtpPanels = new ArrayList();
+
+        for (int i = 0; i < 2; i++) {
+
+            goToParents.add(new GUIButton("parent" + (i + 1), this, new Vec2(i * (SIDE_LENGTH * 8) / 2 + offsetToDraw.x, 50), new Vec2((SIDE_LENGTH * 8) / 2, 32), "Parent " + (i + 1), Color.white));
+            gtpPanels.add(new GUIPanel("pp" + (i + 1), new Vec2(i * (SIDE_LENGTH * 8) / 2 + offsetToDraw.x, 50), new Vec2((SIDE_LENGTH * 8) / 2, 32), getColor(0).multiply(0.8 - 0.1 * i)));
+        }
 
         inputs.add(new GUIButton("back", this, nextPlace(start, 0, 1), BUTTON_SIZE, "Main Menu", Color.white));
         components.add(new GUIPanel("bottom", nextPlace(start, 0, 1), BUTTON_SIZE, getColor(1).multiply(0.6)));
@@ -56,7 +68,7 @@ public class Simulation extends ComponentInputGUI {
 
         for (int i = 0; i < 8; i++) {
 
-            stats.add(new GUILabel("stat" + i, new Vec2(SIDE_LENGTH * 8 + offsetToDraw.x * 2, 225 - 25 * i), "Stat " + i, Color.white));
+            stats.add(new GUILabel("stat" + i, new Vec2(SIDE_LENGTH * 8 + offsetToDraw.x * 2 + 4, 225 - 25 * i), "Stat " + i, Color.white));
         }
 
         this.parent = parent;
@@ -84,7 +96,20 @@ public class Simulation extends ComponentInputGUI {
 
         switch (string) {
 
+            case "parent1":
+
+                //toDraw = the parent 1
+                System.out.println("p1");
+                break;
+
+            case "parent2":
+
+                //toDraw = the parent 2
+                System.out.println("p2");
+                break;
+
             case "back":
+
                 setRunning(false);
                 this.setVisible(false);
                 parent.start();
@@ -114,16 +139,47 @@ public class Simulation extends ComponentInputGUI {
 
             toDraw = null;
         } else {
-            
+
             stats.get(0).setLabel("Creature Mode:      " + toDraw.getModeName());
             stats.get(1).setLabel("Energy Loss/Tick:   " + toDraw.getEnergyPerTick());
             stats.get(2).setLabel("Energy Stored:      " + toDraw.getEnergy());
-            stats.get(3).setLabel("% Max Energy:       " + ((int) (((double) toDraw.getEnergy() / toDraw.getMaxStore()) * 100)) + "%");
+            stats.get(3).setLabel("% of Max Energy:    " + ((int) (((double) toDraw.getEnergy() / toDraw.getMaxStore()) * 100)) + "%");
+
+            if (((double) toDraw.getEnergy() / toDraw.getMaxStore()) * 100 <= 20) {
+
+                stats.get(2).setColor(Color.red);
+                stats.get(3).setColor(Color.red);
+            } else {
+
+                stats.get(2).setColor(Color.white);
+                stats.get(3).setColor(Color.white);
+            }
+
             stats.get(4).setLabel("Max Energy Storage: " + toDraw.getMaxStore());
             stats.get(5).setLabel("Children Spawned:   " + toDraw.getChildrenSpawned());
             stats.get(6).setLabel("Cells Eaten:        " + toDraw.getCellsEaten());
             stats.get(7).setLabel("Food Eaten:         " + toDraw.getFoodParticlesConsumed());
         }
+    }
+
+    @Override
+    public List<GUIComponent> mousePressed(Vec2 p) {
+
+        List<GUIComponent> pressed = new ArrayList();
+        pressed = super.mousePressed(p);
+
+        if (toDraw != null) {
+
+            for (GUIButton gip : goToParents) {
+
+                if (gip.containsClick(p)) {
+
+                    pressed.add(gip);
+                }
+            }
+        }
+
+        return pressed;
     }
 
     @Override
@@ -135,6 +191,9 @@ public class Simulation extends ComponentInputGUI {
         if (toDraw != null) {
 
             stats.forEach(GUILabel::draw);
+
+            gtpPanels.forEach(GUIPanel::draw);
+            goToParents.forEach(GUIButton::draw);
 
             Graphics2D.fillRect(offsetToDraw, new Vec2(SIDE_LENGTH * 8), getColor(2));
             currentT.drawSection(offsetToDraw, new Vec2(toDraw.getPosX(), toDraw.getPosY()), SIDE_LENGTH, 8);
