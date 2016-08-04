@@ -31,9 +31,8 @@ public class Creature {
     public static double huntThreshold = 0.4;
     //USER VARIABLES ABOVE
 
-    public static final int HUNT = 0;
+    public static final int EAT = 0;
     public static final int REPRODUCE = 1;
-    public static final int FORAGE = 2;
 
     private final List<Cell> cells;
     private final Cell[][] cellMap;
@@ -61,15 +60,8 @@ public class Creature {
 
         this.cellMap = cellMap;
         cells = new ArrayList();
-//        this.behaviors = behaviors;
         modeCells = new ArrayList();
-        changeMode(FORAGE);
         curDir = (int) (Math.random() * 4);
-
-//        for (Behavior b : behaviors) {
-//
-//            b.setCreature(this);
-//        }
         this.genes = genes;
         maxStore = 0;
         energyPerTick = 0;
@@ -79,7 +71,6 @@ public class Creature {
         posX = x;
         posY = y;
         usedCells = new int[5];
-//        modeToggle = false;
 
         for (Cell[] cellRow : cellMap) {
 
@@ -104,7 +95,7 @@ public class Creature {
             }
         }
 
-        changeMode(FORAGE);
+        changeMode(EAT);
         this.energy = energy;
 
         if (maxStore < energy) {
@@ -214,12 +205,7 @@ public class Creature {
         if (energy > maxStore * reproductionThreshold) {
             return REPRODUCE;
         } else {
-            double rand = Math.random();
-            if (rand < 0.5) {
-                return HUNT;
-            } else {
-                return FORAGE;
-            }
+            return EAT;
         }
     }
 
@@ -259,12 +245,20 @@ public class Creature {
     
     public String getModeName(){
         
-        return mode == FORAGE ? "Foraging" : (mode == HUNT ? "Hunting" : "Reproducing");
+        return mode == EAT ? "Eating" : "Reproducing";
     }
 
     private void changeMode(int mode) {
 
-        modeCells = findType(mode == FORAGE ? 2 : (mode == HUNT ? 3 : 8));
+        if(mode == EAT){
+            
+            modeCells = findType(2);
+            modeCells.addAll(findType(3));
+        }else{
+            
+            modeCells = findType(8);
+        }
+        
         this.mode = mode;
     }
 
@@ -375,12 +369,9 @@ public class Creature {
 
         switch (mode) {
 
-            case HUNT:
+            case EAT:
 
                 this.addEnergy(currentT.hunt(modeCells) - energyCostPerHunt);
-                break;
-
-            case FORAGE:
                 this.addEnergy(currentT.forage(modeCells) - energyCostPerForage);
                 break;
 
