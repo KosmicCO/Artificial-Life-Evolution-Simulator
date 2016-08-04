@@ -31,6 +31,7 @@ public class Preset {
     private int eCostMove;
 
     //Terrain
+    private int actionRad;
     private int nutrientsPerFood;
     private double huntYield;
 
@@ -44,7 +45,7 @@ public class Preset {
     //StructureInterpreter
     private List<Integer> wGenome;
 
-    public Preset(int sLen, int costHunt, int costForage, int costRepro, double repThresh, double huntThresh, int costDetect, int costMove, int nutrientsPF, int hYield, int fSR, double mFactor, int lenV, List<Integer> wGen) {
+    public Preset(int sLen, int costHunt, int costForage, int costRepro, double repThresh, double huntThresh, int costDetect, int costMove, int actRad, int nutrientsPF, int hYield, int fSR, double mFactor, int lenV, List<Integer> wGen) {
         eCostHunt = costHunt;
         eCostForage = costForage;
         eCostRepro = costRepro;
@@ -52,6 +53,7 @@ public class Preset {
         hunterThreshold = huntThresh;
         eCostDetect = costDetect;
         eCostMove = costMove;
+        actionRad = actRad;
         nutrientsPerFood = nutrientsPF;
         huntYield = hYield;
         foodSR = fSR;
@@ -68,6 +70,7 @@ public class Preset {
         Creature.huntThreshold = hunterThreshold;
         NewBehavior.energyPerDetect = eCostDetect;
         NewBehavior.energyPerMove = eCostMove;
+        Terrain.actionRadius = actionRad;
         Terrain.nutrientsPerFood = this.nutrientsPerFood;
         Terrain.hunterYield = huntYield;
         TerrainGenerator.foodSpawnRate = foodSR;
