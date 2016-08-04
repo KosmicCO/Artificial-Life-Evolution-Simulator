@@ -8,6 +8,8 @@ package map;
 import creature.cells.Cell;
 import creature.Creature;
 import static creature.Creature.SIDE_LENGTH;
+import creature.cells.ForagerCell;
+import creature.cells.HunterCell;
 import graphics.Graphics2D;
 import java.util.ArrayList;
 import java.util.List;
@@ -264,77 +266,28 @@ public class Terrain {
      * Returns the amount of nutrients gained by consuming the food directly
      * adjacent to the creature's forager cells.
      *
-     * @param cr The creature gaining nutrients.
-     * @return The amount of nutrients gained from consuming the food around the
-     * creature.
-     */
-    public int forage(Creature cr) {
-        int nutrientsGained = 0;
-        List<Cell> foragers = cr.getModeCells();
-        for (Cell ce : foragers) {
-            int x = ce.getX() + cr.getPosX();
-            int y = ce.getY() + cr.getPosY();
-            if (environment[x][y] == 1) {
-                nutrientsGained += nutrientsPerFood;
-                environment[x][y] = 0;
-            }
-            for (int k = 0; k < 4; k++) {
-                int newX = x + Mapping.ADX4[k];
-                int newY = y + Mapping.ADY4[k];
-                boolean inBounds = newX < width && newY < height && newX >= 0 && newY >= 0;
-                if (inBounds && environment[newX][newY] == 1) {
-                    nutrientsGained += nutrientsPerFood;
-                    environment[newX][newY] = 0;
-                    int fEaten = cr.getFoodParticlesConsumed();
-                    cr.setFoodParticlesConsumed(fEaten + 1);
-                }
-            }
-        }
-        return nutrientsGained;
-    }
-
-    /**
-     * Returns the amount of nutrients gained by consuming the food directly
-     * adjacent to the creature's forager cells.
-     *
      * @param forageCells The forage cells in the creature gaining nutrients.
      * @return The amount of nutrients gained from consuming the food around the
      * creature.
      */
     public int forage(List<Cell> forageCells) {
         int nutrientsGained = Creature.energyCostPerForage;
-        /*for (Cell ce : forageCells) {
-         Creature cr = ce.getCreature();
-         int x = ce.getX() + cr.getPosX();
-         int y = ce.getY() + cr.getPosY();
-         if (environment[x][y] == 1) {
-         nutrientsGained += nutrientsPerFood;
-         environment[x][y] = 0;
-         }
-         for (int k = 0; k < 4; k++) {
-         int newX = x + Mapping.ADX4[k];
-         int newY = y + Mapping.ADY4[k];
-         boolean inBounds = newX < width && newY < height && newX >= 0 && newY >= 0;
-         if (inBounds && environment[newX][newY] == 1) {
-         nutrientsGained += nutrientsPerFood;
-         environment[newX][newY] = 0;
-         }
-         }
-         }*/
         for (Cell ce : forageCells) {
-            Creature cr = ce.getCreature();
-            int x = ce.getX() + cr.getPosX();
-            int y = ce.getY() + cr.getPosY();
-            for (int i = -actionRadius; i <= actionRadius; i++) {
-                int newX = x + i;
-                for (int j = -actionRadius; j <= actionRadius; j++) {
-                    int newY = y + j;
-                    boolean inBounds = newX < width && newY < height && newX >= 0 && newY >= 0;
-                    if (inBounds && environment[newX][newY] == 1) {
-                        nutrientsGained += nutrientsPerFood;
-                        environment[newX][newY] = 0;
-                        int fEaten = cr.getFoodParticlesConsumed();
-                        cr.setFoodParticlesConsumed(fEaten + 1);
+            if (ce instanceof ForagerCell) {
+                Creature cr = ce.getCreature();
+                int x = ce.getX() + cr.getPosX();
+                int y = ce.getY() + cr.getPosY();
+                for (int i = -actionRadius; i <= actionRadius; i++) {
+                    int newX = x + i;
+                    for (int j = -actionRadius; j <= actionRadius; j++) {
+                        int newY = y + j;
+                        boolean inBounds = newX < width && newY < height && newX >= 0 && newY >= 0;
+                        if (inBounds && environment[newX][newY] == 1) {
+                            nutrientsGained += nutrientsPerFood;
+                            environment[newX][newY] = 0;
+                            int fEaten = cr.getFoodParticlesConsumed();
+                            cr.setFoodParticlesConsumed(fEaten + 1);
+                        }
                     }
                 }
             }
@@ -356,23 +309,25 @@ public class Terrain {
         }
         for (int i = 0; i < hunters.size(); i++) {
             Cell ce = hunters.get(i);
-            Creature cr = ce.getCreature();
-            int x = ce.getX() + cr.getPosX();
-            int y = ce.getY() + cr.getPosY();
-            for (int count = -actionRadius; count <= actionRadius; count++) {
-                int newX = x + count;
-                for (int j = -actionRadius; j <= actionRadius; j++) {
-                    int newY = y + j;
-                    Cell prey = cellAtAbsPos(newX, newY);
-                    boolean inBounds = newX < width && newY < height && newX >= 0 && newY >= 0;
-                    if (inBounds && prey != null) {
-                        nutrientsGained += (int) (hunterYield * prey.getMaxStore());
-                        prey.damage();
-                        if (prey.getHp() <= 0) {
-                            Creature victim = prey.getCreature();
-                            victim.deleteCell(prey);
-                            int cEaten = cr.getCellsEaten();
-                            cr.setCellsEaten(cEaten + 1);
+            if (hunters instanceof HunterCell) {
+                Creature cr = ce.getCreature();
+                int x = ce.getX() + cr.getPosX();
+                int y = ce.getY() + cr.getPosY();
+                for (int count = -actionRadius; count <= actionRadius; count++) {
+                    int newX = x + count;
+                    for (int j = -actionRadius; j <= actionRadius; j++) {
+                        int newY = y + j;
+                        Cell prey = cellAtAbsPos(newX, newY);
+                        boolean inBounds = newX < width && newY < height && newX >= 0 && newY >= 0;
+                        if (inBounds && prey != null) {
+                            nutrientsGained += (int) (hunterYield * prey.getMaxStore());
+                            prey.damage();
+                            if (prey.getHp() <= 0) {
+                                Creature victim = prey.getCreature();
+                                victim.deleteCell(prey);
+                                int cEaten = cr.getCellsEaten();
+                                cr.setCellsEaten(cEaten + 1);
+                            }
                         }
                     }
                 }
