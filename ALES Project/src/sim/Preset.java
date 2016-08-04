@@ -24,6 +24,7 @@ public class Preset {
     private int eCostForage;
     private int eCostRepro;
     private double reproThreshold;
+    private double reproBuffer;
     private double hunterThreshold;
 
     //NewBehavior
@@ -45,11 +46,12 @@ public class Preset {
     //StructureInterpreter
     private List<Integer> wGenome;
 
-    public Preset(int sLen, int costHunt, int costForage, int costRepro, double repThresh, double huntThresh, int costDetect, int costMove, int actRad, int nutrientsPF, int hYield, int fSR, double mFactor, int lenV, List<Integer> wGen) {
+    public Preset(int sLen, int costHunt, int costForage, int costRepro, double repThresh, double repBuffer, double huntThresh, int costDetect, int costMove, int actRad, int nutrientsPF, int hYield, int fSR, double mFactor, int lenV, List<Integer> wGen) {
         eCostHunt = costHunt;
         eCostForage = costForage;
         eCostRepro = costRepro;
         reproThreshold = repThresh;
+        reproBuffer = repBuffer;
         hunterThreshold = huntThresh;
         eCostDetect = costDetect;
         eCostMove = costMove;
@@ -67,6 +69,7 @@ public class Preset {
         Creature.energyCostPerForage = eCostForage;
         Creature.energyCostPerRepro = eCostRepro;
         Creature.reproductionThreshold = reproThreshold;
+        Creature.reproductionBuffer = reproBuffer;
         Creature.huntThreshold = hunterThreshold;
         NewBehavior.energyPerDetect = eCostDetect;
         NewBehavior.energyPerMove = eCostMove;

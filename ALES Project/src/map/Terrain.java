@@ -27,6 +27,7 @@ public class Terrain {
     public static int actionRadius = 2;
     public static int nutrientsPerFood = 100;
     public static double hunterYield = 0.60;
+    public static int foodRespawnTime = 1;
 
     //USER VARIABLES ABOVE
     public static Terrain currentT;
@@ -41,12 +42,16 @@ public class Terrain {
     private int width;
     private int height;
     private List<Creature> population;
+    private double[][] probabilityMap;
+    private int frCounter;
 
-    public Terrain(int[][] generated, List<Creature> pop) {
+    public Terrain(int[][] generated, List<Creature> pop, double[][] probMap) {
         environment = generated;
         height = generated.length;
         width = generated[0].length;
         population = pop;
+        probabilityMap = probMap;
+        frCounter = 0;
     }
 
     /**
@@ -62,6 +67,32 @@ public class Terrain {
     public boolean isAlive(Creature c) {
 
         return population.contains(c);
+    }
+
+    public void respawnFood() {
+        int finalX = -1;
+        int finalY = -1;
+        for (int h = 0; h < 20; h++) {
+            boolean empty = true;
+            int x = (int) (Math.random() * width);
+            int y = (int) (Math.random() * height);
+                    Cell atLoc = cellAtAbsPos(x, y);
+                    if (atLoc != null) {
+                        empty = false;
+                    }
+                    if (environment[x][y] != 0 || (probabilityMap[x][y])*Math.random()>=TerrainGenerator.foodSpawnRate) {
+                        empty = false;
+
+            }
+            if (empty) {
+                finalX = x;
+                finalY = y;
+                break;
+            }
+        }
+        if (finalX >= 0 && finalY >= 0) {
+            environment[finalX][finalY] = 1;
+        }
     }
 
     public void moveCreature(int direction, Creature cr) {
@@ -144,6 +175,12 @@ public class Terrain {
         for (int i = population.size() - 1; i >= 0; i--) {
 
             population.get(i).update();
+        }
+
+        frCounter++;
+        if (frCounter >= 10) {
+            frCounter = 0;
+            respawnFood();
         }
     }
 

@@ -43,6 +43,8 @@ public class Creature {
     private int posX;
     private int posY;
     private int curDir;
+    private Creature parent1;
+    private Creature parent2;
 
     private int childrenSpawned;
     private int cellsEaten;
@@ -71,6 +73,8 @@ public class Creature {
         foodParticlesConsumed = 0;
         posX = x;
         posY = y;
+        parent1 = null;
+        parent2 = null;
         usedCells = new int[5];
 
         for (Cell[] cellRow : cellMap) {
@@ -423,6 +427,25 @@ public class Creature {
 //            bhvs.add(BehaviorInterpreter.interpret(childGene.get(i)));
 //        }
         Creature child = new Creature(childCellMap, childStarterFood, childGene, 0, 0);
+        child.setParent1(this);
+        child.setParent2(other);
         return child;
     }
+
+    public Creature getParent1() {
+        return parent1;
+    }
+
+    public void setParent1(Creature parent1) {
+        this.parent1 = parent1;
+    }
+
+    public Creature getParent2() {
+        return parent2;
+    }
+
+    public void setParent2(Creature parent2) {
+        this.parent2 = parent2;
+    }
+    
 }
