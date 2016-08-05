@@ -234,9 +234,9 @@ public class Terrain {
             respawnFood();
         }
         //System.out.println("There are "+foodCount+" food particles on the map.");
-        System.out.println("Most Evolutionary Successful at: x: " + leaderBoard.get(0).getPosX()+", y: "+leaderBoard.get(0).getPosY());
+        /*System.out.println("Most Evolutionary Successful at: x: " + leaderBoard.get(0).getPosX()+", y: "+leaderBoard.get(0).getPosY());
          System.out.println("Highest Energy Level at:         x: " + leaderBoard.get(1).getPosX()+", y: "+leaderBoard.get(1).getPosY());
-         System.out.println("Best Hunter at:                  x: " + leaderBoard.get(2).getPosX()+", y: "+leaderBoard.get(2).getPosY());
+         System.out.println("Best Hunter at:                  x: " + leaderBoard.get(2).getPosX()+", y: "+leaderBoard.get(2).getPosY());*/
     }
 
     public int getFoodCount() {
@@ -472,6 +472,8 @@ public class Terrain {
                             spawn(child);
                             int cSpawned = cr.getChildrenSpawned();
                             cr.setChildrenSpawned(cSpawned + 1);
+                            int pSpawned = p.getChildrenSpawned();
+                            p.setChildrenSpawned(pSpawned + 1);
 //                            System.out.println("New Creature at x: " + child.getPosX() + ", y: " + child.getPosY());
                         }
                     }
