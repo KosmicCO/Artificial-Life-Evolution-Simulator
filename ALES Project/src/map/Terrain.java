@@ -26,11 +26,14 @@ public class Terrain {
 
     public static int actionRadius = 2;
     public static int nutrientsPerFood = 100;
+    public static int foodSpawnAmount = 1;
     public static double hunterYield = 0.60;
     public static int foodRespawnTime = 1;
 
     //USER VARIABLES ABOVE
     public static Terrain currentT;
+
+    public static List<Creature> leaderBoard = new ArrayList<>(3);//leaderBoard.get(0) = reproductive leader; leaderBoard.get(1) = energy leader; leaderBoard.get(2) = top hunter
 
     public final static Vec2 ORIGIN = new Vec2(-500, -250);
 
@@ -44,6 +47,7 @@ public class Terrain {
     private List<Creature> population;
     private double[][] probabilityMap;
     private int frCounter;
+    private int foodCount;
 
     public Terrain(int[][] generated, List<Creature> pop, double[][] probMap) {
         environment = generated;
@@ -52,6 +56,7 @@ public class Terrain {
         population = pop;
         probabilityMap = probMap;
         frCounter = 0;
+        foodCount = 0;
     }
 
     /**
@@ -62,6 +67,11 @@ public class Terrain {
      */
     public void addCreature(Creature c) {
         population.add(c);
+        if (population.size() == 1) {
+            for (int i = 0; i < 3; i++) {
+                leaderBoard.add(population.get(0));
+            }
+        }
     }
 
     public boolean isAlive(Creature c) {
@@ -69,29 +79,57 @@ public class Terrain {
         return population.contains(c);
     }
 
+    /*public List<Creature> leaderBoard() {
+     List<Creature> leaders = new ArrayList<>(3);
+     if (population.size() <= 0) {
+     return leaders;
+     }
+     Creature reproLeader = population.get(0);
+     Creature energyLeader = population.get(0);
+     Creature huntLeader = population.get(0);
+     for (int i = 0; i < population.size(); i++) {
+     if (population.get(i).getChildrenSpawned() > reproLeader.getChildrenSpawned()) {
+     reproLeader = population.get(i);
+     }
+     if (population.get(i).getEnergy() > energyLeader.getEnergy()) {
+     energyLeader = population.get(i);
+     }
+     if (population.get(i).getCellsEaten() > huntLeader.getCellsEaten()) {
+     huntLeader = population.get(i);
+     }
+     }
+     leaders.add(0, reproLeader);
+     leaders.add(1, energyLeader);
+     leaders.add(2, huntLeader);
+     return leaders;
+     }*/
     public void respawnFood() {
         int finalX = -1;
         int finalY = -1;
-        for (int h = 0; h < 20; h++) {
-            boolean empty = true;
-            int x = (int) (Math.random() * width);
-            int y = (int) (Math.random() * height);
-                    Cell atLoc = cellAtAbsPos(x, y);
-                    if (atLoc != null) {
-                        empty = false;
-                    }
-                    if (environment[x][y] != 0 || (probabilityMap[x][y])*Math.random()>=TerrainGenerator.foodSpawnRate) {
-                        empty = false;
+        for (int c = 0; c < foodSpawnAmount; c++) {
+            for (int h = 0; h < 20; h++) {
+                boolean empty = true;
+                int x = (int) (Math.random() * width);
+                int y = (int) (Math.random() * height);
+                Cell atLoc = cellAtAbsPos(x, y);
+                if (atLoc != null) {
+                    empty = false;
+                }
+                if (environment[x][y] != 0 || (probabilityMap[x][y]) * Math.random() >= TerrainGenerator.foodSpawnRate) {
+                    empty = false;
 
+                }
+                if (empty) {
+                    finalX = x;
+                    finalY = y;
+                    break;
+                }
             }
-            if (empty) {
-                finalX = x;
-                finalY = y;
-                break;
+            if (finalX >= 0 && finalY >= 0) {
+                environment[finalX][finalY] = 1;
+                foodCount++;
+                //System.out.println("FOOD SPAWNED at x: "+finalX+", y: "+finalY);
             }
-        }
-        if (finalX >= 0 && finalY >= 0) {
-            environment[finalX][finalY] = 1;
         }
     }
 
@@ -173,7 +211,20 @@ public class Terrain {
     public void update() {
 
         for (int i = population.size() - 1; i >= 0; i--) {
-
+            if (population.size() > 0) {
+                if (population.get(i).getChildrenSpawned() > leaderBoard.get(0).getChildrenSpawned()) {
+                    leaderBoard.remove(0);
+                    leaderBoard.add(0, population.get(i));
+                }
+                if (population.get(i).getEnergy() > leaderBoard.get(1).getEnergy()) {
+                    leaderBoard.remove(1);
+                    leaderBoard.add(1, population.get(i));
+                }
+                if (population.get(i).getCellsEaten() > leaderBoard.get(2).getCellsEaten()) {
+                    leaderBoard.remove(2);
+                    leaderBoard.add(2, population.get(i));
+                }
+            }
             population.get(i).update();
         }
 
@@ -182,6 +233,18 @@ public class Terrain {
             frCounter = 0;
             respawnFood();
         }
+        //System.out.println("There are "+foodCount+" food particles on the map.");
+        /*System.out.println("Most Evolutionary Successful at: x: " + leaderBoard.get(0).getPosX()+", y: "+leaderBoard.get(0).getPosY());
+         System.out.println("Highest Energy Level at:         x: " + leaderBoard.get(1).getPosX()+", y: "+leaderBoard.get(1).getPosY());
+         System.out.println("Best Hunter at:                  x: " + leaderBoard.get(2).getPosX()+", y: "+leaderBoard.get(2).getPosY());*/
+    }
+
+    public int getFoodCount() {
+        return foodCount;
+    }
+
+    public void alterFoodCount(int diff) {
+        foodCount += diff;
     }
 
     /**
@@ -324,6 +387,7 @@ public class Terrain {
                             environment[newX][newY] = 0;
                             int fEaten = cr.getFoodParticlesConsumed();
                             cr.setFoodParticlesConsumed(fEaten + 1);
+                            foodCount--;
                         }
                     }
                 }
@@ -408,6 +472,8 @@ public class Terrain {
                             spawn(child);
                             int cSpawned = cr.getChildrenSpawned();
                             cr.setChildrenSpawned(cSpawned + 1);
+                            int pSpawned = p.getChildrenSpawned();
+                            p.setChildrenSpawned(pSpawned + 1);
 //                            System.out.println("New Creature at x: " + child.getPosX() + ", y: " + child.getPosY());
                         }
                     }
