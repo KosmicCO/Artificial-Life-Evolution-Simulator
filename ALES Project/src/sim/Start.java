@@ -14,6 +14,7 @@ import gui.TypingManager;
 import static map.Terrain.currentT;
 import org.lwjgl.input.Keyboard;
 import static sim.TestGenMap.makeTestMap;
+import static sim.SimGenerator.generate;
 import util.Color4;
 
 /**
@@ -59,7 +60,7 @@ public class Start {
         Window2D.background = Color4.BLACK;
 
         //testing graphics start
-        makeTestMap();
+        generate(); //makeTestMap();
 
         //testing graphics end
         MainMenu main = new MainMenu("mainMenu");
