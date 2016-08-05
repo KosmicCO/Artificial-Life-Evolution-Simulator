@@ -18,7 +18,7 @@ public class TerrainGenerator {
     public static double foodSpawnRate = 0.005;
 
     public static Terrain generate(int size, double seed) {
-
+        int fCount = 0;
         int[][] map = new int[size][size];
         Noise n = new Noise(1.0);
         n.seed = seed;
@@ -33,17 +33,21 @@ public class TerrainGenerator {
                 
                 if (Math.abs(h) > 0.8) {
 
-                    map[i][j] = h > 0 ? 2 : 3;
+                    map[i][j] = h > 0 ? Terrain.WALL : Terrain.PIT;
                 } else {
 
                     if ((Math.abs((new Random()).nextDouble() * h)) < foodSpawnRate) {
 
-                        map[i][j] = 1;
+                        map[i][j] = Terrain.FOOD;
+                        fCount++;
+                        
                     }
                 }
             }
         }
 
-        return new Terrain(map, new ArrayList(), probMap);
+        Terrain simTerrain = new Terrain(map, new ArrayList(), probMap);
+        simTerrain.alterFoodCount(fCount);
+        return simTerrain;
     }
 }
