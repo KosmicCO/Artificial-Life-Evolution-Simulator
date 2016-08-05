@@ -19,7 +19,7 @@ public class ReproductionCell extends Cell {
      */
     public ReproductionCell(int x, int y) {
 
-        super(1, 50, 3, x, y);
+        super(1, 500, 3, x, y);
     }
 
     @Override

@@ -19,14 +19,14 @@ import static utility.Mapping.ADY4;
  * @author bhargav
  */
 public class StructureInterpreter {
-
+    
     private static int up = 0;
     private static int right = 1;
     private static int down = 2;
     private static int left = 3;
 
     public static final int CELL_TYPES = 12;
-    private static List<Integer> weightedGenome = new ArrayList<>();
+    private static List<Integer> weightedGenome = new ArrayList<>(); //WEIGHTED GENOME WILL BE A USER VARIABLE
     private static List<Integer> geneRefList = new ArrayList<>();
 
     public static List<Integer> getWeightedGenome() {

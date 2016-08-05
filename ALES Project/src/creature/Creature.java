@@ -6,7 +6,6 @@
 package creature;
 
 import creature.cells.Cell;
-import creature.genetics.BehaviorInterpreter;
 import creature.genetics.Chromosome;
 import creature.genetics.StructureInterpreter;
 import graphics.Graphics2D;
@@ -25,49 +24,58 @@ public class Creature {
     public static int energyCostPerHunt = 4;
     public static int energyCostPerForage = 2;
     public static int energyCostPerRepro = 10;
+
+    public static int childStarterFood = 2000;
+
+    public static double reproductionThreshold = 0.7;
+    public static double reproductionBuffer = 0.2;
+    public static double huntThreshold = 0.4;
     //USER VARIABLES ABOVE
-            
-    public static final int HUNT = 0;
+
+    public static final int EAT = 0;
     public static final int REPRODUCE = 1;
-    public static final int FORAGE = 2;
 
     private final List<Cell> cells;
     private final Cell[][] cellMap;
-    private final List<Behavior> behaviors;
+//    private final List<Behavior> behaviors;
     private final List<Chromosome> genes;
 
     private int posX;
     private int posY;
-    
+    private int curDir;
+    private Creature parent1;
+    private Creature parent2;
+
+    private int childrenSpawned;
+    private int cellsEaten;
+    private int foodParticlesConsumed;
+
     private List<Cell> modeCells;
     private int[] usedCells; //up right down left detector
     private int mode;
-    private boolean modeToggle;
-    
+//    private boolean modeToggle;
+
     private int maxStore;
     private int energy;
     private int energyPerTick;
 
-    public Creature(Cell[][] cellMap, List<Behavior> behaviors, int energy, List<Chromosome> genes, int x, int y) {
+    public Creature(Cell[][] cellMap, /*List<Behavior> behaviors,*/ int energy, List<Chromosome> genes, int x, int y) {
 
         this.cellMap = cellMap;
         cells = new ArrayList();
-        this.behaviors = behaviors;
         modeCells = new ArrayList();
-        changeMode(FORAGE);
-
-        for (Behavior b : behaviors) {
-
-            b.setCreature(this);
-        }
-
+        curDir = (int) (Math.random() * 4);
         this.genes = genes;
         maxStore = 0;
         energyPerTick = 0;
+        childrenSpawned = 0;
+        cellsEaten = 0;
+        foodParticlesConsumed = 0;
         posX = x;
         posY = y;
+        parent1 = null;
+        parent2 = null;
         usedCells = new int[5];
-        modeToggle = false;
 
         for (Cell[] cellRow : cellMap) {
 
@@ -91,7 +99,8 @@ public class Creature {
                 }
             }
         }
-        
+
+        changeMode(EAT);
         this.energy = energy;
 
         if (maxStore < energy) {
@@ -99,7 +108,7 @@ public class Creature {
             this.energy = maxStore;
         }
     }
-    
+
     public void deleteCell(Cell ce) {
 
         if (ce.getCellType() >= 4 && ce.getCellType() < 8) {
@@ -120,24 +129,19 @@ public class Creature {
         energyPerTick -= ce.getEnergy();
         checkVitality();
     }
-    
-    public void toggleMode(){
-        
-        modeToggle = !modeToggle;
+
+    public int getCurDir() {
+
+        return curDir;
     }
 
-    public boolean isModeToggle() {
-        
-        return modeToggle;
+    public void setCurDir(int curDir) {
+
+        this.curDir = curDir;
     }
 
-    public void setModeToggle(boolean modeToggle) {
-        
-        this.modeToggle = modeToggle;
-    }
-    
-    public void addEnergy(int en){
-        
+    public void addEnergy(int en) {
+
         energy += en;
     }
 
@@ -149,7 +153,6 @@ public class Creature {
         }
 
         if (energy <= 0) {
-            
             currentT.kill(this);
         }
     }
@@ -180,14 +183,24 @@ public class Creature {
 
     public void update() {
 
-        if(modeToggle){
-            
-            doModeAction();
+        if (getEnergyMode() != mode) {
+            changeMode(getEnergyMode());
         }
-        
-        behaviors.get(mode).step();
+
+        NewBehavior.step(this);
         energy -= energyPerTick;
         checkEnergy();
+    }
+
+    private int getEnergyMode() {
+        
+        if(energy > maxStore * (reproductionThreshold + (mode == EAT ? reproductionBuffer : 0))){
+            
+            return REPRODUCE;
+        }else{
+            
+            return EAT;
+        }
     }
 
     private List<Cell> findType(int type) {
@@ -209,18 +222,54 @@ public class Creature {
         return cells;
     }
     
+    public int getEnergy(){
+        
+        return energy;
+    }
+
+    public int getMaxStore() {
+        
+        return maxStore;
+    }
+
+    public int getEnergyPerTick() {
+        
+        return energyPerTick;
+    }
     
+    public String getModeName(){
+        
+        return mode == EAT ? "Eating" : "Mating";
+    }
 
     private void changeMode(int mode) {
 
-        behaviors.get(this.mode).reset();
-        modeToggle = false;
+        if(mode == EAT){
+            
+            modeCells = findType(2);
+            modeCells.addAll(findType(3));
+        }else{
+            
+            modeCells = findType(8);
+        }
+        
         this.mode = mode;
     }
 
     public boolean detectMode() {
 
-        return currentT.detect(this, mode);
+        boolean found = false;
+        
+        if(mode == EAT){
+            
+            found = currentT.detect(this, 0);
+            found |= currentT.detect(this, 2);
+        }else{
+            
+            found = currentT.detect(this, 1);
+        }
+        
+        return found;
     }
 
     public Cell cellAtRelPos(int x, int y) {
@@ -255,6 +304,30 @@ public class Creature {
         return genes;
     }
 
+    public int getChildrenSpawned() {
+        return childrenSpawned;
+    }
+
+    public void setChildrenSpawned(int childrenSpawned) {
+        this.childrenSpawned = childrenSpawned;
+    }
+
+    public int getCellsEaten() {
+        return cellsEaten;
+    }
+
+    public void setCellsEaten(int cellsEaten) {
+        this.cellsEaten = cellsEaten;
+    }
+
+    public int getFoodParticlesConsumed() {
+        return foodParticlesConsumed;
+    }
+
+    public void setFoodParticlesConsumed(int foodParticlesConsumed) {
+        this.foodParticlesConsumed = foodParticlesConsumed;
+    }
+
     @Override
     public String toString() {
         String s = "";
@@ -276,22 +349,39 @@ public class Creature {
         }
     }
 
-    public void doModeAction() {
-        
-        switch (mode) {
-            
-            case HUNT:
-                
-                energy += currentT.hunt(modeCells) - energyCostPerHunt;
-                break;
-                
-            case FORAGE:
+    public void drawCut(Vec2 start, Vec2 end, Vec2 ScreenAbs, int zoom) {
 
-                energy += currentT.forage(modeCells) - energyCostPerForage;
+        for (Cell c : cells) {
+
+            Vec2 cPos = new Vec2(c.getX() + posX, c.getY() + posY);
+
+            if (cPos.containedBy(start, end)) {
+
+                Graphics2D.fillRect(ScreenAbs.add(new Vec2(c.getX() * zoom, c.getY() * zoom)), new Vec2(zoom), Cell.cellColor(c.getCellType()));
+            }
+        }
+    }
+
+    public void drawNoPos(Vec2 ScreenAbs, int zoom) {
+
+        for (Cell c : cells) {
+
+            Graphics2D.fillRect(ScreenAbs.add(new Vec2(c.getX() * zoom, c.getY() * zoom)), new Vec2(zoom), Cell.cellColor(c.getCellType()));
+        }
+    }
+
+    public void doModeAction() {
+
+        switch (mode) {
+
+            case EAT:
+
+                this.addEnergy(currentT.hunt(modeCells) - energyCostPerHunt);
+                this.addEnergy(currentT.forage(modeCells) - energyCostPerForage);
                 break;
-                
+
             case REPRODUCE:
-                
+
                 currentT.reproduce(this);
                 energy -= energyCostPerRepro;
                 break;
@@ -330,13 +420,32 @@ public class Creature {
         }
         Cell[][] childCellMap = StructureInterpreter.interpret(childGene.get(0));
 
-        List<Behavior> bhvs = new ArrayList();
-
-        for (int i = 1; i < 4; i++) {
-
-            bhvs.add(BehaviorInterpreter.interpret(childGene.get(i)));
-        }
-        Creature child = new Creature(childCellMap, bhvs, 0, childGene, 0, 0);
+//        List<Behavior> bhvs = new ArrayList();
+//
+//        for (int i = 1; i < 4; i++) {
+//
+//            bhvs.add(BehaviorInterpreter.interpret(childGene.get(i)));
+//        }
+        Creature child = new Creature(childCellMap, childStarterFood, childGene, 0, 0);
+        child.setParent1(this);
+        child.setParent2(other);
         return child;
     }
+
+    public Creature getParent1() {
+        return parent1;
+    }
+
+    public void setParent1(Creature parent1) {
+        this.parent1 = parent1;
+    }
+
+    public Creature getParent2() {
+        return parent2;
+    }
+
+    public void setParent2(Creature parent2) {
+        this.parent2 = parent2;
+    }
+    
 }

@@ -7,10 +7,12 @@ package sim;
 
 import sim.guis.MainMenu;
 import engine.Core;
+import engine.Input;
 import graphics.Window2D;
 import gui.GUIController;
 import gui.TypingManager;
 import static map.Terrain.currentT;
+import org.lwjgl.input.Keyboard;
 import static sim.TestGenMap.makeTestMap;
 import util.Color4;
 
@@ -22,11 +24,27 @@ public class Start {
 
     private static long updates;
     private static final int UPDATES_PER_TICK = 20;
-    private static boolean isRunning;
+    private static boolean running;
+    private static boolean paused;
 
-    public static void setRunning(boolean run){
+    public static boolean isRunning() {
         
-        isRunning = run;
+        return running;
+    }
+
+    public static void setRunning(boolean running) {
+        
+        Start.running = running;
+    }
+
+    public static boolean isPaused() {
+        
+        return paused;
+    }
+
+    public static void setPaused(boolean paused) {
+        
+        Start.paused = paused;
     }
     
     public static void main(String[] args) {
@@ -37,7 +55,7 @@ public class Start {
         Core.is3D = false;
 
         Core.init();
-
+        
         Window2D.background = Color4.BLACK;
 
         //testing graphics start
@@ -56,10 +74,10 @@ public class Start {
 
             GUIController.update();
 
-            if (isRunning) {
+            if (running && !paused) {
                 
                 if (updates % UPDATES_PER_TICK == 0) {
-
+                   
                     currentT.update();
                 }
 

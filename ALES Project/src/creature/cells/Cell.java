@@ -112,7 +112,7 @@ public abstract class Cell {
             case 0:
                 return Color4.BLUE.withG(1);
             case 1:
-                return Color4.GREEN;
+                return Color4.BLACK;
             case 2:
                 return Color4.YELLOW;
             case 3:
@@ -128,7 +128,7 @@ public abstract class Cell {
             case 8:
                 return Color4.RED;
             case 9:
-                return Color4.BLACK;
+                return Color4.GREEN;
             case 10:
                 return Color4.RED.withR(.144);
             case 11:
