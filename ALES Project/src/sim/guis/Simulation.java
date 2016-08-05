@@ -29,6 +29,7 @@ import org.lwjgl.input.Keyboard;
 import util.Color4;
 import static sim.Start.setRunning;
 import static gui.TypingManager.typing;
+import sim.SimGenerator;
 import static sim.Start.isPaused;
 import static sim.Start.setPaused;
 
@@ -88,6 +89,9 @@ public class Simulation extends ComponentInputGUI {
 
         inputs.add(new GUIButton("plane", this, new Vec2(-500, -250), new Vec2(500), " ", Color.transparent));
         components.add(new GUIPanel("planeP", new Vec2(-500, -250), new Vec2(500), getColor(2)));
+        
+        inputs.add(new GUIButton("regenerate", this, nextPlace(start, 0, 0), BUTTON_SIZE, "New Map", Color.white));
+        components.add(new GUIPanel("regenMap", nextPlace(start, 0, 0), BUTTON_SIZE, getColor(0)));
 
         stats = new ArrayList();
 
@@ -162,6 +166,8 @@ public class Simulation extends ComponentInputGUI {
                 this.setVisible(false);
                 parent.start();
 
+            case "regenerate":
+                SimGenerator.generate();
             case "plane":
 
                 Cell c = currentT.cellAtAbsPos((int) (Input.getMouse().x - ORIGIN.x) / 2, (int) (Input.getMouse().y - ORIGIN.y) / 2);
