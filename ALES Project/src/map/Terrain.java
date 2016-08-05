@@ -33,6 +33,8 @@ public class Terrain {
     //USER VARIABLES ABOVE
     public static Terrain currentT;
 
+    public static List<Creature> leaderBoard = new ArrayList<>(3);//leaderBoard.get(0) = reproductive leader; leaderBoard.get(1) = energy leader; leaderBoard.get(2) = top hunter
+
     public final static Vec2 ORIGIN = new Vec2(-500, -250);
 
     public final static int FOOD = 1;
@@ -65,38 +67,42 @@ public class Terrain {
      */
     public void addCreature(Creature c) {
         population.add(c);
+        if (population.size() == 1) {
+            for (int i = 0; i < 3; i++) {
+                leaderBoard.add(population.get(0));
+            }
+        }
     }
 
     public boolean isAlive(Creature c) {
 
         return population.contains(c);
     }
-    
-    public List<Creature> leaderBoard(){
-        List<Creature> leaders = new ArrayList<>(3);
-        if(population.size()<=0){
-            return leaders;
-        }
-        Creature reproLeader = population.get(0);
-        Creature energyLeader = population.get(0);
-        Creature huntLeader = population.get(0);
-        for(int i = 0; i<population.size(); i++){
-            if(population.get(i).getChildrenSpawned()>reproLeader.getChildrenSpawned()){
-                reproLeader = population.get(i);
-            }
-            if(population.get(i).getEnergy()>energyLeader.getEnergy()){
-                energyLeader = population.get(i);
-            }
-            if(population.get(i).getCellsEaten()>huntLeader.getCellsEaten()){
-                huntLeader = population.get(i);
-            }
-        }
-        leaders.add(0,reproLeader);
-        leaders.add(1,energyLeader);
-        leaders.add(2,huntLeader);
-        return leaders;
-    }
 
+    /*public List<Creature> leaderBoard() {
+     List<Creature> leaders = new ArrayList<>(3);
+     if (population.size() <= 0) {
+     return leaders;
+     }
+     Creature reproLeader = population.get(0);
+     Creature energyLeader = population.get(0);
+     Creature huntLeader = population.get(0);
+     for (int i = 0; i < population.size(); i++) {
+     if (population.get(i).getChildrenSpawned() > reproLeader.getChildrenSpawned()) {
+     reproLeader = population.get(i);
+     }
+     if (population.get(i).getEnergy() > energyLeader.getEnergy()) {
+     energyLeader = population.get(i);
+     }
+     if (population.get(i).getCellsEaten() > huntLeader.getCellsEaten()) {
+     huntLeader = population.get(i);
+     }
+     }
+     leaders.add(0, reproLeader);
+     leaders.add(1, energyLeader);
+     leaders.add(2, huntLeader);
+     return leaders;
+     }*/
     public void respawnFood() {
         int finalX = -1;
         int finalY = -1;
@@ -205,7 +211,20 @@ public class Terrain {
     public void update() {
 
         for (int i = population.size() - 1; i >= 0; i--) {
-
+            if (population.size() > 0) {
+                if (population.get(i).getChildrenSpawned() > leaderBoard.get(0).getChildrenSpawned()) {
+                    leaderBoard.remove(0);
+                    leaderBoard.add(0, population.get(i));
+                }
+                if (population.get(i).getEnergy() > leaderBoard.get(1).getEnergy()) {
+                    leaderBoard.remove(1);
+                    leaderBoard.add(1, population.get(i));
+                }
+                if (population.get(i).getCellsEaten() > leaderBoard.get(2).getCellsEaten()) {
+                    leaderBoard.remove(2);
+                    leaderBoard.add(2, population.get(i));
+                }
+            }
             population.get(i).update();
         }
 
@@ -214,18 +233,18 @@ public class Terrain {
             frCounter = 0;
             respawnFood();
         }
-        System.out.println("There are "+foodCount+" food particles on the map.");
-        System.out.println("Most Evolutionary Successful at: x: " + leaderBoard().get(0).getPosX()+", y: "+leaderBoard().get(0).getPosY());
-        System.out.println("Highest Energy Level at:         x: " + leaderBoard().get(1).getPosX()+", y: "+leaderBoard().get(1).getPosY());
-        System.out.println("Best Hunter at:                  x: " + leaderBoard().get(2).getPosX()+", y: "+leaderBoard().get(2).getPosY());
+        //System.out.println("There are "+foodCount+" food particles on the map.");
+        System.out.println("Most Evolutionary Successful at: x: " + leaderBoard.get(0).getPosX()+", y: "+leaderBoard.get(0).getPosY());
+         System.out.println("Highest Energy Level at:         x: " + leaderBoard.get(1).getPosX()+", y: "+leaderBoard.get(1).getPosY());
+         System.out.println("Best Hunter at:                  x: " + leaderBoard.get(2).getPosX()+", y: "+leaderBoard.get(2).getPosY());
     }
-    
-    public int getFoodCount(){
+
+    public int getFoodCount() {
         return foodCount;
     }
-    
-    public void alterFoodCount(int diff){
-        foodCount+=diff;
+
+    public void alterFoodCount(int diff) {
+        foodCount += diff;
     }
 
     /**
