@@ -11,8 +11,8 @@ import gui.components.GUIButton;
 import gui.components.GUIPanel;
 import gui.types.ComponentInputGUI;
 import gui.types.GUIInputComponent;
-import org.lwjgl.input.Mouse;
 import org.newdawn.slick.Color;
+import util.Color4;
 import static utility.GUIs.BUTTON_SIZE;
 import static utility.GUIs.getColor;
 import static utility.GUIs.nextPlace;
@@ -25,6 +25,9 @@ import util.Vec2;
 public class MainMenu extends ComponentInputGUI {
 
     private Vec2 start = new Vec2(-500, -150);
+
+    private boolean selected;
+    private GUIPanel hide;
 
     private Presets pre;
     private Simulation sim;
@@ -41,10 +44,13 @@ public class MainMenu extends ComponentInputGUI {
 
         for (int i = 0; i < 3; i++) {
 
-            components.add(new GUIPanel("top" + i, nextPlace(start, 0, -i), BUTTON_SIZE, getColor(0).multiply(0.6 - 0.1 * i)));
+            components.add(new GUIPanel("top" + i, nextPlace(start, 0, -i), BUTTON_SIZE, getColor(0).multiply(0.8 - 0.1 * i)));
         }
 
         components.add(new GUIPanel("bottom", nextPlace(start, 0, 1), BUTTON_SIZE, getColor(1).multiply(0.6)));
+
+        selected = false;
+        hide = new GUIPanel("hide", nextPlace(start, 0, 1), BUTTON_SIZE.multiply(new Vec2(1, 4)), Color4.BLACK.withA(0.6));
 
         pre = new Presets("presets", this);
         sim = new Simulation("simulation", this);
@@ -60,13 +66,14 @@ public class MainMenu extends ComponentInputGUI {
 
         this.setVisible(true);
         typing(this, true);
+        selected = true;
     }
 
     @Override
     public void recieve(String string, Object o) {
 
         switch (string) {
-            
+
             case "start":
                 this.setVisible(false);
                 typing(this, false);
@@ -74,9 +81,21 @@ public class MainMenu extends ComponentInputGUI {
                 break;
             case "presets":
                 pre.start();
+                selected = false;
                 break;
             case "quit":
                 System.exit(0);
+        }
+    }
+
+    @Override
+    public void draw() {
+
+        super.draw();
+        
+        if (!selected) {
+
+            hide.draw();
         }
     }
 

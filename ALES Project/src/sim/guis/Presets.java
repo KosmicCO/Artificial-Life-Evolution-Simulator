@@ -5,6 +5,7 @@
  */
 package sim.guis;
 
+import graphics.Graphics2D;
 import gui.GUIController;
 import static gui.TypingManager.typing;
 import gui.components.GUIButton;
@@ -15,6 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 import org.newdawn.slick.Color;
 import sim.Preset;
+import util.Color4;
 import util.Vec2;
 import static utility.GUIs.BUTTON_SIZE;
 import static utility.GUIs.getColor;
@@ -48,7 +50,7 @@ public class Presets extends ComponentInputGUI {
         for (int i = 0; i < 6; i++) {
             
             buttons.add(new GUIButton("button" + i, this, nextPlace(parent.getStartPos(), 1, -i), BUTTON_SIZE, "-None-", Color.white));
-            panels.add(new GUIPanel("panel" + i, nextPlace(parent.getStartPos(), 1, -i), BUTTON_SIZE, getColor(0).multiply(0.7 - 0.1 * i)));
+            panels.add(new GUIPanel("panel" + i, nextPlace(parent.getStartPos(), 1, -i), BUTTON_SIZE, getColor(0).multiply(0.8 - 0.1 * i)));
         }
 
         inputs.add(new GUIButton("new", this, nextPlace(parent.getStartPos(), 1, 1), BUTTON_SIZE, "New Preset", Color.white));
@@ -91,7 +93,7 @@ public class Presets extends ComponentInputGUI {
         if (string.equals("back")) {
             
             setVisible(false);
-            typing(parent, true);
+            parent.start();
         }
 
     }

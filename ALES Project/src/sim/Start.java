@@ -24,11 +24,27 @@ public class Start {
 
     private static long updates;
     private static final int UPDATES_PER_TICK = 20;
-    private static boolean isRunning;
+    private static boolean running;
+    private static boolean paused;
 
-    public static void setRunning(boolean run){
+    public static boolean isRunning() {
         
-        isRunning = run;
+        return running;
+    }
+
+    public static void setRunning(boolean running) {
+        
+        Start.running = running;
+    }
+
+    public static boolean isPaused() {
+        
+        return paused;
+    }
+
+    public static void setPaused(boolean paused) {
+        
+        Start.paused = paused;
     }
     
     public static void main(String[] args) {
@@ -58,7 +74,7 @@ public class Start {
 
             GUIController.update();
 
-            if (isRunning) {
+            if (running && !paused) {
                 
                 if (updates % UPDATES_PER_TICK == 0) {
                    

@@ -239,7 +239,7 @@ public class Creature {
     
     public String getModeName(){
         
-        return mode == EAT ? "Eating" : "Reproducing";
+        return mode == EAT ? "Eating" : "Mating";
     }
 
     private void changeMode(int mode) {

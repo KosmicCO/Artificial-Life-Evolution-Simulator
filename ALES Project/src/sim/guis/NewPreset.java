@@ -31,10 +31,9 @@ public class NewPreset extends ComponentInputGUI {
         inputs.add(new GUIButton("genetics", this, nextPlace(parent.getStartPos(), 2, -4), BUTTON_SIZE, "Genetics", Color.white));
         inputs.add(new GUIButton("terrain", this, nextPlace(parent.getStartPos(), 2, -3), BUTTON_SIZE, "Terrain", Color.white));
         inputs.add(new GUIButton("food", this, nextPlace(parent.getStartPos(), 2, -2), BUTTON_SIZE, "Food", Color.white));
-        inputs.add(new GUIButton("behavior", this, nextPlace(parent.getStartPos(), 2, -1), BUTTON_SIZE, "Behavior", Color.white));
-        inputs.add(new GUIButton("sumptingEalce", this, nextPlace(parent.getStartPos(), 2, 0), BUTTON_SIZE, ": /", Color.white));
+        inputs.add(new GUIButton("sumptingEalce", this, nextPlace(parent.getStartPos(), 2, 0), BUTTON_SIZE, "Other", Color.white));
 
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < 4; i++) {
 
             components.add(new GUIPanel("top" + i, nextPlace(parent.getStartPos(), 2, -i), BUTTON_SIZE, getColor(0).multiply(0.8 - 0.1 * i)));
         }
