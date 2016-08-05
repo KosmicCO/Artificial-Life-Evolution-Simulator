@@ -71,6 +71,31 @@ public class Terrain {
 
         return population.contains(c);
     }
+    
+    public List<Creature> leaderBoard(){
+        List<Creature> leaders = new ArrayList<>(3);
+        if(population.size()<=0){
+            return leaders;
+        }
+        Creature reproLeader = population.get(0);
+        Creature energyLeader = population.get(0);
+        Creature huntLeader = population.get(0);
+        for(int i = 0; i<population.size(); i++){
+            if(population.get(i).getChildrenSpawned()>reproLeader.getChildrenSpawned()){
+                reproLeader = population.get(i);
+            }
+            if(population.get(i).getEnergy()>energyLeader.getEnergy()){
+                energyLeader = population.get(i);
+            }
+            if(population.get(i).getCellsEaten()>huntLeader.getCellsEaten()){
+                huntLeader = population.get(i);
+            }
+        }
+        leaders.add(0,reproLeader);
+        leaders.add(1,energyLeader);
+        leaders.add(2,huntLeader);
+        return leaders;
+    }
 
     public void respawnFood() {
         int finalX = -1;
@@ -190,6 +215,9 @@ public class Terrain {
             respawnFood();
         }
         System.out.println("There are "+foodCount+" food particles on the map.");
+        System.out.println("Most Evolutionary Successful at: x: " + leaderBoard().get(0).getPosX()+", y: "+leaderBoard().get(0).getPosY());
+        System.out.println("Highest Energy Level at:         x: " + leaderBoard().get(1).getPosX()+", y: "+leaderBoard().get(1).getPosY());
+        System.out.println("Best Hunter at:                  x: " + leaderBoard().get(2).getPosX()+", y: "+leaderBoard().get(2).getPosY());
     }
     
     public int getFoodCount(){
