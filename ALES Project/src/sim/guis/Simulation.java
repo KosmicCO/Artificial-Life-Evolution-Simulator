@@ -19,14 +19,18 @@ import org.newdawn.slick.Color;
 import util.Vec2;
 import static utility.GUIs.getColor;
 import static map.Terrain.ORIGIN;
-import static sim.Start.setRunning;
 import static utility.GUIs.BUTTON_SIZE;
 import static utility.GUIs.nextPlace;
-import static gui.TypingManager.typing;
 import gui.components.GUILabel;
 import gui.types.GUIComponent;
 import java.util.ArrayList;
 import java.util.List;
+import org.lwjgl.input.Keyboard;
+import util.Color4;
+import static sim.Start.setRunning;
+import static gui.TypingManager.typing;
+import static sim.Start.isPaused;
+import static sim.Start.setPaused;
 
 /**
  *
@@ -37,6 +41,7 @@ public class Simulation extends ComponentInputGUI {
     private static int zoom = 2;
 
     private Vec2 start = new Vec2(0, -150);
+    private boolean init = false;
     private MainMenu parent;
 
     private static Vec2 offsetToDraw = new Vec2(2, 250 - SIDE_LENGTH * 8);
@@ -46,20 +51,38 @@ public class Simulation extends ComponentInputGUI {
     private GUIPanel gtpPanel;
     private GUILabel noParents;
 
+    private static Vec2 moveSize = new Vec2(24, 16);
+    private List<GUIButton> moveButtons;
+    private List<GUIPanel> movePanels;
+
     public Simulation(String n, MainMenu parent) {
 
         super(n);
 
         goToParents = new ArrayList();
+        moveButtons = new ArrayList();
+        movePanels = new ArrayList();
 
         for (int i = 0; i < 2; i++) {
 
-            goToParents.add(new GUIButton("parent" + (i + 1), this, new Vec2(i * (SIDE_LENGTH * 8) / 2 + offsetToDraw.x, 50), new Vec2((SIDE_LENGTH * 8) / 2, 32), "Parent " + (i + 1), Color.white));
+            goToParents.add(new GUIButton("parent" + (i + 1), this, new Vec2(i * (SIDE_LENGTH * 4) + offsetToDraw.x, 50), new Vec2((SIDE_LENGTH * 4), 32), "Parent " + (i + 1), Color.white));
         }
+
+        moveButtons.add(new GUIButton("move0", this, offsetToDraw.add(new Vec2(SIDE_LENGTH * 4, SIDE_LENGTH * 8 - moveSize.y)).subtract(moveSize.withY(0).divide(2)), moveSize, " ", Color.transparent));
+        movePanels.add(new GUIPanel("mp0", offsetToDraw.add(new Vec2(SIDE_LENGTH * 4, SIDE_LENGTH * 8 - moveSize.y)).subtract(moveSize.withY(0).divide(2)), moveSize, Color4.BLACK.withA(0.6)));
+
+        moveButtons.add(new GUIButton("move1", this, offsetToDraw.add(new Vec2(SIDE_LENGTH * 8 - moveSize.x, SIDE_LENGTH * 4)).subtract(moveSize.withY(moveSize.x / 2).withX(0)), moveSize.normal().multiply(new Vec2(-1, 1)), " ", Color.transparent));
+        movePanels.add(new GUIPanel("mp1", offsetToDraw.add(new Vec2(SIDE_LENGTH * 8 - moveSize.y, SIDE_LENGTH * 4)).subtract(moveSize.withY(moveSize.x / 2).withX(0)), moveSize.normal().multiply(new Vec2(-1, 1)), Color4.BLACK.withA(0.6)));
+
+        moveButtons.add(new GUIButton("move2", this, offsetToDraw.add(new Vec2(SIDE_LENGTH * 4, 0)).subtract(moveSize.withY(0).divide(2)), moveSize, " ", Color.transparent));
+        movePanels.add(new GUIPanel("mp2", offsetToDraw.add(new Vec2(SIDE_LENGTH * 4, 0)).subtract(moveSize.withY(0).divide(2)), moveSize, Color4.BLACK.withA(0.6)));
+
+        moveButtons.add(new GUIButton("mov3", this, offsetToDraw.add(new Vec2(0, SIDE_LENGTH * 4)).subtract(moveSize.withY(moveSize.x / 2).withX(0)), moveSize.normal().multiply(new Vec2(-1, 1)), " ", Color.transparent));
+        movePanels.add(new GUIPanel("mp3", offsetToDraw.add(new Vec2(0, SIDE_LENGTH * 4)).subtract(moveSize.withY(moveSize.x / 2).withX(0)), moveSize.normal().multiply(new Vec2(-1, 1)), Color4.BLACK.withA(0.6)));
 
         gtpPanel = new GUIPanel("pp", new Vec2(offsetToDraw.x, 50), new Vec2(SIDE_LENGTH * 8, 32), getColor(0).multiply(0.8));
         noParents = new GUILabel("np", new Vec2(offsetToDraw.x, 50), new Vec2(SIDE_LENGTH * 8, 32), "No Parents", Color.white);
-        
+
         inputs.add(new GUIButton("back", this, nextPlace(start, 0, 1), BUTTON_SIZE, "Main Menu", Color.white));
         components.add(new GUIPanel("bottom", nextPlace(start, 0, 1), BUTTON_SIZE, getColor(1).multiply(0.6)));
 
@@ -91,10 +114,35 @@ public class Simulation extends ComponentInputGUI {
         this.setVisible(true);
         typing(this, true);
         setRunning(true);
+        toDraw = null;
+
+        if (!init) {
+
+            Input.whenKey(Keyboard.KEY_SPACE, true).onEvent(() -> {
+
+                setPaused(!isPaused());
+            });
+
+            Input.whenKey(Keyboard.KEY_S, true).onEvent(() -> {
+
+                if (isPaused()) {
+                    
+                    currentT.update();
+                }
+            });
+
+            init = true;
+        }
     }
 
     @Override
     public void recieve(String string, Object o) {
+
+        if (string.contains("move")) {
+
+            int dir = Integer.parseInt(string.substring(4));
+            toDraw.setCurDir(dir);
+        }
 
         switch (string) {
 
@@ -166,11 +214,23 @@ public class Simulation extends ComponentInputGUI {
     public List<GUIComponent> mousePressed(Vec2 p) {
 
         List<GUIComponent> pressed = new ArrayList();
+
         pressed = super.mousePressed(p);
 
-        if (toDraw != null && toDraw.getParent1() != null) {
+        if (toDraw != null) {
 
-            for (GUIButton gip : goToParents) {
+            if (toDraw.getParent1() != null) {
+
+                for (GUIButton gip : goToParents) {
+
+                    if (gip.containsClick(p)) {
+
+                        pressed.add(gip);
+                    }
+                }
+            }
+
+            for (GUIButton gip : moveButtons) {
 
                 if (gip.containsClick(p)) {
 
@@ -196,8 +256,8 @@ public class Simulation extends ComponentInputGUI {
             if (toDraw.getParent1() != null) {
 
                 goToParents.forEach(GUIButton::draw);
-            }else{
-                
+            } else {
+
                 noParents.draw();
             }
 
@@ -211,6 +271,8 @@ public class Simulation extends ComponentInputGUI {
                 Vec2 p = new Vec2(c.getPosX(), c.getPosY());
                 c.drawCut(tdPos, tdPos.add(new Vec2(SIDE_LENGTH)), offsetToDraw.add(p.subtract(tdPos).multiply(8)), 8);
             }
+
+            movePanels.forEach(GUIPanel::draw);
         }
     }
 
