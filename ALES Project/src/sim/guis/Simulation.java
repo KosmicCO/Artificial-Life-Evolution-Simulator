@@ -69,6 +69,7 @@ public class Simulation extends ComponentInputGUI {
             goToParents.add(new GUIButton("parent" + (i + 1), this, new Vec2(i * (SIDE_LENGTH * 4) + offsetToDraw.x, 50), new Vec2((SIDE_LENGTH * 4), 32), "Parent " + (i + 1), Color.white));
         }
 
+        //move buttons
         moveButtons.add(new GUIButton("move0", this, offsetToDraw.add(new Vec2(SIDE_LENGTH * 4, SIDE_LENGTH * 8 - moveSize.y)).subtract(moveSize.withY(0).divide(2)), moveSize, " ", Color.transparent));
         movePanels.add(new GUIPanel("mp0", offsetToDraw.add(new Vec2(SIDE_LENGTH * 4, SIDE_LENGTH * 8 - moveSize.y)).subtract(moveSize.withY(0).divide(2)), moveSize, Color4.BLACK.withA(0.6)));
 
@@ -81,17 +82,18 @@ public class Simulation extends ComponentInputGUI {
         moveButtons.add(new GUIButton("mov3", this, offsetToDraw.add(new Vec2(0, SIDE_LENGTH * 4)).subtract(moveSize.withY(moveSize.x / 2).withX(0)), moveSize.normal().multiply(new Vec2(-1, 1)), " ", Color.transparent));
         movePanels.add(new GUIPanel("mp3", offsetToDraw.add(new Vec2(0, SIDE_LENGTH * 4)).subtract(moveSize.withY(moveSize.x / 2).withX(0)), moveSize.normal().multiply(new Vec2(-1, 1)), Color4.BLACK.withA(0.6)));
 
+        
         gtpPanel = new GUIPanel("pp", new Vec2(offsetToDraw.x, 50), new Vec2(SIDE_LENGTH * 8, 32), getColor(0).multiply(0.8));
         noParents = new GUILabel("np", new Vec2(offsetToDraw.x, 50), new Vec2(SIDE_LENGTH * 8, 32), "No Parents", Color.white);
 
-        inputs.add(new GUIButton("back", this, nextPlace(start, 0, 1), BUTTON_SIZE, "Main Menu", Color.white));
-        components.add(new GUIPanel("bottom", nextPlace(start, 0, 1), BUTTON_SIZE, getColor(1).multiply(0.6)));
+        inputs.add(new GUIButton("back", this, nextPlace(start, 0, 1).add(offsetToDraw.withY(0)), BUTTON_SIZE, "Main Menu", Color.white));
+        components.add(new GUIPanel("bottom", nextPlace(start, 0, 1).add(offsetToDraw.withY(0)), BUTTON_SIZE, getColor(1).multiply(0.6)));
 
         inputs.add(new GUIButton("plane", this, new Vec2(-500, -250), new Vec2(500), " ", Color.transparent));
         components.add(new GUIPanel("planeP", new Vec2(-500, -250), new Vec2(500), getColor(2)));
         
-        inputs.add(new GUIButton("regenerate", this, nextPlace(start, 0, 0), BUTTON_SIZE, "New Map", Color.white));
-        components.add(new GUIPanel("regenMap", nextPlace(start, 0, 0), BUTTON_SIZE, getColor(0)));
+        inputs.add(new GUIButton("regenerate", this, nextPlace(start, 0, 0).add(offsetToDraw.withY(0)), BUTTON_SIZE, "New Map", Color.white));
+        components.add(new GUIPanel("regenMap", nextPlace(start, 0, 0).add(offsetToDraw.withY(0)), BUTTON_SIZE, getColor(0)));
 
         stats = new ArrayList();
 
@@ -214,6 +216,8 @@ public class Simulation extends ComponentInputGUI {
             stats.get(6).setLabel("Cells Eaten:        " + toDraw.getCellsEaten());
             stats.get(7).setLabel("Food Eaten:         " + toDraw.getFoodParticlesConsumed());
         }
+        
+        
     }
 
     @Override
