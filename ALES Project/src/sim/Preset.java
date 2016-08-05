@@ -46,8 +46,11 @@ public class Preset {
     
     //StructureInterpreter
     private List<Integer> wGenome;
+    
+    //SimGenerator
+    private int numCreatures;
 
-    public Preset(int sLen, int costHunt, int costForage, int costRepro, double repThresh, double repBuffer, double huntThresh, int costDetect, int costMove, int actRad, int nutrientsPF, int hYield, int fRSAmount, int fSR, double mFactor, int lenV, List<Integer> wGen) {
+    public Preset(int sLen, int costHunt, int costForage, int costRepro, double repThresh, double repBuffer, double huntThresh, int costDetect, int costMove, int actRad, int nutrientsPF, int hYield, int fRSAmount, int fSR, double mFactor, int lenV, List<Integer> wGen, int numCre) {
         eCostHunt = costHunt;
         eCostForage = costForage;
         eCostRepro = costRepro;
@@ -64,6 +67,7 @@ public class Preset {
         mutantFactor = mFactor;
         lenVariance = lenV;
         wGenome = wGen;
+        numCreatures = numCre;
     }
 
     public void set() {
@@ -83,6 +87,7 @@ public class Preset {
         Chromosome.mutationFactor = mutantFactor;
         Chromosome.variance = lenVariance;
         StructureInterpreter.setWeightedGenome(wGenome);
+        SimGenerator.creatureAmount = numCreatures;
     }
 }
  
