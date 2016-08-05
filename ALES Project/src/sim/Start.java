@@ -7,12 +7,17 @@ package sim;
 
 import sim.guis.MainMenu;
 import engine.Core;
-import engine.Input;
 import graphics.Window2D;
 import gui.GUIController;
 import gui.TypingManager;
+import java.awt.Toolkit;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.ByteBuffer;
 import static map.Terrain.currentT;
-import org.lwjgl.input.Keyboard;
+import org.lwjgl.opengl.Display;
+import org.newdawn.slick.opengl.PNGDecoder;
 import static sim.TestGenMap.makeTestMap;
 import util.Color4;
 
@@ -51,10 +56,25 @@ public class Start {
 
         Core.screenWidth = 1000;
         Core.screenHeight = 500;
-        Core.title = "ALES by Cruz & Bhargav";
+        Core.title = "ALES Project by Cruz & Bhargav";
         Core.is3D = false;
 
         Core.init();
+        
+        ByteBuffer[] icon_array = new ByteBuffer[2];
+        
+        try {
+            
+                icon_array[0] = ByteBuffer.allocateDirect(1);
+                icon_array[0] = loadIcon("icons/ALES-Icon-16.png");
+                icon_array[1] = ByteBuffer.allocateDirect(1);
+                icon_array[1] = loadIcon("icons/ALES-Icon-32.png");
+        } catch (IOException e) {
+            
+            e.printStackTrace();
+        }
+        
+        Display.setIcon(icon_array);
         
         Window2D.background = Color4.BLACK;
 
@@ -86,5 +106,19 @@ public class Start {
         });
 
         Core.run();
+    }
+    
+    private static ByteBuffer loadIcon(String path) throws IOException {
+        
+        InputStream inputStream = new FileInputStream(path);
+        try {
+            PNGDecoder decoder = new PNGDecoder(inputStream);
+            ByteBuffer bytebuf = ByteBuffer.allocateDirect(decoder.getWidth()*decoder.getHeight()*4);
+            decoder.decode(bytebuf, decoder.getWidth()*4, PNGDecoder.RGBA);
+            bytebuf.flip();
+            return bytebuf;
+        } finally {
+            inputStream.close();
+        }
     }
 }
