@@ -14,6 +14,7 @@ import graphics.Graphics2D;
 import java.util.ArrayList;
 import java.util.List;
 import static sim.guis.Simulation.getZoom;
+import static sim.guis.Simulation.getOffsetPopulation;
 import util.Color4;
 import util.Vec2;
 import utility.Mapping;
@@ -241,6 +242,14 @@ public class Terrain {
 
     public int getFoodCount() {
         return foodCount;
+    }
+
+    public int getWidth() {
+        return width;
+    }
+
+    public int getHeight() {
+        return height;
     }
 
     public void alterFoodCount(int diff) {
@@ -608,9 +617,9 @@ public class Terrain {
 
     public void draw() {
 
-        for (int i = 0; i < width; i++) {
+        for (int i = 0; i < width / (getZoom() / 2); i++) {
 
-            for (int j = 0; j < height; j++) {
+            for (int j = 0; j < height / (getZoom() / 2); j++) {
 
                 if (environment[i][j] != 0) {
 
@@ -620,8 +629,8 @@ public class Terrain {
         }
 
         for (Creature cre : population) {
-
             cre.draw(ORIGIN, getZoom());
+            //cre.drawCut(ORIGIN, new Vec2((width),(height))/*.divide(getZoom()/2)*/, new Vec2(cre.getPosX(),cre.getPosY())/*.divide(getOffsetPopulation())*/, getZoom());
         }
     }
 }

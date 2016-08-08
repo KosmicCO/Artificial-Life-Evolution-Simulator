@@ -53,7 +53,6 @@ public class NewPreset extends ComponentInputGUI {
 
     @Override
     public void recieve(String string, Object o) {
-
         if (string.equals("cancel")) {
 
             setVisible(false);
