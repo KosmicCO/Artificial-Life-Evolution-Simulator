@@ -60,6 +60,36 @@ public class Terrain {
         foodCount = 0;
     }
 
+    public int getWidth() {
+
+        return width;
+    }
+
+    public int getHeight() {
+
+        return height;
+    }
+
+    public void replaceTile(Vec2 pos, int type, int size) {
+        
+        if (pos.containedBy(Vec2.ZERO, new Vec2(width, height)) && type >= 0 && type < 4) {
+
+            for (int i = 0; i < size; i++) {
+                
+                for (int j = 0; j < size; j++) {
+                    
+                    int x = (int) (pos.x + i - size / 2.0);
+                    int y = (int) (pos.y + j - size / 2.0);
+                    
+                    if(x >= 0 && y >= 0 && x < width && y < height){
+                        
+                        environment[x][y] = type;
+                    }
+                }
+            }
+        }
+    }
+
     /**
      * Adds a creature to the terrain-managed list of creatures, or population.
      * Creatures can only be visualized if they are added to the population.
@@ -580,7 +610,7 @@ public class Terrain {
         Terrain.nutrientsPerFood = nutrientsPerFood;
     }
 
-    private static Color4 getTerColor(int type) {
+    public static Color4 getTerColor(int type) {
 
         switch (type) {
 
@@ -594,7 +624,7 @@ public class Terrain {
                 return Color4.gray(0.5);
         }
 
-        return null;
+        return Color4.WHITE;
     }
 
     public void drawSection(Vec2 pos, Vec2 from, int s, int zoom) {

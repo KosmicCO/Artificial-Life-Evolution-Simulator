@@ -28,7 +28,7 @@ public class TerrainGenerator {
 
             for (int j = 0; j < size; j++) {
 
-                double h = n.multi(i, j, 100, 0.01);
+                double h = n.multiBetterOffset(i, j, 100, 0.01);
                 probMap[i][j] = h;
                 
                 if (Math.abs(h) > 0.8) {
