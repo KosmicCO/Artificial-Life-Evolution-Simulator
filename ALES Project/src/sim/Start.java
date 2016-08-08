@@ -18,7 +18,6 @@ import java.nio.ByteBuffer;
 import static map.Terrain.currentT;
 import org.lwjgl.opengl.Display;
 import org.newdawn.slick.opengl.PNGDecoder;
-import static sim.TestGenMap.makeTestMap;
 import static sim.SimGenerator.generate;
 import util.Color4;
 
@@ -55,8 +54,8 @@ public class Start {
     
     public static void main(String[] args) {
 
-        Core.screenWidth = 1000;
-        Core.screenHeight = 500;
+        Core.screenWidth = 1024;
+        Core.screenHeight = 512;
         Core.title = "ALES Project by Cruz & Bhargav";
         Core.is3D = false;
 
@@ -78,9 +77,6 @@ public class Start {
         Display.setIcon(icon_array);
         
         Window2D.background = Color4.BLACK;
-
-        //testing graphics start
-        generate(); //makeTestMap();
 
         //testing graphics end
         MainMenu main = new MainMenu("mainMenu");

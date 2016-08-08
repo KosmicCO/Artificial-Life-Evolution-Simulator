@@ -36,7 +36,7 @@ public class Terrain {
 
     public static List<Creature> leaderBoard = new ArrayList<>(3);//leaderBoard.get(0) = reproductive leader; leaderBoard.get(1) = energy leader; leaderBoard.get(2) = top hunter
 
-    public final static Vec2 ORIGIN = new Vec2(-500, -250);
+    public final static Vec2 ORIGIN = new Vec2(-512, -256);
 
     public final static int FOOD = 1;
     public final static int WALL = 2;
@@ -272,14 +272,6 @@ public class Terrain {
 
     public int getFoodCount() {
         return foodCount;
-    }
-
-    public int getWidth() {
-        return width;
-    }
-
-    public int getHeight() {
-        return height;
     }
 
     public void alterFoodCount(int diff) {

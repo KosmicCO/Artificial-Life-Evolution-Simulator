@@ -42,11 +42,11 @@ public class Simulation extends ComponentInputGUI {
 
     private static int zoom = 2;
 
-    private Vec2 start = new Vec2(0, -150);
+    private Vec2 start = new Vec2(0, -156);
     private boolean init = false;
     private MainMenu parent;
 
-    private static Vec2 offsetToDraw = new Vec2(2, 250 - SIDE_LENGTH * 8);
+    private static Vec2 offsetToDraw = new Vec2(2, 256 - SIDE_LENGTH * 8);
     private static Vec2 offsetPopulation = new Vec2(ORIGIN.x + currentT.getWidth(), ORIGIN.y + currentT.getHeight());
     private Creature toDraw;
     private List<GUILabel> stats;
@@ -121,20 +121,20 @@ public class Simulation extends ComponentInputGUI {
         inputs.add(new GUIButton("back", this, nextPlace(start, 0, 1).add(offsetToDraw.withY(0)), BUTTON_SIZE, "Main Menu", Color.white));
         components.add(new GUIPanel("bottom", nextPlace(start, 0, 1).add(offsetToDraw.withY(0)), BUTTON_SIZE, getColor(1).multiply(0.6)));
 
-        inputs.add(new GUIButton("plane", this, new Vec2(-500, -250), new Vec2(500), " ", Color.transparent));
-        components.add(new GUIPanel("planeP", new Vec2(-500, -250), new Vec2(500), getColor(2)));
+        inputs.add(new GUIButton("plane", this, new Vec2(-512, -256), new Vec2(512), " ", Color.transparent));
+        components.add(new GUIPanel("planeP", new Vec2(-512, -256), new Vec2(512), getColor(2)));
 
-        inputs.add(new GUIButton("regenerate", this, nextPlace(start, 0, 0), BUTTON_SIZE, "New Map", Color.white));
-        components.add(new GUIPanel("regenMap", nextPlace(start, 0, 0), BUTTON_SIZE, getColor(0)));
+        inputs.add(new GUIButton("regenerate", this, nextPlace(start, 0, 0).add(offsetToDraw.withY(0)), BUTTON_SIZE, "New Map", Color.white));
+        components.add(new GUIPanel("regenMap", nextPlace(start, 0, 0).add(offsetToDraw.withY(0)), BUTTON_SIZE, getColor(0)));
 
-        inputs.add(new GUIButton("zoomIn", this, nextPlace(start, 1, -1), BUTTON_SIZE, "Zoom In", Color.white));
-        components.add(new GUIPanel("zoomIn", nextPlace(start, 1, -1), BUTTON_SIZE, getColor(1)));
+        inputs.add(new GUIButton("zoomIn", this, nextPlace(start, 1, -1).add(offsetToDraw.withY(0)), BUTTON_SIZE, "Zoom In", Color.white));
+        components.add(new GUIPanel("zoomIn", nextPlace(start, 1, -1).add(offsetToDraw.withY(0)), BUTTON_SIZE, getColor(1)));
 
-        inputs.add(new GUIButton("zoomOut", this, nextPlace(start, 1, 0), BUTTON_SIZE, "Zoom Out", Color.white));
-        components.add(new GUIPanel("zoomOut", nextPlace(start, 1, 0), BUTTON_SIZE, getColor(1)));
+        inputs.add(new GUIButton("zoomOut", this, nextPlace(start, 1, 0).add(offsetToDraw.withY(0)), BUTTON_SIZE, "Zoom Out", Color.white));
+        components.add(new GUIPanel("zoomOut", nextPlace(start, 1, 0).add(offsetToDraw.withY(0)), BUTTON_SIZE, getColor(1)));
 
-        inputs.add(new GUIButton("zoomReset", this, nextPlace(start, 1, 1), BUTTON_SIZE, "Zoom Reset", Color.white));
-        components.add(new GUIPanel("zoomReset", nextPlace(start, 1, 1), BUTTON_SIZE, getColor(1)));
+        inputs.add(new GUIButton("zoomReset", this, nextPlace(start, 1, 1).add(offsetToDraw.withY(0)), BUTTON_SIZE, "Zoom Reset", Color.white));
+        components.add(new GUIPanel("zoomReset", nextPlace(start, 1, 1).add(offsetToDraw.withY(0)), BUTTON_SIZE, getColor(1)));
 
         stats = new ArrayList();
 
@@ -393,6 +393,7 @@ public class Simulation extends ComponentInputGUI {
 
         super.draw();
         currentT.draw();
+        Graphics2D.fillRect(new Vec2(0, -256), offsetToDraw.withY(512), getColor(1).multiply(0.6));
 
         if (toDraw != null) {
 

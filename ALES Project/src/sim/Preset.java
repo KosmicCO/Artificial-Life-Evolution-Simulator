@@ -50,7 +50,11 @@ public class Preset {
     //SimGenerator
     private int numCreatures;
 
-    public Preset(int sLen, int costHunt, int costForage, int costRepro, double repThresh, double repBuffer, double huntThresh, int costDetect, int costMove, int actRad, int nutrientsPF, int hYield, int fRSAmount, int fSR, double mFactor, int lenV, List<Integer> wGen, int numCre) {
+    public Preset(int sLen, int costHunt, int costForage, int costRepro, 
+            double repThresh, double repBuffer, double huntThresh, 
+            int costDetect, int costMove, int actRad, int nutrientsPF, 
+            int hYield, int fRSAmount, int fSR, double mFactor, int lenV, 
+            List<Integer> wGen, int numCre) {
         eCostHunt = costHunt;
         eCostForage = costForage;
         eCostRepro = costRepro;

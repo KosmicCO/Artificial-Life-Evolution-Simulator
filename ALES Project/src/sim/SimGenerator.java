@@ -37,7 +37,7 @@ public class SimGenerator {
             Creature cr = CreatureGenerator.generateCreature(wGen);
             pop.add(cr);
         }
-        Terrain terr = TerrainGenerator.generate(250, Math.random());
+        Terrain terr = TerrainGenerator.generate(256, Math.random());
         for(Creature c : pop){
             terr.spawn(c);
         }

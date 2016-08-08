@@ -11,7 +11,9 @@ import gui.components.GUIButton;
 import gui.components.GUIPanel;
 import gui.types.ComponentInputGUI;
 import gui.types.GUIInputComponent;
+import static map.Terrain.currentT;
 import org.newdawn.slick.Color;
+import static sim.SimGenerator.generate;
 import util.Color4;
 import static utility.GUIs.BUTTON_SIZE;
 import static utility.GUIs.getColor;
@@ -24,7 +26,8 @@ import util.Vec2;
  */
 public class MainMenu extends ComponentInputGUI {
 
-    private Vec2 start = new Vec2(-500, -150);
+    private Vec2 start = new Vec2(-512, -156);
+    private boolean init = false;
 
     private boolean selected;
     private GUIPanel hide;
@@ -54,9 +57,8 @@ public class MainMenu extends ComponentInputGUI {
         hide = new GUIPanel("hide", nextPlace(start, 0, 1), BUTTON_SIZE.multiply(new Vec2(1, 4)), Color4.BLACK.withA(0.6));
 
         pre = new Presets("presets", this);
-        sim = new Simulation("simulation", this);
         help = new HelpMenu("help", this);
-        GUIController.add(pre, sim);
+        GUIController.add(pre);
     }
 
     public Vec2 getStartPos() {
@@ -77,21 +79,41 @@ public class MainMenu extends ComponentInputGUI {
         switch (string) {
 
             case "start":
+                
+                if (currentT == null) {
+
+                    generate();
+                }
+                
+                if (!init) {
+                    
+                    sim = new Simulation("simulation", this);
+                    GUIController.add(sim);
+                }
+                
+                ((GUIButton) inputs.get(0)).setLabel("Continue");
+
                 this.setVisible(false);
                 typing(this, false);
                 sim.start();
                 break;
+
             case "presets":
+
                 pre.start();
                 selected = false;
                 break;
+
             case "help":
+
                 System.out.println("clicked");
                 this.setVisible(false);
                 help.start();
                 System.out.println("TRIGGERED");
                 break;
+
             case "quit":
+
                 System.exit(0);
         }
     }
@@ -100,7 +122,7 @@ public class MainMenu extends ComponentInputGUI {
     public void draw() {
 
         super.draw();
-        
+
         if (!selected) {
 
             hide.draw();
