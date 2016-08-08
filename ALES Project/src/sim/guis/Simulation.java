@@ -29,6 +29,7 @@ import org.lwjgl.input.Keyboard;
 import util.Color4;
 import static sim.Start.setRunning;
 import static gui.TypingManager.typing;
+import static map.Terrain.getTerColor;
 import sim.SimGenerator;
 import static sim.Start.isPaused;
 import static sim.Start.setPaused;
@@ -56,6 +57,14 @@ public class Simulation extends ComponentInputGUI {
     private List<GUIButton> moveButtons;
     private List<GUIPanel> movePanels;
 
+    private GUIPanel hide;
+
+    private boolean drawing;
+    private List<GUIButton> drawType;
+    private List<GUIPanel> drawTP;
+    private int type;
+    private int brush;
+
     public Simulation(String n, MainMenu parent) {
 
         super(n);
@@ -82,7 +91,29 @@ public class Simulation extends ComponentInputGUI {
         moveButtons.add(new GUIButton("mov3", this, offsetToDraw.add(new Vec2(0, SIDE_LENGTH * 4)).subtract(moveSize.withY(moveSize.x / 2).withX(0)), moveSize.normal().multiply(new Vec2(-1, 1)), " ", Color.transparent));
         movePanels.add(new GUIPanel("mp3", offsetToDraw.add(new Vec2(0, SIDE_LENGTH * 4)).subtract(moveSize.withY(moveSize.x / 2).withX(0)), moveSize.normal().multiply(new Vec2(-1, 1)), Color4.BLACK.withA(0.6)));
 
+        //drawing
+        drawType = new ArrayList();
+        drawTP = new ArrayList();
+        type = 0;
+        brush = 1;
+
+        inputs.add(new GUIButton("draw", this, nextPlace(start, 0, -1).add(offsetToDraw.withY(0)), BUTTON_SIZE, "Draw", Color.white));
+        components.add(new GUIPanel("drawP", nextPlace(start, 0, -1).add(offsetToDraw.withY(0)), BUTTON_SIZE, getColor(0).multiply(0.7)));
+
+        drawType.add(new GUIButton("drawSize", this, nextPlace(start, 1, -1).add(offsetToDraw.withY(0)), BUTTON_SIZE, "Size: " + brush, Color.white));
+        drawTP.add(new GUIPanel("drawSP", nextPlace(start, 1, -1).add(offsetToDraw.withY(0)), BUTTON_SIZE, getColor(0).multiply(0.7)));
         
+        drawType.add(new GUIButton("drawType", this, nextPlace(start, 1, 0).add(offsetToDraw.withY(0)), BUTTON_SIZE, "Type", Color.white));
+        drawTP.add(new GUIPanel("drawTP", nextPlace(start, 1, 0).add(offsetToDraw.withY(0)), BUTTON_SIZE, getColor(0).multiply(0.8)));
+
+        drawType.add(new GUIButton("drawBack", this, nextPlace(start, 1, 1).add(offsetToDraw.withY(0)), BUTTON_SIZE, "Back", Color.white));
+        drawTP.add(new GUIPanel("drawBP", nextPlace(start, 1, 1).add(offsetToDraw.withY(0)), BUTTON_SIZE, getColor(1).multiply(0.6)));
+
+        
+
+        //other
+        hide = new GUIPanel("hide", nextPlace(start, 0, 1).add(offsetToDraw.withY(0)), BUTTON_SIZE.multiply(new Vec2(1, 4)), Color4.BLACK.withA(0.6));
+
         gtpPanel = new GUIPanel("pp", new Vec2(offsetToDraw.x, 50), new Vec2(SIDE_LENGTH * 8, 32), getColor(0).multiply(0.8));
         noParents = new GUILabel("np", new Vec2(offsetToDraw.x, 50), new Vec2(SIDE_LENGTH * 8, 32), "No Parents", Color.white);
 
@@ -91,9 +122,9 @@ public class Simulation extends ComponentInputGUI {
 
         inputs.add(new GUIButton("plane", this, new Vec2(-500, -250), new Vec2(500), " ", Color.transparent));
         components.add(new GUIPanel("planeP", new Vec2(-500, -250), new Vec2(500), getColor(2)));
-        
+
         inputs.add(new GUIButton("regenerate", this, nextPlace(start, 0, 0).add(offsetToDraw.withY(0)), BUTTON_SIZE, "New Map", Color.white));
-        components.add(new GUIPanel("regenMap", nextPlace(start, 0, 0).add(offsetToDraw.withY(0)), BUTTON_SIZE, getColor(0)));
+        components.add(new GUIPanel("regenMap", nextPlace(start, 0, 0).add(offsetToDraw.withY(0)), BUTTON_SIZE, getColor(0).multiply(0.8)));
 
         stats = new ArrayList();
 
@@ -132,8 +163,18 @@ public class Simulation extends ComponentInputGUI {
             Input.whenKey(Keyboard.KEY_S, true).onEvent(() -> {
 
                 if (isPaused()) {
-                    
+
                     currentT.update();
+                }
+            });
+
+            Input.whileMouse(0, true).onEvent(() -> {
+
+                Vec2 pos = new Vec2((int) (Input.getMouse().x - ORIGIN.x) / getZoom(), (int) (Input.getMouse().y - ORIGIN.y) / getZoom());
+
+                if (drawing && pos.containedBy(Vec2.ZERO, new Vec2(currentT.getWidth(), currentT.getHeight()))) {
+
+                    currentT.replaceTile(pos, type, brush);
                 }
             });
 
@@ -152,6 +193,39 @@ public class Simulation extends ComponentInputGUI {
 
         switch (string) {
 
+            case "draw":
+
+                drawing = true;
+                break;
+                
+            case "drawSize":
+                
+                brush++;
+                
+                if(brush > 15){
+                    
+                    brush = 1;
+                }
+                
+                drawType.get(0).setLabel("Size: " + brush);
+                break;
+
+            case "drawType":
+
+                type++;
+
+                if (type > 3) {
+
+                    type = 0;
+                }
+                
+                break;
+
+            case "drawBack":
+
+                drawing = false;
+                break;
+
             case "parent1":
 
                 toDraw = toDraw.getParent1();
@@ -167,15 +241,19 @@ public class Simulation extends ComponentInputGUI {
                 setRunning(false);
                 this.setVisible(false);
                 parent.start();
-
+                break;
             case "regenerate":
                 SimGenerator.generate();
+                break;
             case "plane":
 
-                Cell c = currentT.cellAtAbsPos((int) (Input.getMouse().x - ORIGIN.x) / 2, (int) (Input.getMouse().y - ORIGIN.y) / 2);
-                if (c != null) {
+                if (!drawing) {
 
-                    toDraw = c.getCreature();
+                    Cell c = currentT.cellAtAbsPos((int) (Input.getMouse().x - ORIGIN.x) / getZoom(), (int) (Input.getMouse().y - ORIGIN.y) / getZoom());
+                    if (c != null) {
+
+                        toDraw = c.getCreature();
+                    }
                 }
                 break;
         }
@@ -216,8 +294,7 @@ public class Simulation extends ComponentInputGUI {
             stats.get(6).setLabel("Cells Eaten:        " + toDraw.getCellsEaten());
             stats.get(7).setLabel("Food Eaten:         " + toDraw.getFoodParticlesConsumed());
         }
-        
-        
+
     }
 
     @Override
@@ -225,7 +302,10 @@ public class Simulation extends ComponentInputGUI {
 
         List<GUIComponent> pressed = new ArrayList();
 
-        pressed = super.mousePressed(p);
+        if (!drawing) {
+
+            pressed = super.mousePressed(p);
+        }
 
         if (toDraw != null) {
 
@@ -249,6 +329,17 @@ public class Simulation extends ComponentInputGUI {
             }
         }
 
+        if (drawing) {
+
+            for (GUIButton gip : drawType) {
+
+                if (gip.containsClick(p)) {
+
+                    pressed.add(gip);
+                }
+            }
+        }
+
         return pressed;
     }
 
@@ -260,8 +351,8 @@ public class Simulation extends ComponentInputGUI {
 
         if (toDraw != null) {
 
-            stats.forEach(GUILabel::draw);
             gtpPanel.draw();
+            stats.forEach(GUILabel::draw);
 
             if (toDraw.getParent1() != null) {
 
@@ -283,6 +374,14 @@ public class Simulation extends ComponentInputGUI {
             }
 
             movePanels.forEach(GUIPanel::draw);
+        }
+
+        if (drawing) {
+
+            drawTP.forEach(GUIPanel::draw);
+            drawType.forEach(GUIButton::draw);
+            Graphics2D.fillRect(nextPlace(start, 1, 0).add(new Vec2(BUTTON_SIZE.x - 10, 0)), BUTTON_SIZE.withX(5), getTerColor(type));
+            hide.draw();
         }
     }
 
