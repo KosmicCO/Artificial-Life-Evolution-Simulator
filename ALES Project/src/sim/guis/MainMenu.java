@@ -31,6 +31,7 @@ public class MainMenu extends ComponentInputGUI {
 
     private Presets pre;
     private Simulation sim;
+    private HelpMenu help;
 
     public MainMenu(String name) {
 
@@ -38,7 +39,7 @@ public class MainMenu extends ComponentInputGUI {
 
         inputs.add(new GUIButton("start", this, nextPlace(start, 0, -2), BUTTON_SIZE, "Start", Color.white));
         inputs.add(new GUIButton("presets", this, nextPlace(start, 0, -1), BUTTON_SIZE, "Presets", Color.white));
-        inputs.add(new GUIButton("settings", this, nextPlace(start, 0, 0), BUTTON_SIZE, "Settings", Color.white));
+        inputs.add(new GUIButton("help", this, nextPlace(start, 0, 0), BUTTON_SIZE, "Help", Color.white));
 
         inputs.add(new GUIButton("quit", this, nextPlace(start, 0, 1), BUTTON_SIZE, "Quit", Color.white));
 
@@ -54,6 +55,7 @@ public class MainMenu extends ComponentInputGUI {
 
         pre = new Presets("presets", this);
         sim = new Simulation("simulation", this);
+        help = new HelpMenu("help", this);
         GUIController.add(pre, sim);
     }
 
@@ -82,6 +84,12 @@ public class MainMenu extends ComponentInputGUI {
             case "presets":
                 pre.start();
                 selected = false;
+                break;
+            case "help":
+                System.out.println("clicked");
+                this.setVisible(false);
+                help.start();
+                System.out.println("TRIGGERED");
                 break;
             case "quit":
                 System.exit(0);

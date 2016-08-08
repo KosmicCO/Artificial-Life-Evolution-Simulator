@@ -47,6 +47,7 @@ public class Simulation extends ComponentInputGUI {
     private MainMenu parent;
 
     private static Vec2 offsetToDraw = new Vec2(2, 250 - SIDE_LENGTH * 8);
+    private static Vec2 offsetPopulation = new Vec2(ORIGIN.x + currentT.getWidth(), ORIGIN.y + currentT.getHeight());
     private Creature toDraw;
     private List<GUILabel> stats;
     private List<GUIButton> goToParents;
@@ -123,8 +124,17 @@ public class Simulation extends ComponentInputGUI {
         inputs.add(new GUIButton("plane", this, new Vec2(-500, -250), new Vec2(500), " ", Color.transparent));
         components.add(new GUIPanel("planeP", new Vec2(-500, -250), new Vec2(500), getColor(2)));
 
-        inputs.add(new GUIButton("regenerate", this, nextPlace(start, 0, 0).add(offsetToDraw.withY(0)), BUTTON_SIZE, "New Map", Color.white));
-        components.add(new GUIPanel("regenMap", nextPlace(start, 0, 0).add(offsetToDraw.withY(0)), BUTTON_SIZE, getColor(0).multiply(0.8)));
+        inputs.add(new GUIButton("regenerate", this, nextPlace(start, 0, 0), BUTTON_SIZE, "New Map", Color.white));
+        components.add(new GUIPanel("regenMap", nextPlace(start, 0, 0), BUTTON_SIZE, getColor(0)));
+
+        inputs.add(new GUIButton("zoomIn", this, nextPlace(start, 1, -1), BUTTON_SIZE, "Zoom In", Color.white));
+        components.add(new GUIPanel("zoomIn", nextPlace(start, 1, -1), BUTTON_SIZE, getColor(1)));
+
+        inputs.add(new GUIButton("zoomOut", this, nextPlace(start, 1, 0), BUTTON_SIZE, "Zoom Out", Color.white));
+        components.add(new GUIPanel("zoomOut", nextPlace(start, 1, 0), BUTTON_SIZE, getColor(1)));
+
+        inputs.add(new GUIButton("zoomReset", this, nextPlace(start, 1, 1), BUTTON_SIZE, "Zoom Reset", Color.white));
+        components.add(new GUIPanel("zoomReset", nextPlace(start, 1, 1), BUTTON_SIZE, getColor(1)));
 
         stats = new ArrayList();
 
@@ -144,6 +154,14 @@ public class Simulation extends ComponentInputGUI {
     public static void setZoom(int zoom) {
 
         Simulation.zoom = zoom;
+    }
+
+    public static Vec2 getOffsetPopulation() {
+        return offsetPopulation;
+    }
+
+    public static void setOffsetPopulation(Vec2 offsetPopulation) {
+        Simulation.offsetPopulation = offsetPopulation;
     }
 
     public void start() {
@@ -244,6 +262,33 @@ public class Simulation extends ComponentInputGUI {
                 break;
             case "regenerate":
                 SimGenerator.generate();
+                break;
+            case "zoomIn":
+                if (zoom <= 128) {
+                    zoom *= 2;
+                    System.out.println("ZOOM: " + zoom);
+                    double offX = offsetPopulation.x;
+                    double offY = offsetPopulation.y;
+                    offX /= 2;
+                    offY /= 2;
+                    offsetPopulation.withX(offX);
+                    offsetPopulation.withY(offY);
+                }
+                break;
+            case "zoomOut":
+                if (zoom > 2) {
+                    zoom /= 2;
+                }
+                double newXOff = offsetPopulation.x;
+                double newYOff = offsetPopulation.y;
+                newXOff *= 2;
+                newYOff *= 2;
+                offsetPopulation.withX(newXOff);
+                offsetPopulation.withY(newYOff);
+                break;
+            case "zoomReset":
+                zoom = 2;
+                offsetPopulation = new Vec2(ORIGIN.x + currentT.getWidth(), ORIGIN.y + currentT.getHeight());
                 break;
             case "plane":
 
