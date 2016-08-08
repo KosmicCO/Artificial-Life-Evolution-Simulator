@@ -274,13 +274,6 @@ public class Terrain {
         return foodCount;
     }
 
-    public int getWidth() {
-        return width;
-    }
-
-    public int getHeight() {
-        return height;
-    }
 
     public void alterFoodCount(int diff) {
         foodCount += diff;

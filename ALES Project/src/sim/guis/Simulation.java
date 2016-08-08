@@ -127,14 +127,14 @@ public class Simulation extends ComponentInputGUI {
         inputs.add(new GUIButton("regenerate", this, nextPlace(start, 0, 0), BUTTON_SIZE, "New Map", Color.white));
         components.add(new GUIPanel("regenMap", nextPlace(start, 0, 0), BUTTON_SIZE, getColor(0)));
 
-        inputs.add(new GUIButton("zoomIn", this, nextPlace(start, 1, -1), BUTTON_SIZE, "Zoom In", Color.white));
-        components.add(new GUIPanel("zoomIn", nextPlace(start, 1, -1), BUTTON_SIZE, getColor(1)));
+        inputs.add(new GUIButton("zoomIn", this, nextPlace(start, 2, -1), BUTTON_SIZE, "Zoom In", Color.white));
+        components.add(new GUIPanel("zoomIn", nextPlace(start, 2, -1), BUTTON_SIZE, getColor(1)));
 
-        inputs.add(new GUIButton("zoomOut", this, nextPlace(start, 1, 0), BUTTON_SIZE, "Zoom Out", Color.white));
-        components.add(new GUIPanel("zoomOut", nextPlace(start, 1, 0), BUTTON_SIZE, getColor(1)));
+        inputs.add(new GUIButton("zoomOut", this, nextPlace(start, 2, 0), BUTTON_SIZE, "Zoom Out", Color.white));
+        components.add(new GUIPanel("zoomOut", nextPlace(start, 2, 0), BUTTON_SIZE, getColor(1)));
 
-        inputs.add(new GUIButton("zoomReset", this, nextPlace(start, 1, 1), BUTTON_SIZE, "Zoom Reset", Color.white));
-        components.add(new GUIPanel("zoomReset", nextPlace(start, 1, 1), BUTTON_SIZE, getColor(1)));
+        inputs.add(new GUIButton("zoomReset", this, nextPlace(start, 2, 1), BUTTON_SIZE, "Zoom Reset", Color.white));
+        components.add(new GUIPanel("zoomReset", nextPlace(start, 2, 1), BUTTON_SIZE, getColor(1)));
 
         stats = new ArrayList();
 
