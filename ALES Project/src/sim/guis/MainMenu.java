@@ -5,9 +5,11 @@
  */
 package sim.guis;
 
+import graphics.Graphics2D;
 import gui.GUIController;
 import static gui.TypingManager.typing;
 import gui.components.GUIButton;
+import gui.components.GUILabel;
 import gui.components.GUIPanel;
 import gui.types.ComponentInputGUI;
 import gui.types.GUIInputComponent;
@@ -36,6 +38,10 @@ public class MainMenu extends ComponentInputGUI {
     private Simulation sim;
     private HelpMenu help;
 
+    private boolean loading;
+    private int progress;
+    private GUILabel load;
+
     public MainMenu(String name) {
 
         super(name);
@@ -55,10 +61,16 @@ public class MainMenu extends ComponentInputGUI {
 
         selected = false;
         hide = new GUIPanel("hide", nextPlace(start, 0, 1), BUTTON_SIZE.multiply(new Vec2(1, 4)), Color4.BLACK.withA(0.6));
+        load = new GUILabel("loading", nextPlace(start, 0, -2), BUTTON_SIZE, "Loading", Color.white);
 
         pre = new Presets("presets", this);
         help = new HelpMenu("help", this);
         GUIController.add(pre);
+    }
+
+    public void progress(int p) {
+
+        progress = p;
     }
 
     public Vec2 getStartPos() {
@@ -79,18 +91,18 @@ public class MainMenu extends ComponentInputGUI {
         switch (string) {
 
             case "start":
-                
+
                 if (currentT == null) {
 
                     generate();
                 }
-                
+
                 if (!init) {
-                    
+
                     sim = new Simulation("simulation", this);
                     GUIController.add(sim);
                 }
-                
+
                 ((GUIButton) inputs.get(0)).setLabel("Continue");
 
                 this.setVisible(false);
@@ -126,6 +138,12 @@ public class MainMenu extends ComponentInputGUI {
         if (!selected) {
 
             hide.draw();
+        }
+
+        if (loading) {
+            
+            Graphics2D.drawRect(nextPlace(start, 0, -2), BUTTON_SIZE.multiply(new Vec2(100 / progress, 1)), Color4.BLUE);
+            load.draw();
         }
     }
 
