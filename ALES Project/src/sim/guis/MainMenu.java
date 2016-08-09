@@ -5,6 +5,8 @@
  */
 package sim.guis;
 
+import engine.Core;
+import engine.EventStream;
 import graphics.Graphics2D;
 import gui.GUIController;
 import static gui.TypingManager.typing;
@@ -39,7 +41,7 @@ public class MainMenu extends ComponentInputGUI {
     private HelpMenu help;
 
     private boolean loading;
-    private int progress;
+    private double progress;
     private GUILabel load;
 
     public MainMenu(String name) {
@@ -60,15 +62,17 @@ public class MainMenu extends ComponentInputGUI {
         components.add(new GUIPanel("bottom", nextPlace(start, 0, 1), BUTTON_SIZE, getColor(1).multiply(0.6)));
 
         selected = false;
-        hide = new GUIPanel("hide", nextPlace(start, 0, 1), BUTTON_SIZE.multiply(new Vec2(1, 4)), Color4.BLACK.withA(0.6));
-        load = new GUILabel("loading", nextPlace(start, 0, -2), BUTTON_SIZE, "Loading", Color.white);
+        hide = new GUIPanel("hide", nextPlace(start, 1, 1), BUTTON_SIZE.multiply(new Vec2(1, 4)), Color4.BLACK.withA(0.6));
+        load = new GUILabel("loading", nextPlace(start, 1, 0), BUTTON_SIZE, "Loading", Color.white);
+        progress = 0;
+        loading = false;
 
         pre = new Presets("presets", this);
         help = new HelpMenu("help", this);
         GUIController.add(pre);
     }
 
-    public void progress(int p) {
+    public void progress(double p) {
 
         progress = p;
     }
@@ -85,6 +89,26 @@ public class MainMenu extends ComponentInputGUI {
         selected = true;
     }
 
+    public void startSim() {
+
+        if (!init) {
+
+            sim = new Simulation("simulation", this);
+            GUIController.add(sim);
+            init = true;
+        }
+
+        ((GUIButton) inputs.get(0)).setLabel("Continue");
+        this.setVisible(false);
+        typing(this, false);
+        sim.start();
+    }
+
+    public void setLoading(boolean loading) {
+
+        this.loading = loading;
+    }
+
     @Override
     public void recieve(String string, Object o) {
 
@@ -94,20 +118,28 @@ public class MainMenu extends ComponentInputGUI {
 
                 if (currentT == null) {
 
-                    generate();
+                    (new Thread(() -> {
+
+                        setLoading(true);
+                        generate();
+
+                        long gt = System.currentTimeMillis() + 250;
+                        while(gt >= System.currentTimeMillis());
+                        
+                            startSim();
+                            setLoading(false);
+
+//                        Core.delay(0.25, new EventStream()).onEvent(() -> {
+//
+//                            startSim();
+//                            setLoading(false);
+//                        }).sendEvent();
+
+                    })).start();
+                } else {
+
+                    startSim();
                 }
-
-                if (!init) {
-
-                    sim = new Simulation("simulation", this);
-                    GUIController.add(sim);
-                }
-
-                ((GUIButton) inputs.get(0)).setLabel("Continue");
-
-                this.setVisible(false);
-                typing(this, false);
-                sim.start();
                 break;
 
             case "presets":
@@ -141,8 +173,8 @@ public class MainMenu extends ComponentInputGUI {
         }
 
         if (loading) {
-            
-            Graphics2D.drawRect(nextPlace(start, 0, -2), BUTTON_SIZE.multiply(new Vec2(100 / progress, 1)), Color4.BLUE);
+
+            Graphics2D.fillRect(nextPlace(start, 1, 0), BUTTON_SIZE.multiply(new Vec2(progress / 100.0, 1)), Color4.BLUE);
             load.draw();
         }
     }

@@ -41,6 +41,8 @@ import static sim.Start.setPaused;
 public class Simulation extends ComponentInputGUI {
 
     private static int zoom = 2;
+    private static Vec2 offset = new Vec2(0, 0);
+    private static List<Creature> inScreen = currentT.creaturesInSec(offset, new Vec2(512 / zoom));
 
     private Vec2 start = new Vec2(0, -156);
     private boolean init = false;
@@ -103,14 +105,12 @@ public class Simulation extends ComponentInputGUI {
 
         drawType.add(new GUIButton("drawSize", this, nextPlace(start, 1, -1).add(offsetToDraw.withY(0)), BUTTON_SIZE, "Size: " + brush, Color.white));
         drawTP.add(new GUIPanel("drawSP", nextPlace(start, 1, -1).add(offsetToDraw.withY(0)), BUTTON_SIZE, getColor(0).multiply(0.7)));
-        
+
         drawType.add(new GUIButton("drawType", this, nextPlace(start, 1, 0).add(offsetToDraw.withY(0)), BUTTON_SIZE, "Type", Color.white));
         drawTP.add(new GUIPanel("drawTP", nextPlace(start, 1, 0).add(offsetToDraw.withY(0)), BUTTON_SIZE, getColor(0).multiply(0.8)));
 
         drawType.add(new GUIButton("drawBack", this, nextPlace(start, 1, 1).add(offsetToDraw.withY(0)), BUTTON_SIZE, "Back", Color.white));
         drawTP.add(new GUIPanel("drawBP", nextPlace(start, 1, 1).add(offsetToDraw.withY(0)), BUTTON_SIZE, getColor(1).multiply(0.6)));
-
-        
 
         //other
         hide = new GUIPanel("hide", nextPlace(start, 0, 1).add(offsetToDraw.withY(0)), BUTTON_SIZE.multiply(new Vec2(1, 4)), Color4.BLACK.withA(0.6));
@@ -126,16 +126,6 @@ public class Simulation extends ComponentInputGUI {
 
         inputs.add(new GUIButton("regenerate", this, nextPlace(start, 0, 0).add(offsetToDraw.withY(0)), BUTTON_SIZE, "New Map", Color.white));
         components.add(new GUIPanel("regenMap", nextPlace(start, 0, 0).add(offsetToDraw.withY(0)), BUTTON_SIZE, getColor(0)));
-
-        inputs.add(new GUIButton("zoomIn", this, nextPlace(start, 1, -1).add(offsetToDraw.withY(0)), BUTTON_SIZE, "Zoom In", Color.white));
-        components.add(new GUIPanel("zoomIn", nextPlace(start, 1, -1).add(offsetToDraw.withY(0)), BUTTON_SIZE, getColor(1)));
-
-        inputs.add(new GUIButton("zoomOut", this, nextPlace(start, 1, 0).add(offsetToDraw.withY(0)), BUTTON_SIZE, "Zoom Out", Color.white));
-        components.add(new GUIPanel("zoomOut", nextPlace(start, 1, 0).add(offsetToDraw.withY(0)), BUTTON_SIZE, getColor(1)));
-
-        inputs.add(new GUIButton("zoomReset", this, nextPlace(start, 1, 1).add(offsetToDraw.withY(0)), BUTTON_SIZE, "Zoom Reset", Color.white));
-        components.add(new GUIPanel("zoomReset", nextPlace(start, 1, 1).add(offsetToDraw.withY(0)), BUTTON_SIZE, getColor(1)));
-
         stats = new ArrayList();
 
         for (int i = 0; i < 8; i++) {
@@ -146,14 +136,28 @@ public class Simulation extends ComponentInputGUI {
         this.parent = parent;
     }
 
-    public static int getZoom() {
-
-        return zoom;
+    public static List<Creature> getInScreen() {
+        return inScreen;
     }
 
-    public static void setZoom(int zoom) {
+    public static void updateDrawn() {
 
-        Simulation.zoom = zoom;
+        inScreen = currentT.creaturesInSec(offset, new Vec2(512 / (1 << zoom)));
+    }
+
+    public static Vec2 getOffset() {
+
+        return offset;
+    }
+
+    public static void addOffset(Vec2 dd) {
+
+        offset = offset.add(dd);
+    }
+
+    public static int getZoom() {
+
+        return 1 << zoom;
     }
 
     public static Vec2 getOffsetPopulation() {
@@ -188,7 +192,7 @@ public class Simulation extends ComponentInputGUI {
 
             Input.whileMouse(0, true).onEvent(() -> {
 
-                Vec2 pos = new Vec2((int) (Input.getMouse().x - ORIGIN.x) / getZoom(), (int) (Input.getMouse().y - ORIGIN.y) / getZoom());
+                Vec2 pos = new Vec2((int) Math.ceil((Input.getMouse().x - ORIGIN.x) / getZoom()), (int) Math.ceil((Input.getMouse().y - ORIGIN.y) / getZoom()));
 
                 if (drawing && pos.containedBy(Vec2.ZERO, new Vec2(currentT.getWidth(), currentT.getHeight()))) {
 
@@ -196,7 +200,74 @@ public class Simulation extends ComponentInputGUI {
                 }
             });
 
+            Input.mouseWheel.filter(i -> {
+
+                return Math.abs(i) >= 120;
+
+            }).onEvent(() -> {
+
+                zoom += Input.mouseWheel.get() / 120;
+
+                if (zoom < 1) {
+
+                    zoom = 1;
+                } else if (zoom > 7) {
+
+                    zoom = 7;
+                }
+
+                inScreen = currentT.creaturesInSec(offset, new Vec2(512 / (1 << zoom)));
+                checkOffsetBounds();
+            });
+
+            Input.whileKey(Keyboard.KEY_UP, true).onEvent(() -> {
+
+                offset = offset.add(new Vec2(0, 1));
+                checkOffsetBounds();
+                updateDrawn();
+            });
+
+            Input.whileKey(Keyboard.KEY_RIGHT, true).onEvent(() -> {
+
+                offset = offset.add(new Vec2(1, 0));
+                checkOffsetBounds();
+                updateDrawn();
+            });
+
+            Input.whileKey(Keyboard.KEY_DOWN, true).onEvent(() -> {
+
+                offset = offset.add(new Vec2(0, -1));
+                checkOffsetBounds();
+                updateDrawn();
+            });
+
+            Input.whileKey(Keyboard.KEY_LEFT, true).onEvent(() -> {
+
+                offset = offset.add(new Vec2(-1, 0));
+                checkOffsetBounds();
+                updateDrawn();
+            });
+
             init = true;
+        }
+    }
+
+    private void checkOffsetBounds() {
+
+        if (offset.x < 0) {
+
+            offset = offset.withX(0);
+        } else if (offset.x > 256 - 512 / (1 << zoom)) {
+
+            offset = offset.withX(256 - 512 / (1 << zoom));
+        }
+
+        if (offset.y < 0) {
+
+            offset = offset.withY(0);
+        } else if (offset.y > 256 - 512 / (1 << zoom)) {
+
+            offset = offset.withY(256 - 512 / (1 << zoom));
         }
     }
 
@@ -215,16 +286,16 @@ public class Simulation extends ComponentInputGUI {
 
                 drawing = true;
                 break;
-                
+
             case "drawSize":
-                
+
                 brush++;
-                
-                if(brush > 15){
-                    
+
+                if (brush > 15) {
+
                     brush = 1;
                 }
-                
+
                 drawType.get(0).setLabel("Size: " + brush);
                 break;
 
@@ -236,7 +307,7 @@ public class Simulation extends ComponentInputGUI {
 
                     type = 0;
                 }
-                
+
                 break;
 
             case "drawBack":
@@ -262,33 +333,6 @@ public class Simulation extends ComponentInputGUI {
                 break;
             case "regenerate":
                 SimGenerator.generate();
-                break;
-            case "zoomIn":
-                if (zoom <= 128) {
-                    zoom *= 2;
-                    System.out.println("ZOOM: " + zoom);
-                    double offX = offsetPopulation.x;
-                    double offY = offsetPopulation.y;
-                    offX /= 2;
-                    offY /= 2;
-                    offsetPopulation.withX(offX);
-                    offsetPopulation.withY(offY);
-                }
-                break;
-            case "zoomOut":
-                if (zoom > 2) {
-                    zoom /= 2;
-                }
-                double newXOff = offsetPopulation.x;
-                double newYOff = offsetPopulation.y;
-                newXOff *= 2;
-                newYOff *= 2;
-                offsetPopulation.withX(newXOff);
-                offsetPopulation.withY(newYOff);
-                break;
-            case "zoomReset":
-                zoom = 2;
-                offsetPopulation = new Vec2(ORIGIN.x + currentT.getWidth(), ORIGIN.y + currentT.getHeight());
                 break;
             case "plane":
 
