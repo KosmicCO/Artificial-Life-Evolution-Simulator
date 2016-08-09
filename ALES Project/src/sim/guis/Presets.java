@@ -5,7 +5,6 @@
  */
 package sim.guis;
 
-import graphics.Graphics2D;
 import gui.GUIController;
 import static gui.TypingManager.typing;
 import gui.components.GUIButton;
@@ -35,6 +34,8 @@ public class Presets extends ComponentInputGUI {
     private List<GUIButton> buttons;
     private List<GUIPanel> panels;
     private int panIndex;
+    private GUIPanel hide;
+    private boolean selected;
 
     public Presets(String name, MainMenu parent) {
 
@@ -46,12 +47,15 @@ public class Presets extends ComponentInputGUI {
         inputs.addAll(buttons);
         panels = new ArrayList();
         panIndex = 0;
+        selected = false;
         
         for (int i = 0; i < 6; i++) {
             
             buttons.add(new GUIButton("button" + i, this, nextPlace(parent.getStartPos(), 1, -i), BUTTON_SIZE, "-None-", Color.white));
             panels.add(new GUIPanel("panel" + i, nextPlace(parent.getStartPos(), 1, -i), BUTTON_SIZE, getColor(0).multiply(0.8 - 0.1 * i)));
         }
+        
+        hide= new GUIPanel("hide", nextPlace(parent.getStartPos(), 1, 2), BUTTON_SIZE.multiply(new Vec2(1, 8)), Color4.BLACK.withA(0.6));
 
         inputs.add(new GUIButton("new", this, nextPlace(parent.getStartPos(), 1, 1), BUTTON_SIZE, "New Preset", Color.white));
         inputs.add(new GUIButton("back", this, nextPlace(parent.getStartPos(), 1, 2), BUTTON_SIZE, "Back", Color.white));
@@ -72,6 +76,7 @@ public class Presets extends ComponentInputGUI {
 
         this.setVisible(true);
         typing(this, true);
+        selected = true;
     }
 
     @Override
@@ -80,6 +85,11 @@ public class Presets extends ComponentInputGUI {
         super.draw();
         panels.forEach(GUIPanel::draw);
         buttons.forEach(GUIButton::draw);
+        
+        if(!selected){
+            
+            hide.draw();
+        }
     }
 
     @Override
@@ -88,6 +98,7 @@ public class Presets extends ComponentInputGUI {
         if(string.equals("new")){
             
             newPre.start();
+            selected = false;
         }
         
         if (string.equals("back")) {

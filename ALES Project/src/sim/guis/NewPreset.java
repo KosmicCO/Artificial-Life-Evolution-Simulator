@@ -171,7 +171,7 @@ public class NewPreset extends ComponentInputGUI {
         }
         if (string.equals("cancel")) {
             setVisible(false);
-            typing(parent, true);
+            parent.start();
         }
     }
 
