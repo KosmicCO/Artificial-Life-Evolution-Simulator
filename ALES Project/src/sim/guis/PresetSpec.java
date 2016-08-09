@@ -30,16 +30,15 @@ import static utility.GUIs.nextPlace;
  */
 public class PresetSpec extends ComponentInputGUI {
 
-    private int type;
-    private String typeStr;
+   
     private NewPreset parent;
-    private EnergyCostMenu eCostMenu;
+    
 
-    public PresetSpec(String n, int t, NewPreset parent) {
+    public PresetSpec(String n, NewPreset parent) {
         super(n);
-        type = t;
+        //type = t;
         this.parent = parent;
-        switch (type) {
+        /*switch (type) {
             case 0:
                 typeStr = "creature";
                 inputs.add(new GUIButton("eCostSetVisible", this, nextPlace(parent.getStartPos(), 3, -5), BUTTON_SIZE, "Energy Costs", Color.white));
@@ -49,31 +48,31 @@ public class PresetSpec extends ComponentInputGUI {
                 GUIController.add(eCostMenu);
                 // </energyCosts>
                 //THRESHOLDS
-                components.add(new GUILabel("reproThreshLabel", nextPlace(parent.getStartPos(), 3, -4), BUTTON_SIZE.multiply(new Vec2(0.5, 1)), "Reproduction Threshold", Color.white));
-                inputs.add(new GUICommandField("reproThreshField", this, nextPlace(parent.getStartPos(), 3, -4).add(BUTTON_SIZE.multiply(new Vec2(0.5, 0))), (BUTTON_SIZE.x) * 1.5, Color.black));
-                components.add(new GUILabel("hunterThreshLabel", nextPlace(parent.getStartPos(), 3, -3), BUTTON_SIZE.multiply(new Vec2(0.5, 1)), "Hunter Threshold", Color.white));
-                inputs.add(new GUICommandField("hunterThreshField", this, nextPlace(parent.getStartPos(), 3, -3).add(BUTTON_SIZE.multiply(new Vec2(0.5, 0))), (BUTTON_SIZE.x) * 1.5, Color.black));
+                components.add(new GUILabel("reproThreshLabel", nextPlace(parent.getStartPos(), 3, -4), BUTTON_SIZE, "Mate Threshold", Color.white));
+                inputs.add(new GUICommandField("reproThreshField", this, nextPlace(parent.getStartPos(), 4, -4).add(BUTTON_SIZE), (BUTTON_SIZE.x), Color.black));
+                components.add(new GUILabel("hunterThreshLabel", nextPlace(parent.getStartPos(), 3, -3), BUTTON_SIZE, "Hunt Threshold", Color.white));
+                inputs.add(new GUICommandField("hunterThreshField", this, nextPlace(parent.getStartPos(), 4, -3).add(BUTTON_SIZE), (BUTTON_SIZE.x), Color.black));
                 //RIP THRESHOLDS
                 //Other
-                components.add(new GUILabel("reproBufferLabel", nextPlace(parent.getStartPos(), 3, -2), BUTTON_SIZE.multiply(new Vec2(0.5, 1)), "Reproduction Buffer", Color.white));
-                inputs.add(new GUICommandField("reproBufferField", this, nextPlace(parent.getStartPos(), 3, -2).add(BUTTON_SIZE.multiply(new Vec2(0.5, 0))), (BUTTON_SIZE.x) * 1.5, Color.black));
-                components.add(new GUILabel("actionRadiusLabel", nextPlace(parent.getStartPos(), 3, -1), BUTTON_SIZE.multiply(new Vec2(0.5, 1)), "Action Radius", Color.white));
-                inputs.add(new GUICommandField("actionRadiusField", this, nextPlace(parent.getStartPos(), 3, -1).add(BUTTON_SIZE.multiply(new Vec2(0.5, 0))), (BUTTON_SIZE.x) * 1.5, Color.black));
-                /*
-                 inputs for:
-                 <Creature>
-                 eCostHunt- COMPLETE
-                 eCostForage- COMPLETE
-                 eCostRepro- COMPLETE
-                 reproThreshold- COMPLETE
-                 reproBuffer- COMPLETE
-                 hunterThreshold- COMPLETE
-                 <NewBehavior>
-                 eCostDetect- COMPLETE
-                 eCostMove- COMPLETE
-                 <Terrain>
-                 actionRadius- COMPLETE
-                 */
+                components.add(new GUILabel("reproBufferLabel", nextPlace(parent.getStartPos(), 3, -2), BUTTON_SIZE, "Mating Buffer", Color.white));
+                inputs.add(new GUICommandField("reproBufferField", this, nextPlace(parent.getStartPos(), 4, -2).add(BUTTON_SIZE), BUTTON_SIZE.x, Color.black));
+                components.add(new GUILabel("actionRadiusLabel", nextPlace(parent.getStartPos(), 3, -1), BUTTON_SIZE, "Action Radius", Color.white));
+                inputs.add(new GUICommandField("actionRadiusField", this, nextPlace(parent.getStartPos(), 4, -1).add(BUTTON_SIZE), BUTTON_SIZE.x, Color.black));
+                
+//                 inputs for:
+//                 <Creature>
+//                 eCostHunt- COMPLETE
+//                 eCostForage- COMPLETE
+//                 eCostRepro- COMPLETE
+//                 reproThreshold- COMPLETE
+//                 reproBuffer- COMPLETE
+//                 hunterThreshold- COMPLETE
+//                 <NewBehavior>
+//                 eCostDetect- COMPLETE
+//                 eCostMove- COMPLETE
+//                 <Terrain>
+//                 actionRadius- COMPLETE
+                 
                 for (int i = 1; i < 6; i++) {
                     components.add(new GUIPanel("top1." + i, nextPlace(parent.getStartPos(), 3, -i), BUTTON_SIZE.multiply(new Vec2(2, 1)), getColor(0).multiply(0.8 - 0.1 * i)));
                 }
@@ -81,64 +80,64 @@ public class PresetSpec extends ComponentInputGUI {
                 break;
             case 1:
                 typeStr = "terrain";
-                components.add(new GUILabel("huntYieldLabel", nextPlace(parent.getStartPos(), 3, -2), BUTTON_SIZE.multiply(new Vec2(0.5, 1)), "Hunter Yield", Color.white));
-                inputs.add(new GUICommandField("huntYieldField", this, nextPlace(parent.getStartPos(), 3, -2).add(BUTTON_SIZE.multiply(new Vec2(0.5, 0))), (BUTTON_SIZE.x) * 1.5, Color.black));
-                components.add(new GUILabel("numCreaturesLabel", nextPlace(parent.getStartPos(), 3, -1), BUTTON_SIZE.multiply(new Vec2(0.5, 1)), "Number of Creatures", Color.white));
-                inputs.add(new GUICommandField("numCreaturesField", this, nextPlace(parent.getStartPos(), 3, -1).add(BUTTON_SIZE.multiply(new Vec2(0.5, 0))), (BUTTON_SIZE.x) * 1.5, Color.black));
+                components.add(new GUILabel("huntYieldLabel", nextPlace(parent.getStartPos(), 3, -2), BUTTON_SIZE, "Hunter Yield", Color.white));
+                inputs.add(new GUICommandField("huntYieldField", this, nextPlace(parent.getStartPos(), 4, -2).add(BUTTON_SIZE), BUTTON_SIZE.x, Color.black));
+                components.add(new GUILabel("numCreaturesLabel", nextPlace(parent.getStartPos(), 3, -1), BUTTON_SIZE, "Number of Creatures", Color.white));
+                inputs.add(new GUICommandField("numCreaturesField", this, nextPlace(parent.getStartPos(), 4, -1).add(BUTTON_SIZE), BUTTON_SIZE.x, Color.black));
                 for (int i = 1; i < 3; i++) {
                     components.add(new GUIPanel("top" + i, nextPlace(parent.getStartPos(), 3, -i), BUTTON_SIZE.multiply(new Vec2(2, 1)), getColor(0).multiply(0.8 - 0.1 * i)));
                 }
-                /*
+                
                  inputs for:
                  <Terrain>
                  huntYield
                  <SimGenerator>
                  numCreatures
-                 */
+                
                 System.out.println("all terrain components constructed according to plan");
                 break;
             case 2:
                 typeStr = "food";
-                components.add(new GUILabel("nutrientsPFLabel", nextPlace(parent.getStartPos(), 3, -3), BUTTON_SIZE.multiply(new Vec2(0.5, 1)), "Nutrients Per Food", Color.white));
-                inputs.add(new GUICommandField("nPFField", this, nextPlace(parent.getStartPos(), 3, -3).add(BUTTON_SIZE.multiply(new Vec2(0.5, 0))), (BUTTON_SIZE.x) * 1.5, Color.black));
-                components.add(new GUILabel("fRespawnAmountLabel", nextPlace(parent.getStartPos(), 3, -2), BUTTON_SIZE.multiply(new Vec2(0.5, 1)), "Food Respawn Amount", Color.white));
-                inputs.add(new GUICommandField("fRespawnAmountField", this, nextPlace(parent.getStartPos(), 3, -2).add(BUTTON_SIZE.multiply(new Vec2(0.5, 0))), (BUTTON_SIZE.x) * 1.5, Color.black));
-                components.add(new GUILabel("fRespawnRateLabel", nextPlace(parent.getStartPos(), 3, -1), BUTTON_SIZE.multiply(new Vec2(0.5, 1)), "Food Respawn Rate", Color.white));
-                inputs.add(new GUICommandField("fRespawnRateField", this, nextPlace(parent.getStartPos(), 3, -1).add(BUTTON_SIZE.multiply(new Vec2(0.5, 0))), (BUTTON_SIZE.x) * 1.5, Color.black));
+                components.add(new GUILabel("nutrientsPFLabel", nextPlace(parent.getStartPos(), 3, -3), BUTTON_SIZE, "Nutrients Per Food", Color.white));
+                inputs.add(new GUICommandField("nPFField", this, nextPlace(parent.getStartPos(), 4, -3).add(BUTTON_SIZE), BUTTON_SIZE.x, Color.black));
+                components.add(new GUILabel("fRespawnAmountLabel", nextPlace(parent.getStartPos(), 3, -2), BUTTON_SIZE, "Food Respawn Amount", Color.white));
+                inputs.add(new GUICommandField("fRespawnAmountField", this, nextPlace(parent.getStartPos(), 4, -2).add(BUTTON_SIZE), BUTTON_SIZE.x, Color.black));
+                components.add(new GUILabel("fRespawnRateLabel", nextPlace(parent.getStartPos(), 3, -1), BUTTON_SIZE, "Food Respawn Rate", Color.white));
+                inputs.add(new GUICommandField("fRespawnRateField", this, nextPlace(parent.getStartPos(), 4, -1).add(BUTTON_SIZE), BUTTON_SIZE.x, Color.black));
                 for (int i = 1; i < 4; i++) {
                     components.add(new GUIPanel("top" + i, nextPlace(parent.getStartPos(), 3, -i), BUTTON_SIZE.multiply(new Vec2(2, 1)), getColor(0).multiply(0.8 - 0.1 * i)));
                 }
-                /*
-                 <Terrain>
-                 nutrientsPerFood
-                 fRespawnAmount
-                 <TerrainGenerator>
-                 foodSpawnRate
-                 */
+                
+//                 <Terrain>
+//                 nutrientsPerFood
+//                 fRespawnAmount
+//                 <TerrainGenerator>
+//                 foodSpawnRate
+                 
                 System.out.println("all food components constructed according to plan");
                 break;
             case 3:
                 typeStr = "advanced";
-                components.add(new GUILabel("mutationFactorLabel", nextPlace(parent.getStartPos(), 3, -3), BUTTON_SIZE.multiply(new Vec2(0.5, 1)), "Mutation Factor", Color.white));
-                inputs.add(new GUICommandField("mFactorField", this, nextPlace(parent.getStartPos(), 3, -3).add(BUTTON_SIZE.multiply(new Vec2(0.5, 0))), (BUTTON_SIZE.x) * 1.5, Color.black));
-                components.add(new GUILabel("lengthVarianceLabel", nextPlace(parent.getStartPos(), 3, -2), BUTTON_SIZE.multiply(new Vec2(0.5, 1)), "Gene Length Variance", Color.white));
-                inputs.add(new GUICommandField("lenVarianceField", this, nextPlace(parent.getStartPos(), 3, -2).add(BUTTON_SIZE.multiply(new Vec2(0.5, 0))), (BUTTON_SIZE.x) * 1.5, Color.black));
-                components.add(new GUILabel("wGenomeLabel", nextPlace(parent.getStartPos(), 3, -1), BUTTON_SIZE.multiply(new Vec2(0.5, 1)), "Weighted Genome", Color.white));
-                inputs.add(new GUICommandField("wGenomeField", this, nextPlace(parent.getStartPos(), 3, -1).add(BUTTON_SIZE.multiply(new Vec2(0.5, 0))), (BUTTON_SIZE.x) * 1.5, Color.black));
+                components.add(new GUILabel("mutationFactorLabel", nextPlace(parent.getStartPos(), 3, -3), BUTTON_SIZE, "Mutation Factor", Color.white));
+                inputs.add(new GUICommandField("mFactorField", this, nextPlace(parent.getStartPos(), 4, -3).add(BUTTON_SIZE), BUTTON_SIZE.x, Color.black));
+                components.add(new GUILabel("lengthVarianceLabel", nextPlace(parent.getStartPos(), 3, -2), BUTTON_SIZE, "Gene Length Variance", Color.white));
+                inputs.add(new GUICommandField("lenVarianceField", this, nextPlace(parent.getStartPos(), 4, -2).add(BUTTON_SIZE), BUTTON_SIZE.x, Color.black));
+                components.add(new GUILabel("wGenomeLabel", nextPlace(parent.getStartPos(), 3, -1), BUTTON_SIZE, "Weighted Genome", Color.white));
+                inputs.add(new GUICommandField("wGenomeField", this, nextPlace(parent.getStartPos(), 4, -1).add(BUTTON_SIZE), BUTTON_SIZE.x, Color.black));
                 for (int i = 1; i < 4; i++) {
                     components.add(new GUIPanel("top" + i, nextPlace(parent.getStartPos(), 3, -i), BUTTON_SIZE.multiply(new Vec2(2, 1)), getColor(0).multiply(0.8 - 0.1 * i)));
                 }
-                /*
-                 inputs for:
-                 <Chromosome>
-                 mutationFactor
-                 lengthVariance
-                 <StructureInterpreter>
-                 weightedGenome
-                 */
+                
+//                 inputs for:
+//                 <Chromosome>
+//                 mutationFactor
+//                 lengthVariance
+//                 <StructureInterpreter>
+//                 weightedGenome
+                 
                 System.out.println("all advanced settings components constructed according to plan");
                 break;
-        }
+        }*/
         inputs.add(new GUIButton("cancelBtn", this, nextPlace(parent.getStartPos(), 3, 0), BUTTON_SIZE, "Cancel", Color.white));
         components.add(new GUIPanel("cancelPanel", nextPlace(parent.getStartPos(), 3, 0), BUTTON_SIZE, Color4.RED));
     }
@@ -165,7 +164,7 @@ public class PresetSpec extends ComponentInputGUI {
                 typing(parent, true);
                 break;
             case "eCostSetVisible":
-                eCostMenu.start();
+                //eCostMenu.start();
                 break;
             case "reproThreshField":
                 inputStr = (String) o;

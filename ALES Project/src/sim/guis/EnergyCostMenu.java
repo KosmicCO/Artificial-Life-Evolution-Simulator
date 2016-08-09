@@ -30,28 +30,29 @@ import static utility.GUIs.nextPlace;
  */
 public class EnergyCostMenu extends ComponentInputGUI {
 
-    private PresetSpec parent;
+    private CreaturePresetSpec parent;
 
-    public EnergyCostMenu(String n, PresetSpec parent) {
+    public EnergyCostMenu(String n, CreaturePresetSpec parent) {
         super(n);
         this.parent = parent;
-        components.add(new GUILabel("eCostHuntLabel", nextPlace(parent.getStartPos(), 4, -5), BUTTON_SIZE.multiply(new Vec2(0.5, 1)), "Hunting", Color.white));
+                for (int i = -1; i < 6; i++) {
+            components.add(new GUIPanel("top" + i, nextPlace(parent.getStartPos(), 4, -i), BUTTON_SIZE.multiply(new Vec2(1, 1)), getColor(0).multiply(0.8 - 0.1 * i)));
+        }
+        components.add(new GUILabel("eCostHuntLabel", nextPlace(parent.getStartPos(), 4, -5), BUTTON_SIZE, "Hunting", Color.white));
         inputs.add(new GUICommandField("eCostHuntField", this, nextPlace(parent.getStartPos(), 4, -5).add(BUTTON_SIZE.multiply(new Vec2(0.5, 0))), (BUTTON_SIZE.x) * 1.5, Color.black));
-        components.add(new GUILabel("eCostForageLabel", nextPlace(parent.getStartPos(), 4, -4), BUTTON_SIZE.multiply(new Vec2(0.5, 1)), "Foraging", Color.white));
+        components.add(new GUILabel("eCostForageLabel", nextPlace(parent.getStartPos(), 4, -4), BUTTON_SIZE, "Foraging", Color.white));
         inputs.add(new GUICommandField("eCostForageField", this, nextPlace(parent.getStartPos(), 4, -4).add(BUTTON_SIZE.multiply(new Vec2(0.5, 0))), (BUTTON_SIZE.x) * 1.5, Color.black));
-        components.add(new GUILabel("eCostReproLabel", nextPlace(parent.getStartPos(), 4, -3), BUTTON_SIZE.multiply(new Vec2(0.5, 1)), "Reproduction", Color.white));
+        components.add(new GUILabel("eCostReproLabel", nextPlace(parent.getStartPos(), 4, -3), BUTTON_SIZE, "Reproduction", Color.white));
         inputs.add(new GUICommandField("eCostReproField", this, nextPlace(parent.getStartPos(), 4, -3).add(BUTTON_SIZE.multiply(new Vec2(0.5, 0))), (BUTTON_SIZE.x) * 1.5, Color.black));
-        components.add(new GUILabel("eCostDetectLabel", nextPlace(parent.getStartPos(), 4, -2), BUTTON_SIZE.multiply(new Vec2(0.5, 1)), "Detection", Color.white));
+        components.add(new GUILabel("eCostDetectLabel", nextPlace(parent.getStartPos(), 4, -2), BUTTON_SIZE, "Detection", Color.white));
         inputs.add(new GUICommandField("eCostDetectField", this, nextPlace(parent.getStartPos(), 4, -2).add(BUTTON_SIZE.multiply(new Vec2(0.5, 0))), (BUTTON_SIZE.x) * 1.5, Color.black));
-        components.add(new GUILabel("eCostMoveLabel", nextPlace(parent.getStartPos(), 4, -1), BUTTON_SIZE.multiply(new Vec2(0.5, 1)), "Movement", Color.white));
+        components.add(new GUILabel("eCostMoveLabel", nextPlace(parent.getStartPos(), 4, -1), BUTTON_SIZE, "Movement", Color.white));
         inputs.add(new GUICommandField("eCostMoveField", this, nextPlace(parent.getStartPos(), 4, -1).add(BUTTON_SIZE.multiply(new Vec2(0.5, 0))), (BUTTON_SIZE.x) * 1.5, Color.black));
 
-        inputs.add(new GUIButton("eCostCancel", this, nextPlace(parent.getStartPos(), 4, 0), BUTTON_SIZE, "Cancel", Color.white));
-        components.add(new GUIPanel("cancelPanel", nextPlace(parent.getStartPos(), 4, 0), BUTTON_SIZE, Color4.RED));
+        inputs.add(new GUIButton("eCostCancel", this, nextPlace(parent.getStartPos(), 4, 2), BUTTON_SIZE, "Cancel", Color.white));
+        components.add(new GUIPanel("cancelPanel", nextPlace(parent.getStartPos(), 4, 2), BUTTON_SIZE, Color4.RED));
 
-        for (int i = 1; i < 6; i++) {
-            components.add(new GUIPanel("top2." + i, nextPlace(parent.getStartPos(), 4, -i), BUTTON_SIZE.multiply(new Vec2(2, 1)), getColor(0).multiply(0.8 - 0.1 * i)));
-        }
+
     }
 
     public void start() {

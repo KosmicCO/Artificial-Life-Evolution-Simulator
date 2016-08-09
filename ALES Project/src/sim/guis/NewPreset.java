@@ -33,7 +33,6 @@ import static utility.GUIs.nextPlace;
  */
 public class NewPreset extends ComponentInputGUI {
 
-    
     //Creature
     public static int eCostHunt;
     public static int eCostForage;
@@ -54,21 +53,25 @@ public class NewPreset extends ComponentInputGUI {
 
     //TerrainGenerator
     public static double foodSR;
-    
+
     //Chromosome
     public static double mutantFactor;
     public static int lenVariance;
-    
+
     //StructureInterpreter
     public static List<Integer> wGenome;
-    
+
     //SimGenerator
     public static int numCreatures;
-    
-    
+
     private Presets parent;
-    List<PresetSpec> preSpecs;
+    //List<PresetSpec> preSpecs;
     public static Preset newPreset;
+
+    private CreaturePresetSpec crPreSpec;
+    private TerrainPresetSpec terrPreSpec;
+    private FoodPresetSpec fPreSpec;
+    private AdvancedPresetSpec advPreSpec;
 
     public NewPreset(String n, Presets parent) {
 
@@ -76,9 +79,9 @@ public class NewPreset extends ComponentInputGUI {
         this.parent = parent;
 
         newPreset = new Preset();
-        
+
         //SETTING ALL OF THESE CLASS VARIABLES
-         eCostHunt = Creature.energyCostPerHunt;
+        eCostHunt = Creature.energyCostPerHunt;
         eCostForage = Creature.energyCostPerForage;
         eCostRepro = Creature.energyCostPerRepro;
         reproThreshold = Creature.reproductionThreshold;
@@ -95,7 +98,7 @@ public class NewPreset extends ComponentInputGUI {
         lenVariance = Chromosome.variance;
         wGenome = StructureInterpreter.getWeightedGenome();
         numCreatures = SimGenerator.creatureAmount;
-        
+
         inputs.add(new GUIButton("creature", this, nextPlace(parent.getStartPos(), 2, -4), BUTTON_SIZE, "Creature", Color.white));
         inputs.add(new GUIButton("terrain", this, nextPlace(parent.getStartPos(), 2, -3), BUTTON_SIZE, "Terrain", Color.white));
         inputs.add(new GUIButton("food", this, nextPlace(parent.getStartPos(), 2, -2), BUTTON_SIZE, "Food", Color.white));
@@ -111,12 +114,15 @@ public class NewPreset extends ComponentInputGUI {
 
         components.add(new GUIPanel("middle", nextPlace(parent.getStartPos(), 2, 1), BUTTON_SIZE, getColor(1).multiply(0.8)));
         components.add(new GUIPanel("bottom", nextPlace(parent.getStartPos(), 2, 2), BUTTON_SIZE, getColor(1).multiply(0.7)));
-        preSpecs = new ArrayList<>();
-        for (int i = 0; i < 4; i++) {
-            PresetSpec prSpec = new PresetSpec("specMenu" + i, i, this);
-            preSpecs.add(prSpec);
-            GUIController.add(prSpec);
-        }
+        //preSpecs = new ArrayList<>();
+        crPreSpec = new CreaturePresetSpec("specMenu1", this);
+        GUIController.add(crPreSpec);
+        terrPreSpec = new TerrainPresetSpec("specMenu2", this);
+        GUIController.add(terrPreSpec);
+        fPreSpec = new FoodPresetSpec("specMenu3", this);
+        GUIController.add(fPreSpec);
+        advPreSpec = new AdvancedPresetSpec("specMenu4", this);
+        GUIController.add(advPreSpec);
     }
 
     public void start() {
@@ -134,22 +140,22 @@ public class NewPreset extends ComponentInputGUI {
     public void recieve(String string, Object o) {
         switch (string) {
             case "creature":
-                preSpecs.get(0).start();
+                crPreSpec.start();
                 System.out.println("Creature");
                 break;
             case "terrain":
 
-                preSpecs.get(1).start();
+                terrPreSpec.start();
                 System.out.println("Terrain");
                 break;
             case "food":
 
-                preSpecs.get(2).start();
+                fPreSpec.start();
                 System.out.println("Food");
                 break;
             case "advanced":
 
-                preSpecs.get(3).start();
+                advPreSpec.start();
                 System.out.println("Advanced Settings");
                 break;
             case "cancel":
