@@ -115,8 +115,8 @@ public class Simulation extends ComponentInputGUI {
         //other
         hide = new GUIPanel("hide", nextPlace(start, 0, 1).add(offsetToDraw.withY(0)), BUTTON_SIZE.multiply(new Vec2(1, 4)), Color4.BLACK.withA(0.6));
 
-        gtpPanel = new GUIPanel("pp", new Vec2(offsetToDraw.x, 50), new Vec2(SIDE_LENGTH * 8, 32), getColor(0).multiply(0.8));
-        noParents = new GUILabel("np", new Vec2(offsetToDraw.x, 50), new Vec2(SIDE_LENGTH * 8, 32), "No Parents", Color.white);
+        gtpPanel = new GUIPanel("pp", new Vec2(offsetToDraw.x, 56), new Vec2(SIDE_LENGTH * 8, 32), getColor(0).multiply(0.8));
+        noParents = new GUILabel("np", new Vec2(offsetToDraw.x, 56), new Vec2(SIDE_LENGTH * 8, 32), "No Parents", Color.white);
 
         inputs.add(new GUIButton("back", this, nextPlace(start, 0, 1).add(offsetToDraw.withY(0)), BUTTON_SIZE, "Main Menu", Color.white));
         components.add(new GUIPanel("bottom", nextPlace(start, 0, 1).add(offsetToDraw.withY(0)), BUTTON_SIZE, getColor(1).multiply(0.6)));
@@ -130,7 +130,7 @@ public class Simulation extends ComponentInputGUI {
 
         for (int i = 0; i < 8; i++) {
 
-            stats.add(new GUILabel("stat" + i, new Vec2(SIDE_LENGTH * 8 + offsetToDraw.x * 2 + 4, 225 - 25 * i), "Stat " + i, Color.white));
+            stats.add(new GUILabel("stat" + i, new Vec2(SIDE_LENGTH * 8 + offsetToDraw.x * 2 + 4, 231 - 25 * i), "Stat " + i, Color.white));
         }
 
         this.parent = parent;
