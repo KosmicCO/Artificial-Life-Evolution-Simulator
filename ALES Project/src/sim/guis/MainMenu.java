@@ -70,6 +70,7 @@ public class MainMenu extends ComponentInputGUI {
         pre = new Presets("presets", this);
         help = new HelpMenu("help", this);
         GUIController.add(pre);
+        GUIController.add(help);
     }
 
     public void progress(double p) {
@@ -150,10 +151,8 @@ public class MainMenu extends ComponentInputGUI {
 
             case "help":
 
-                System.out.println("clicked");
                 this.setVisible(false);
                 help.start();
-                System.out.println("TRIGGERED");
                 break;
 
             case "quit":
