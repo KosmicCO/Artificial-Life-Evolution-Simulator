@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package sim.guis;
+package sim.guis.pres;
 
 import gui.GUIController;
 import static gui.TypingManager.typing;
@@ -16,6 +16,7 @@ import gui.types.GUIInputComponent;
 import static java.lang.Double.parseDouble;
 import static java.lang.Integer.parseInt;
 import org.newdawn.slick.Color;
+import sim.guis.NewPreset;
 import util.Color4;
 import util.Vec2;
 import static utility.GUIs.BUTTON_SIZE;
@@ -34,28 +35,27 @@ public class CreaturePresetSpec extends ComponentInputGUI {
     public CreaturePresetSpec(String n, NewPreset parent) {
         super(n);
         this.parent = parent;
-                for (int i = -1; i < 5; i++) {
+                for (int i = 0; i < 5; i++) {
             components.add(new GUIPanel("top1." + i, nextPlace(parent.getStartPos(), 3, -i), BUTTON_SIZE.multiply(new Vec2(1, 1)), getColor(0).multiply(0.8 - 0.1 * i)));
         }
-        inputs.add(new GUIButton("cancelBtn", this, nextPlace(parent.getStartPos(), 3, 2), BUTTON_SIZE, "Cancel", Color.white));
-        components.add(new GUIPanel("cancelPanel", nextPlace(parent.getStartPos(), 3, 2), BUTTON_SIZE, Color4.RED));
+        inputs.add(new GUIButton("cancelBtn", this, nextPlace(parent.getStartPos(), 3, 1), BUTTON_SIZE, "Cancel", Color.white));
+        components.add(new GUIPanel("cancelPanel", nextPlace(parent.getStartPos(), 3, 1), BUTTON_SIZE, Color4.RED.multiply(0.8)));
         
-        inputs.add(new GUIButton("eCostSetVisible", this, nextPlace(parent.getStartPos(), 3, -5), BUTTON_SIZE, "Energy Costs", Color.white));
-        components.add(new GUIPanel("eCostPanel", nextPlace(parent.getStartPos(), 3, -5), BUTTON_SIZE, Color4.RED));
+        inputs.add(new GUIButton("eCostSetVisible", this, nextPlace(parent.getStartPos(), 3, -4), BUTTON_SIZE, "Energy Costs", Color.white));
         //ENERGY COSTS
         eCostMenu = new EnergyCostMenu("eCostMenu", this);
         GUIController.add(eCostMenu);
         // </energyCosts>
         //THRESHOLDS
-        components.add(new GUILabel("reproThreshLabel", nextPlace(parent.getStartPos(), 3, -4), BUTTON_SIZE, "Mate Threshold", Color.white));
+        components.add(new GUILabel("reproThreshLabel", nextPlace(parent.getStartPos(), 3, -3), BUTTON_SIZE, "Mate Threshold", Color.white));
         inputs.add(new GUICommandField("reproThreshField", this, nextPlace(parent.getStartPos(), 4, -4).add(BUTTON_SIZE), (BUTTON_SIZE.x), Color.black));
-        components.add(new GUILabel("hunterThreshLabel", nextPlace(parent.getStartPos(), 3, -3), BUTTON_SIZE, "Hunt Threshold", Color.white));
+        components.add(new GUILabel("hunterThreshLabel", nextPlace(parent.getStartPos(), 3, -2), BUTTON_SIZE, "Hunt Threshold", Color.white));
         inputs.add(new GUICommandField("hunterThreshField", this, nextPlace(parent.getStartPos(), 4, -3).add(BUTTON_SIZE), (BUTTON_SIZE.x), Color.black));
         //RIP THRESHOLDS
         //Other
-        components.add(new GUILabel("reproBufferLabel", nextPlace(parent.getStartPos(), 3, -2), BUTTON_SIZE, "Mating Buffer", Color.white));
+        components.add(new GUILabel("reproBufferLabel", nextPlace(parent.getStartPos(), 3, -1), BUTTON_SIZE, "Mating Buffer", Color.white));
         inputs.add(new GUICommandField("reproBufferField", this, nextPlace(parent.getStartPos(), 4, -2).add(BUTTON_SIZE), BUTTON_SIZE.x, Color.black));
-        components.add(new GUILabel("actionRadiusLabel", nextPlace(parent.getStartPos(), 3, -1), BUTTON_SIZE, "Action Radius", Color.white));
+        components.add(new GUILabel("actionRadiusLabel", nextPlace(parent.getStartPos(), 3, -0), BUTTON_SIZE, "Action Radius", Color.white));
         inputs.add(new GUICommandField("actionRadiusField", this, nextPlace(parent.getStartPos(), 4, -1).add(BUTTON_SIZE), BUTTON_SIZE.x, Color.black));
 
 //                 inputs for:
@@ -88,7 +88,7 @@ public class CreaturePresetSpec extends ComponentInputGUI {
         switch (string) {
             case "cancelBtn":
                 setVisible(false);
-                typing(parent, true);
+                parent.start();
                 break;
             case "eCostSetVisible":
                 eCostMenu.start();

@@ -51,7 +51,6 @@ public class MainMenu extends ComponentInputGUI {
         inputs.add(new GUIButton("start", this, nextPlace(start, 0, -2), BUTTON_SIZE, "Start", Color.white));
         inputs.add(new GUIButton("presets", this, nextPlace(start, 0, -1), BUTTON_SIZE, "Presets", Color.white));
         inputs.add(new GUIButton("help", this, nextPlace(start, 0, 0), BUTTON_SIZE, "Help", Color.white));
-
         inputs.add(new GUIButton("quit", this, nextPlace(start, 0, 1), BUTTON_SIZE, "Quit", Color.white));
 
         for (int i = 0; i < 3; i++) {
@@ -59,10 +58,10 @@ public class MainMenu extends ComponentInputGUI {
             components.add(new GUIPanel("top" + i, nextPlace(start, 0, -i), BUTTON_SIZE, getColor(0).multiply(0.8 - 0.1 * i)));
         }
 
-        components.add(new GUIPanel("bottom", nextPlace(start, 0, 1), BUTTON_SIZE, getColor(1).multiply(0.6)));
+        components.add(new GUIPanel("bottom", nextPlace(start, 0, 1), BUTTON_SIZE, getColor(1).multiply(0.8)));
 
         selected = false;
-        hide = new GUIPanel("hide", nextPlace(start, 1, 1), BUTTON_SIZE.multiply(new Vec2(1, 4)), Color4.BLACK.withA(0.6));
+        hide = new GUIPanel("hide", nextPlace(start, 0, 1), BUTTON_SIZE.multiply(new Vec2(1, 4)), Color4.BLACK.withA(0.6));
         load = new GUILabel("loading", nextPlace(start, 1, 0), BUTTON_SIZE, "Loading", Color.white);
         progress = 0;
         loading = false;
