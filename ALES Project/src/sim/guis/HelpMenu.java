@@ -11,13 +11,10 @@ import gui.components.GUIButton;
 import gui.components.GUIPanel;
 import gui.types.ComponentInputGUI;
 import gui.types.GUIInputComponent;
-import java.util.ArrayList;
-import java.util.List;
 import org.newdawn.slick.Color;
 import util.Color4;
 import util.Vec2;
 import static utility.GUIs.BUTTON_SIZE;
-import static utility.GUIs.getColor;
 import static utility.GUIs.nextPlace;
 
 /**
@@ -29,6 +26,7 @@ public class HelpMenu extends ComponentInputGUI {
     private MainMenu parent;
     private HelpKey cellKey;
     private HelpPresetDefinitions presetKey;
+    private HelpMenuGeneral helpGen;
 
     public HelpMenu(String n, MainMenu parent) {
         super(n);
@@ -38,11 +36,16 @@ public class HelpMenu extends ComponentInputGUI {
         inputs.add(new GUIButton("key", this, nextPlace(parent.getStartPos(), 0, 1), BUTTON_SIZE, "Cell Key", Color.white));
         components.add(new GUIPanel("keyPanel", nextPlace(parent.getStartPos(), 0, 1), BUTTON_SIZE, Color4.BLUE));
         cellKey = new HelpKey("key", this);
-        inputs.add(new GUIButton("presetKey", this, nextPlace(parent.getStartPos(), 0, 0), BUTTON_SIZE, "Preset Key", Color.white));
+        inputs.add(new GUIButton("presetKey", this, nextPlace(parent.getStartPos(), 0, 0), BUTTON_SIZE, "Preset Info", Color.white));
         components.add(new GUIPanel("prKeyPanel", nextPlace(parent.getStartPos(), 0, 0), BUTTON_SIZE, Color4.BLUE.multiply(.4)));
         presetKey = new HelpPresetDefinitions("prKey", this);
+        inputs.add(new GUIButton("generalInfoButton", this, nextPlace(parent.getStartPos(),0,-1),BUTTON_SIZE, "General Info", Color.white));
+        components.add(new GUIPanel("genInfoPanel", nextPlace(parent.getStartPos(), 0, -1), BUTTON_SIZE, Color4.BLUE.multiply(.8)));
+        helpGen = new HelpMenuGeneral("helpGen", this);
         GUIController.add(cellKey);
         GUIController.add(presetKey);
+        GUIController.add(helpGen);
+        
     }
 
     @Override
@@ -62,6 +65,9 @@ public class HelpMenu extends ComponentInputGUI {
                 this.setVisible(false);
                 presetKey.start();
                 break;
+            case "generalInfoButton":
+                this.setVisible(false);
+                helpGen.start();
         }
     }
 

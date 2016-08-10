@@ -41,7 +41,7 @@ public class HelpPresetDefinitions extends ComponentInputGUI {
                 + "FOOD SPAWN RATE- The rate at which food particles are regenerated. "
                 + "MUTANT FACTOR- The percentage of genes in the chromosome which are mutated despite the parental structure. "
                 + "LENGTH VARIANCE- The maximum amount that a chromosome's length can change from generation to generation, affecting size and other traits. "
-                + "WEIGHTED GENOME- A list of integers representing cells, with a greater integer at a certain point. A list of 12 integers, each separated by dashes. "
+                + "WEIGHTED GENOME- A list of integers representing cells, with a greater integer at a certain point. A list of 12 integers, each separated by dashes (e.g. '12-18-4-16-22-56-20-34-26-12-33-16'). "
                 + "NUMBER OF CREATURES- The number of creatures initially generated on the map. ");
         components.add(prInfo);
     }
