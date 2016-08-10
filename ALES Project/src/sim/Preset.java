@@ -19,6 +19,8 @@ import map.TerrainGenerator;
  */
 public class Preset {
 
+    private String name;
+    
     //Creature
     private int eCostHunt;
     private int eCostForage;
@@ -50,7 +52,13 @@ public class Preset {
     //SimGenerator
     private int numCreatures;
 
-    public Preset(int costHunt, int costForage, int costRepro, double repThresh, double repBuffer, double huntThresh, int costDetect, int costMove, int actRad, int nutrientsPF, double hYield, int fRSAmount, double fSR, double mFactor, int lenV, List<Integer> wGen, int numCre) {
+    public Preset(String name, int costHunt, int costForage, int costRepro, 
+            double repThresh, double repBuffer, double huntThresh, int costDetect, 
+            int costMove, int actRad, int nutrientsPF, double hYield, int fRSAmount, 
+            double fSR, double mFactor, int lenV, List<Integer> wGen, int numCre) {
+        
+        this.name = name;
+        
         eCostHunt = costHunt;
         eCostForage = costForage;
         eCostRepro = costRepro;
@@ -88,6 +96,11 @@ public class Preset {
         lenVariance = Chromosome.variance;
         wGenome = StructureInterpreter.getWeightedGenome();
         numCreatures = SimGenerator.creatureAmount;
+    }
+    
+    public String getName(){
+        
+        return name;
     }
 
     public void set() {
