@@ -130,9 +130,9 @@ public abstract class Cell {
             case 9:
                 return Color4.GREEN;
             case 10:
-                return Color4.RED.withR(.144);
+                return Color4.RED.withR(.4);
             case 11:
-                return Color4.GREEN.withB(0.5);
+                return Color4.GREEN.multiply(.2);
             default:
                 return Color4.WHITE;
         }
