@@ -123,18 +123,11 @@ public class MainMenu extends ComponentInputGUI {
                         setLoading(true);
                         generate();
 
-                        long gt = System.currentTimeMillis() + 250;
-                        while(gt >= System.currentTimeMillis());
-                        
+                        Core.timer(0.25, () -> {
+                            
                             startSim();
                             setLoading(false);
-
-//                        Core.delay(0.25, new EventStream()).onEvent(() -> {
-//
-//                            startSim();
-//                            setLoading(false);
-//                        }).sendEvent();
-
+                        });
                     })).start();
                 } else {
 

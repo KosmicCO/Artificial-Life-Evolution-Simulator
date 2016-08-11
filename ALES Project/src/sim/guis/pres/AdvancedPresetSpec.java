@@ -5,12 +5,14 @@
  */
 package sim.guis.pres;
 
+import static gui.GUIController.FONT;
 import static gui.TypingManager.typing;
 import gui.components.GUIButton;
 import gui.components.GUICommandField;
 import gui.components.GUILabel;
 import gui.components.GUIPanel;
 import gui.types.ComponentInputGUI;
+import gui.types.GUIComponent;
 import gui.types.GUIInputComponent;
 import static java.lang.Double.parseDouble;
 import static java.lang.Integer.parseInt;
@@ -36,16 +38,25 @@ public class AdvancedPresetSpec extends ComponentInputGUI {
         super(n);
         this.parent = parent;
         for (int i = 0; i < 3; i++) {
-            components.add(new GUIPanel("top" + i, nextPlace(parent.getStartPos(), 3, -i), BUTTON_SIZE.multiply(new Vec2(1, 1)), getColor(0).multiply(0.8 - 0.1 * i)));
+            components.add(new GUIPanel("top" + i, nextPlace(parent.getStartPos(), 3, -i), BUTTON_SIZE.multiply(new Vec2(2 + (i == 0 ? 1.5 : 0), 1)), getColor(0).multiply(0.8 - 0.1 * i)));
         }
-        inputs.add(new GUIButton("cancelBtn", this, nextPlace(parent.getStartPos(), 3, 1), BUTTON_SIZE, "Cancel", Color.white));
+        inputs.add(new GUIButton("cancelBtn", this, nextPlace(parent.getStartPos(), 3, 1), BUTTON_SIZE, "Back", Color.white));
         components.add(new GUIPanel("cancelPanel", nextPlace(parent.getStartPos(), 3, 1), BUTTON_SIZE, Color4.RED.multiply(0.8)));
+
         components.add(new GUILabel("mutationFactorLabel", nextPlace(parent.getStartPos(), 3, -2), BUTTON_SIZE, "Mutation Factor", Color.white));
-        inputs.add(new GUICommandField("mFactorField", this, nextPlace(parent.getStartPos(), 4, -2).add(BUTTON_SIZE), BUTTON_SIZE.x, Color.black));
+
+        inputs.add(new GUIButton("mffb", this, nextPlace(parent.getStartPos(), 4, -2), BUTTON_SIZE, "", Color.white));
+        inputs.add(new GUICommandField("mff", this, nextPlace(parent.getStartPos(), 4, -2).add(new Vec2(6, (BUTTON_SIZE.y - FONT.getHeight()) / 2.0 + FONT.getHeight())), BUTTON_SIZE.x - 12, Color.white, Color4.WHITE));
+
         components.add(new GUILabel("lengthVarianceLabel", nextPlace(parent.getStartPos(), 3, -1), BUTTON_SIZE, "Size Variance", Color.white));
-        inputs.add(new GUICommandField("lenVarianceField", this, nextPlace(parent.getStartPos(), 4, -1).add(BUTTON_SIZE), BUTTON_SIZE.x, Color.black));
+
+        inputs.add(new GUIButton("lvfb", this, nextPlace(parent.getStartPos(), 4, -1), BUTTON_SIZE, "", Color.white));
+        inputs.add(new GUICommandField("lvf", this, nextPlace(parent.getStartPos(), 4, -1).add(new Vec2(6, (BUTTON_SIZE.y - FONT.getHeight()) / 2.0 + FONT.getHeight())), BUTTON_SIZE.x - 12, Color.white, Color4.WHITE));
+
         components.add(new GUILabel("wGenomeLabel", nextPlace(parent.getStartPos(), 3, 0), BUTTON_SIZE, "Weighted Genome", Color.white));
-        inputs.add(new GUICommandField("wGenomeField", this, nextPlace(parent.getStartPos(), 4, 0).add(BUTTON_SIZE), BUTTON_SIZE.x, Color.black));
+
+        inputs.add(new GUIButton("egfb", this, nextPlace(parent.getStartPos(), 4, 0), BUTTON_SIZE.multiply(new Vec2(2.5, 1)), "", Color.white));
+        inputs.add(new GUICommandField("egf", this, nextPlace(parent.getStartPos(), 4, 0).add(new Vec2(6, (BUTTON_SIZE.y - FONT.getHeight()) / 2.0 + FONT.getHeight())), (BUTTON_SIZE.x * 2.5) - 12, Color.white, Color4.WHITE));
 
 //                 inputs for:
 //                 <Chromosome>
@@ -68,38 +79,82 @@ public class AdvancedPresetSpec extends ComponentInputGUI {
         int newValInt;
         switch (string) {
             case "cancelBtn":
+                ((GUICommandField) inputs.get(getFieldIndex("mff"))).send();
+                ((GUICommandField) inputs.get(getFieldIndex("lvf"))).send();
+                ((GUICommandField) inputs.get(getFieldIndex("egf"))).send();
                 setVisible(false);
                 parent.start();
                 break;
-            case "mFactorField":
+            case "mff":
+
                 inputStr = (String) o;
-                newValDouble = parseDouble(inputStr);
-                NewPreset.mutantFactor = newValDouble;
-                ((GUICommandField) inputs.get(getFieldIndex("mutantFactorField"))).setText(inputStr);
-                break;
-            case "lenVarianceField":
-                inputStr = (String) o;
-                newValInt = parseInt(inputStr);
-                NewPreset.lenVariance = newValInt;
-                ((GUICommandField) inputs.get(getFieldIndex("lenVarianceField"))).setText(inputStr);
-                break;
-            case "wGenomeField":
-                inputStr = (String) o;
-                List<Integer> wG = new ArrayList<>();
-                String sub = "";
-                for (int i = 0; i < inputStr.length(); i++) {
-                    //String j = inputStr.substring(i);
-                    if (inputStr.charAt(i) == '-' || i == inputStr.length() - 1) {
-                        int chr = parseInt(sub);
-                        wG.add(chr);
-                        sub = "";
-                    }
-                    sub += inputStr.charAt(i);
+
+                try {
+
+                    newValDouble = parseDouble(inputStr);
+                    NewPreset.mutantFactor = newValDouble;
+                    ((GUICommandField) inputs.get(getFieldIndex("mff"))).setText(inputStr);
+                } catch (Exception e) {
+
+                    ((GUICommandField) inputs.get(getFieldIndex("mff"))).setText("Error");
                 }
-                NewPreset.wGenome = wG;
-                ((GUICommandField) inputs.get(getFieldIndex("wGenomeField"))).setText(inputStr);
+                break;
+            case "lvf":
+
+                inputStr = (String) o;
+
+                try {
+
+                    newValInt = parseInt(inputStr);
+                    NewPreset.lenVariance = newValInt;
+                    ((GUICommandField) inputs.get(getFieldIndex("lvf"))).setText(inputStr);
+                } catch (Exception e) {
+
+                    ((GUICommandField) inputs.get(getFieldIndex("lvf"))).setText("Error");
+                }
+                break;
+            case "egf":
+
+                inputStr = (String) o;
+
+                try {
+
+                    List<Integer> wG = new ArrayList<>();
+                    String sub = "";
+                    for (int i = 0; i < inputStr.length(); i++) {
+                        //String j = inputStr.substring(i);
+                        if (inputStr.charAt(i) == '-' || i == inputStr.length() - 1) {
+                            int chr = parseInt(sub);
+                            wG.add(chr);
+                            sub = "";
+                        }
+                        sub += inputStr.charAt(i);
+                    }
+                    NewPreset.wGenome = wG;
+                    ((GUICommandField) inputs.get(getFieldIndex("egf"))).setText(inputStr);
+                } catch (Exception e) {
+
+                    ((GUICommandField) inputs.get(getFieldIndex("egf"))).setText("Error");
+                }
                 break;
         }
+    }
+
+    @Override
+    public List<GUIComponent> mousePressed(Vec2 p) {
+
+        List<GUIComponent> lgc = super.mousePressed(p);
+
+        for (int i = 0; i < 3; i++) {
+
+            if (lgc.contains(inputs.get(i * 2 + 1))) {
+
+                lgc.remove(inputs.get(i * 2 + 1));
+                lgc.add(inputs.get(i * 2 + 2));
+            }
+        }
+
+        return lgc;
     }
 
     public int getFieldIndex(String str) {

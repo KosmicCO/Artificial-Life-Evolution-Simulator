@@ -42,7 +42,6 @@ public class Simulation extends ComponentInputGUI {
 
     private static int zoom = 2;
     private static Vec2 offset = new Vec2(0, 0);
-    private static List<Creature> inScreen = currentT.creaturesInSec(offset, new Vec2(512 / zoom));
 
     private Vec2 start = new Vec2(0, -156);
     private boolean init = false;
@@ -143,15 +142,6 @@ public class Simulation extends ComponentInputGUI {
         this.parent = parent;
     }
 
-    public static List<Creature> getInScreen() {
-        return inScreen;
-    }
-
-    public static void updateDrawn() {
-
-        inScreen = currentT.creaturesInSec(offset, new Vec2(512 / (1 << zoom)));
-    }
-
     public static Vec2 getOffset() {
 
         return offset;
@@ -223,7 +213,6 @@ public class Simulation extends ComponentInputGUI {
                     zoom = 7;
                 }
 
-                inScreen = currentT.creaturesInSec(offset, new Vec2(512 / (1 << zoom)));
                 checkOffsetBounds();
             });
 
@@ -231,28 +220,24 @@ public class Simulation extends ComponentInputGUI {
 
                 offset = offset.add(new Vec2(0, 1));
                 checkOffsetBounds();
-                updateDrawn();
             });
 
             Input.whileKey(Keyboard.KEY_RIGHT, true).onEvent(() -> {
 
                 offset = offset.add(new Vec2(1, 0));
                 checkOffsetBounds();
-                updateDrawn();
             });
 
             Input.whileKey(Keyboard.KEY_DOWN, true).onEvent(() -> {
 
                 offset = offset.add(new Vec2(0, -1));
                 checkOffsetBounds();
-                updateDrawn();
             });
 
             Input.whileKey(Keyboard.KEY_LEFT, true).onEvent(() -> {
 
                 offset = offset.add(new Vec2(-1, 0));
                 checkOffsetBounds();
-                updateDrawn();
             });
 
             init = true;
@@ -357,7 +342,7 @@ public class Simulation extends ComponentInputGUI {
 
                 if (!drawing) {
 
-                    Cell c = currentT.cellAtAbsPos((int) (Input.getMouse().x - ORIGIN.x) / getZoom(), (int) (Input.getMouse().y - ORIGIN.y) / getZoom());
+                    Cell c = currentT.cellAtAbsPos((int) ((Input.getMouse().x - ORIGIN.x) / getZoom() + offset.x), (int) ((Input.getMouse().y - ORIGIN.y) / getZoom() + offset.y));
                     if (c != null) {
 
                         toDraw = c.getCreature();

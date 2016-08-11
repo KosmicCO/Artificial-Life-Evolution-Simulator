@@ -13,7 +13,6 @@ import creature.cells.HunterCell;
 import graphics.Graphics2D;
 import java.util.ArrayList;
 import java.util.List;
-import static sim.guis.Simulation.getInScreen;
 import static sim.guis.Simulation.getOffset;
 import static sim.guis.Simulation.getZoom;
 import util.Color4;
@@ -574,6 +573,14 @@ public class Terrain {
         return cis;
     }
 
+    public boolean creatureInSec(Vec2 pos, Vec2 dim, Creature c) {
+
+        pos = pos.subtract(new Vec2(SIDE_LENGTH));
+        dim = dim.add(new Vec2(SIDE_LENGTH));
+
+        return pos.x <= c.getPosX() && c.getPosX() < pos.x + dim.x && pos.y <= c.getPosY() && c.getPosY() < pos.y + dim.y;
+    }
+
     /**
      * Returns the cell at a given position, designated by x and y coordinate
      * parameters
@@ -664,11 +671,10 @@ public class Terrain {
             }
         }
 
-        for (Creature cre : getInScreen()) {
-
-            Vec2 dist = (new Vec2(cre.getPosX(), cre.getPosY())).subtract(getOffset());
-            cre.drawCut(getOffset(), getOffset().add(new Vec2(512 / getZoom())), ORIGIN.add(dist.multiply(getZoom())), getZoom());
-            //cre.drawCut(ORIGIN, new Vec2((width),(height))/*.divide(getZoom()/2)*/, new Vec2(cre.getPosX(),cre.getPosY())/*.divide(getOffsetPopulation())*/, getZoom());
+        for (Creature cre : population){
+                
+                Vec2 dist = (new Vec2(cre.getPosX(), cre.getPosY())).subtract(getOffset());
+                cre.drawCut(getOffset(), getOffset().add(new Vec2(512 / getZoom())), ORIGIN.add(dist.multiply(getZoom())), getZoom());
         }
     }
 }
