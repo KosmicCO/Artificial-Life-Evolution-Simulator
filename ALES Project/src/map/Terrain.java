@@ -34,7 +34,7 @@ public class Terrain {
     //USER VARIABLES ABOVE
     public static Terrain currentT;
 
-    public static List<Creature> leaderBoard = new ArrayList<>(3);//leaderBoard.get(0) = reproductive leader; leaderBoard.get(1) = energy leader; leaderBoard.get(2) = top hunter
+    public List<Creature> leaderBoard = new ArrayList<>(3);//leaderBoard.get(0) = reproductive leader; leaderBoard.get(1) = energy leader; leaderBoard.get(2) = top hunter
 
     public final static Vec2 ORIGIN = new Vec2(-512, -256);
 
@@ -240,6 +240,12 @@ public class Terrain {
     }
 
     public void update() {
+
+        for (int i = 0; i < leaderBoard.size(); i++) {
+            if (leaderBoard.get(i) == null) {
+                leaderBoard.set(i, population.get(0));
+            }
+        }
 
         for (int i = population.size() - 1; i >= 0; i--) {
             if (population.size() > 0) {
