@@ -133,11 +133,11 @@ public class Simulation extends ComponentInputGUI {
         }
 
         inputs.add(new GUIButton("reproLeaderButton", this, nextPlace(start, 0, -3).add(offsetToDraw.withY(0)), BUTTON_SIZE, "Most Children", Color.white));
-        components.add(new GUIPanel("reproLeaderPanel", nextPlace(start, 0, -3).add(offsetToDraw.withY(0)), BUTTON_SIZE, getColor(0).multiply(0.3)));
+        components.add(new GUIPanel("reproLeaderPanel", nextPlace(start, 0, -3).add(offsetToDraw.withY(0)), BUTTON_SIZE, getColor(0).multiply(0.8)));
         inputs.add(new GUIButton("energyLeaderButton", this, nextPlace(start, 1, -3).add(offsetToDraw.withY(0)), BUTTON_SIZE, "Highest Energy", Color.white));
         components.add(new GUIPanel("energyLeaderPanel", nextPlace(start, 1, -3).add(offsetToDraw.withY(0)), BUTTON_SIZE, getColor(0).multiply(0.7)));
         inputs.add(new GUIButton("topHunterButton", this, nextPlace(start, 2, -3).add(offsetToDraw.withY(0)), BUTTON_SIZE, "Top Hunter", Color.white));
-        components.add(new GUIPanel("topHunterPanel", nextPlace(start, 2, -3).add(offsetToDraw.withY(0)), BUTTON_SIZE, getColor(0).multiply(0.5)));
+        components.add(new GUIPanel("topHunterPanel", nextPlace(start, 2, -3).add(offsetToDraw.withY(0)), BUTTON_SIZE, getColor(0).multiply(0.6)));
         
         this.parent = parent;
     }

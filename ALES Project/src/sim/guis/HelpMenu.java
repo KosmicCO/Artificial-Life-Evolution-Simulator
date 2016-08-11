@@ -27,6 +27,7 @@ public class HelpMenu extends ComponentInputGUI {
     private HelpKey cellKey;
     private HelpPresetDefinitions presetKey;
     private HelpMenuGeneral helpGen;
+    private HelpMenuControls helpControls;
 
     public HelpMenu(String n, MainMenu parent) {
         super(n);
@@ -40,11 +41,15 @@ public class HelpMenu extends ComponentInputGUI {
         components.add(new GUIPanel("prKeyPanel", nextPlace(parent.getStartPos(), 0, 0), BUTTON_SIZE, Color4.BLUE.multiply(.4)));
         presetKey = new HelpPresetDefinitions("prKey", this);
         inputs.add(new GUIButton("generalInfoButton", this, nextPlace(parent.getStartPos(),0,-1),BUTTON_SIZE, "General Info", Color.white));
-        components.add(new GUIPanel("genInfoPanel", nextPlace(parent.getStartPos(), 0, -1), BUTTON_SIZE, Color4.BLUE.multiply(.8)));
+        components.add(new GUIPanel("genInfoPanel", nextPlace(parent.getStartPos(), 0, -1), BUTTON_SIZE, Color4.BLUE.multiply(.6)));
         helpGen = new HelpMenuGeneral("helpGen", this);
+        inputs.add(new GUIButton("controlsButton", this, nextPlace(parent.getStartPos(),0,-2),BUTTON_SIZE, "Sim Controls", Color.white));
+        components.add(new GUIPanel("controlsPanel", nextPlace(parent.getStartPos(), 0, -2), BUTTON_SIZE, Color4.BLUE.multiply(.8)));
+        helpControls = new HelpMenuControls("helpControls", this);
         GUIController.add(cellKey);
         GUIController.add(presetKey);
         GUIController.add(helpGen);
+        GUIController.add(helpControls);
         
     }
 
@@ -68,6 +73,11 @@ public class HelpMenu extends ComponentInputGUI {
             case "generalInfoButton":
                 this.setVisible(false);
                 helpGen.start();
+                break;
+            case "controlsButton":
+                this.setVisible(false);
+                helpControls.start();
+                break;
         }
     }
 

@@ -116,6 +116,9 @@ public class MainMenu extends ComponentInputGUI {
 
             case "start":
 
+                this.selected = false;
+                typing(this, false);
+                
                 if (currentT == null) {
 
                     (new Thread(() -> {

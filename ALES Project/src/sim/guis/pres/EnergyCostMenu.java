@@ -82,11 +82,11 @@ public class EnergyCostMenu extends ComponentInputGUI {
         switch (string) {
             case "eCostCancel":
 
-                ((GUICommandField) inputs.get(parent.getFieldIndex("echf"))).send();
-                ((GUICommandField) inputs.get(parent.getFieldIndex("ecff"))).send();
-                ((GUICommandField) inputs.get(parent.getFieldIndex("ecrf"))).send();
-                ((GUICommandField) inputs.get(parent.getFieldIndex("ecdf"))).send();
-                ((GUICommandField) inputs.get(parent.getFieldIndex("ecmf"))).send();
+                ((GUICommandField) inputs.get(getFieldIndex("echf"))).send();
+                ((GUICommandField) inputs.get(getFieldIndex("ecff"))).send();
+                ((GUICommandField) inputs.get(getFieldIndex("ecrf"))).send();
+                ((GUICommandField) inputs.get(getFieldIndex("ecdf"))).send();
+                ((GUICommandField) inputs.get(getFieldIndex("ecmf"))).send();
 
                 setVisible(false);
                 parent.start();
@@ -100,10 +100,10 @@ public class EnergyCostMenu extends ComponentInputGUI {
                     
                     newCost = parseInt(input);
                     NewPreset.eCostHunt = newCost;
-                    ((GUICommandField) inputs.get(parent.getFieldIndex("echf"))).setText(input);
+                    ((GUICommandField) inputs.get(getFieldIndex("echf"))).setText(input);
                 } catch (Exception e) {
 
-                    ((GUICommandField) inputs.get(parent.getFieldIndex("echf"))).setText("Error");
+                    ((GUICommandField) inputs.get(getFieldIndex("echf"))).setText("Error");
                 }
                 break;
                 
@@ -115,10 +115,10 @@ public class EnergyCostMenu extends ComponentInputGUI {
                     
                 newCost = parseInt(input);
                 NewPreset.eCostForage = newCost;
-                ((GUICommandField) inputs.get(parent.getFieldIndex("ecff"))).setText(input);
+                ((GUICommandField) inputs.get(getFieldIndex("ecff"))).setText(input);
                 }catch(Exception e){
                     
-                    ((GUICommandField) inputs.get(parent.getFieldIndex("ecff"))).setText("Error");
+                    ((GUICommandField) inputs.get(getFieldIndex("ecff"))).setText("Error");
                 }
                 break;
             case "ecrf":
@@ -129,10 +129,10 @@ public class EnergyCostMenu extends ComponentInputGUI {
                 
                 newCost = parseInt(input);
                 NewPreset.eCostRepro = newCost;
-                ((GUICommandField) inputs.get(parent.getFieldIndex("ecrf"))).setText(input);
+                ((GUICommandField) inputs.get(getFieldIndex("ecrf"))).setText(input);
                 }catch(Exception e){
                     
-                    ((GUICommandField) inputs.get(parent.getFieldIndex("ecrf"))).setText("Error");
+                    ((GUICommandField) inputs.get(getFieldIndex("ecrf"))).setText("Error");
                 }
                 
                 break;
@@ -145,10 +145,10 @@ public class EnergyCostMenu extends ComponentInputGUI {
                 
                 newCost = parseInt(input);
                 NewPreset.eCostDetect = newCost;
-                ((GUICommandField) inputs.get(parent.getFieldIndex("ecdf"))).setText(input);
+                ((GUICommandField) inputs.get(getFieldIndex("ecdf"))).setText(input);
                 }catch(Exception e){
                     
-                    ((GUICommandField) inputs.get(parent.getFieldIndex("ecdf"))).setText("Error");
+                    ((GUICommandField) inputs.get(getFieldIndex("ecdf"))).setText("Error");
                 }
                 
                 break;
@@ -161,10 +161,10 @@ public class EnergyCostMenu extends ComponentInputGUI {
                 
                 newCost = parseInt(input);
                 NewPreset.eCostMove = newCost;
-                ((GUICommandField) inputs.get(parent.getFieldIndex("ecmf"))).setText(input);
+                ((GUICommandField) inputs.get(getFieldIndex("ecmf"))).setText(input);
                 }catch(Exception e){
                     
-                     ((GUICommandField) inputs.get(parent.getFieldIndex("ecmf"))).setText("Error");
+                     ((GUICommandField) inputs.get(getFieldIndex("ecmf"))).setText("Error");
                 }
                 
                 break;
@@ -172,6 +172,15 @@ public class EnergyCostMenu extends ComponentInputGUI {
 
     }
 
+    public int getFieldIndex(String str) {
+        for (int i = 0; i < inputs.size(); i++) {
+            if (inputs.get(i).getName().equals(str)) {
+                return i;
+            }
+        }
+        return -1;
+    }
+    
     @Override
     public List<GUIComponent> mousePressed(Vec2 p) {
 

@@ -33,7 +33,9 @@ public class HelpMenuControls extends ComponentInputGUI{
         components.add(new GUIPanel("cancelPanel", nextPlace(parent.getStartPos(), 0, 2), BUTTON_SIZE, Color4.RED));
         prInfo.appendLine("When you start the simulation, it will open up rather close up. Just use the SCROLL on your mouse to ZOOM OUT. You can SCROLL in to ZOOM back in as well. "
                 + "And while you're at it, you can use the ARROW KEYS to move your zoomed in view of the map. To PAUSE the simulation, press the SPACEBAR. While you are paused, you "
-                + "can also CYCLE THROUGH TICKS of the program by pressing the 'S' KEY.");
+                + "can also CYCLE THROUGH TICKS of the program by pressing the 'S' KEY. You can also click on a creature in the large terrain window to see it in a mini-window"
+                + " which will appear at the top right of the screen. This mini-window contains statistics about the creature and allows you to press the FOUR DIRECTIONAL BUTTONS "
+                + "around it to manipulate the motor cells in the creature and move it manually. You can also view the leading creatures in this mini window by pressing the respective buttons below.");
         components.add(prInfo);
     }
 
