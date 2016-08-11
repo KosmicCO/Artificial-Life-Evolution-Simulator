@@ -13,6 +13,7 @@ import creature.cells.HunterCell;
 import graphics.Graphics2D;
 import java.util.ArrayList;
 import java.util.List;
+import static sim.guis.Simulation.getOffset;
 import static sim.guis.Simulation.getZoom;
 import util.Color4;
 import util.Vec2;
@@ -33,9 +34,9 @@ public class Terrain {
     //USER VARIABLES ABOVE
     public static Terrain currentT;
 
-    public static List<Creature> leaderBoard = new ArrayList<>(3);//leaderBoard.get(0) = reproductive leader; leaderBoard.get(1) = energy leader; leaderBoard.get(2) = top hunter
+    public List<Creature> leaderBoard = new ArrayList<>(3);//leaderBoard.get(0) = reproductive leader; leaderBoard.get(1) = energy leader; leaderBoard.get(2) = top hunter
 
-    public final static Vec2 ORIGIN = new Vec2(-500, -250);
+    public final static Vec2 ORIGIN = new Vec2(-512, -256);
 
     public final static int FOOD = 1;
     public final static int WALL = 2;
@@ -57,6 +58,36 @@ public class Terrain {
         probabilityMap = probMap;
         frCounter = 0;
         foodCount = 0;
+    }
+
+    public int getWidth() {
+
+        return width;
+    }
+
+    public int getHeight() {
+
+        return height;
+    }
+
+    public void replaceTile(Vec2 pos, int type, int size) {
+
+        if (pos.containedBy(Vec2.ZERO, new Vec2(width, height)) && type >= 0 && type < 4) {
+
+            for (int i = 0; i < size; i++) {
+
+                for (int j = 0; j < size; j++) {
+
+                    int x = (int) (pos.x + i - size / 2.0);
+                    int y = (int) (pos.y + j - size / 2.0);
+
+                    if (x >= 0 && y >= 0 && x < width && y < height) {
+
+                        environment[x][y] = type;
+                    }
+                }
+            }
+        }
     }
 
     /**
@@ -209,6 +240,12 @@ public class Terrain {
     }
 
     public void update() {
+
+        for (int i = 0; i < leaderBoard.size(); i++) {
+            if (leaderBoard.get(i) == null) {
+                leaderBoard.set(i, population.get(0));
+            }
+        }
 
         for (int i = population.size() - 1; i >= 0; i--) {
             if (population.size() > 0) {
@@ -536,6 +573,14 @@ public class Terrain {
         return cis;
     }
 
+    public boolean creatureInSec(Vec2 pos, Vec2 dim, Creature c) {
+
+        pos = pos.subtract(new Vec2(SIDE_LENGTH));
+        dim = dim.add(new Vec2(SIDE_LENGTH));
+
+        return pos.x <= c.getPosX() && c.getPosX() < pos.x + dim.x && pos.y <= c.getPosY() && c.getPosY() < pos.y + dim.y;
+    }
+
     /**
      * Returns the cell at a given position, designated by x and y coordinate
      * parameters
@@ -571,7 +616,7 @@ public class Terrain {
         Terrain.nutrientsPerFood = nutrientsPerFood;
     }
 
-    private static Color4 getTerColor(int type) {
+    public static Color4 getTerColor(int type) {
 
         switch (type) {
 
@@ -585,7 +630,7 @@ public class Terrain {
                 return Color4.gray(0.5);
         }
 
-        return null;
+        return Color4.WHITE;
     }
 
     public void drawSection(Vec2 pos, Vec2 from, int s, int zoom) {
@@ -608,20 +653,28 @@ public class Terrain {
 
     public void draw() {
 
-        for (int i = 0; i < width; i++) {
+        for (int i = 0; i < width / (getZoom() / 2); i++) {
 
-            for (int j = 0; j < height; j++) {
+            for (int j = 0; j < height / (getZoom() / 2); j++) {
 
-                if (environment[i][j] != 0) {
+                if (i + getOffset().x >= 0 && j + getOffset().y >= 0 && i + getOffset().x < width && j + getOffset().y < height) {
 
-                    Graphics2D.fillRect(ORIGIN.add(new Vec2(getZoom() * i, getZoom() * j)), new Vec2(getZoom()), getTerColor(environment[i][j]));
+                    int ent = environment[(int) getOffset().x + i][(int) getOffset().y + j];
+                    if (ent != 0) {
+
+                        Graphics2D.fillRect(ORIGIN.add(new Vec2(getZoom() * i, getZoom() * j)), new Vec2(getZoom()), getTerColor(ent));
+                    } else {
+
+                        Graphics2D.fillRect(ORIGIN.add(new Vec2(getZoom() * i, getZoom() * j)), new Vec2(getZoom()), getTerColor(environment[(int) getOffset().x + i][(int) getOffset().y + j]));
+                    }
                 }
             }
         }
 
-        for (Creature cre : population) {
-
-            cre.draw(ORIGIN, getZoom());
+        for (Creature cre : population){
+                
+                Vec2 dist = (new Vec2(cre.getPosX(), cre.getPosY())).subtract(getOffset());
+                cre.drawCut(getOffset(), getOffset().add(new Vec2(512 / getZoom())), ORIGIN.add(dist.multiply(getZoom())), getZoom());
         }
     }
 }
