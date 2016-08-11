@@ -96,7 +96,6 @@ public class CreaturePresetSpec extends ComponentInputGUI {
             case "cancelBtn":
 
                 ((GUICommandField) inputs.get(getFieldIndex("rtf"))).send();
-                ((GUICommandField) inputs.get(getFieldIndex("htf"))).send();
                 ((GUICommandField) inputs.get(getFieldIndex("rbf"))).send();
                 ((GUICommandField) inputs.get(getFieldIndex("arf"))).send();
                 
@@ -124,23 +123,6 @@ public class CreaturePresetSpec extends ComponentInputGUI {
                 }
 
                 break;
-
-            case "htf":
-
-                inputStr = (String) o;
-
-                try {
-
-                    newValDouble = parseDouble(inputStr);
-                    NewPreset.hunterThreshold = newValDouble;
-                    ((GUICommandField) inputs.get(getFieldIndex("htf"))).setText(inputStr);
-                } catch (Exception e) {
-
-                    ((GUICommandField) inputs.get(getFieldIndex("htf"))).setText("Error");
-                }
-
-                break;
-
             case "rbf":
 
                 inputStr = (String) o;
