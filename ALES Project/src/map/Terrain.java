@@ -35,7 +35,7 @@ public class Terrain {
     //USER VARIABLES ABOVE
     public static Terrain currentT;
 
-    public static List<Creature> leaderBoard = new ArrayList<>(3);//leaderBoard.get(0) = reproductive leader; leaderBoard.get(1) = energy leader; leaderBoard.get(2) = top hunter
+    public List<Creature> leaderBoard = new ArrayList<>(3);//leaderBoard.get(0) = reproductive leader; leaderBoard.get(1) = energy leader; leaderBoard.get(2) = top hunter
 
     public final static Vec2 ORIGIN = new Vec2(-512, -256);
 
@@ -241,6 +241,12 @@ public class Terrain {
     }
 
     public void update() {
+
+        for (int i = 0; i < leaderBoard.size(); i++) {
+            if (leaderBoard.get(i) == null) {
+                leaderBoard.set(i, population.get(0));
+            }
+        }
 
         for (int i = population.size() - 1; i >= 0; i--) {
             if (population.size() > 0) {
@@ -645,13 +651,13 @@ public class Terrain {
             for (int j = 0; j < height / (getZoom() / 2); j++) {
 
                 if (i + getOffset().x >= 0 && j + getOffset().y >= 0 && i + getOffset().x < width && j + getOffset().y < height) {
-                    
+
                     int ent = environment[(int) getOffset().x + i][(int) getOffset().y + j];
                     if (ent != 0) {
 
                         Graphics2D.fillRect(ORIGIN.add(new Vec2(getZoom() * i, getZoom() * j)), new Vec2(getZoom()), getTerColor(ent));
-                    }else{
-                        
+                    } else {
+
                         Graphics2D.fillRect(ORIGIN.add(new Vec2(getZoom() * i, getZoom() * j)), new Vec2(getZoom()), getTerColor(environment[(int) getOffset().x + i][(int) getOffset().y + j]));
                     }
                 }
@@ -659,7 +665,7 @@ public class Terrain {
         }
 
         for (Creature cre : getInScreen()) {
-            
+
             Vec2 dist = (new Vec2(cre.getPosX(), cre.getPosY())).subtract(getOffset());
             cre.drawCut(getOffset(), getOffset().add(new Vec2(512 / getZoom())), ORIGIN.add(dist.multiply(getZoom())), getZoom());
             //cre.drawCut(ORIGIN, new Vec2((width),(height))/*.divide(getZoom()/2)*/, new Vec2(cre.getPosX(),cre.getPosY())/*.divide(getOffsetPopulation())*/, getZoom());

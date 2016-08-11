@@ -133,6 +133,13 @@ public class Simulation extends ComponentInputGUI {
             stats.add(new GUILabel("stat" + i, new Vec2(SIDE_LENGTH * 8 + offsetToDraw.x * 2 + 4, 231 - 25 * i), "Stat " + i, Color.white));
         }
 
+        inputs.add(new GUIButton("reproLeaderButton", this, nextPlace(start, 0, -3).add(offsetToDraw.withY(0)), BUTTON_SIZE, "Most Children", Color.white));
+        components.add(new GUIPanel("reproLeaderPanel", nextPlace(start, 0, -3).add(offsetToDraw.withY(0)), BUTTON_SIZE, getColor(0).multiply(0.3)));
+        inputs.add(new GUIButton("energyLeaderButton", this, nextPlace(start, 1, -3).add(offsetToDraw.withY(0)), BUTTON_SIZE, "Highest Energy", Color.white));
+        components.add(new GUIPanel("energyLeaderPanel", nextPlace(start, 1, -3).add(offsetToDraw.withY(0)), BUTTON_SIZE, getColor(0).multiply(0.7)));
+        inputs.add(new GUIButton("topHunterButton", this, nextPlace(start, 2, -3).add(offsetToDraw.withY(0)), BUTTON_SIZE, "Top Hunter", Color.white));
+        components.add(new GUIPanel("topHunterPanel", nextPlace(start, 2, -3).add(offsetToDraw.withY(0)), BUTTON_SIZE, getColor(0).multiply(0.5)));
+        
         this.parent = parent;
     }
 
@@ -333,6 +340,18 @@ public class Simulation extends ComponentInputGUI {
                 break;
             case "regenerate":
                 SimGenerator.generate();
+                break;
+            case "reproLeaderButton":
+                System.out.println("repro clicked");
+                toDraw = currentT.leaderBoard.get(0);
+                break;
+            case "energyLeaderButton":
+                System.out.println("energy clicked");
+                toDraw = currentT.leaderBoard.get(1);
+                break;
+            case "topHunterButton":
+                System.out.println("hunter clicked");
+                toDraw = currentT.leaderBoard.get(2);
                 break;
             case "plane":
 
