@@ -37,9 +37,10 @@ public class FoodPresetSpec extends ComponentInputGUI {
         super(n);
         this.parent = parent;
         for (int i = 0; i < 3; i++) {
-            components.add(new GUIPanel("top" + i, nextPlace(parent.getStartPos(), 3, -i), BUTTON_SIZE.multiply(new Vec2(1, 1)), getColor(0).multiply(0.8 - 0.1 * i)));
+            components.add(new GUIPanel("top" + i, nextPlace(parent.getStartPos(), 3, -i), BUTTON_SIZE.multiply(new Vec2(2, 1)), getColor(0).multiply(0.8 - 0.1 * i)));
         }
-        inputs.add(new GUIButton("cancelBtn", this, nextPlace(parent.getStartPos(), 3, 1), BUTTON_SIZE, "Cancel", Color.white));
+        
+        inputs.add(new GUIButton("cancelBtn", this, nextPlace(parent.getStartPos(), 3, 1), BUTTON_SIZE, "Back", Color.white));
         components.add(new GUIPanel("cancelPanel", nextPlace(parent.getStartPos(), 3, 1), BUTTON_SIZE, Color4.RED.multiply(0.8)));
 
         components.add(new GUILabel("nutrientsPFLabel", nextPlace(parent.getStartPos(), 3, -2), BUTTON_SIZE, "Nutrients/Food", Color.white));

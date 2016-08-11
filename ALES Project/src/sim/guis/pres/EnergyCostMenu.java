@@ -63,7 +63,7 @@ public class EnergyCostMenu extends ComponentInputGUI {
         inputs.add(new GUIButton("ecmfb", this, nextPlace(parent.getStartPos(), 5, 0), BUTTON_SIZE, "", Color.white));
         inputs.add(new GUICommandField("ecmf", this, nextPlace(parent.getStartPos(), 5, 0).add(new Vec2(6, (BUTTON_SIZE.y - FONT.getHeight()) / 2.0 + FONT.getHeight())), BUTTON_SIZE.x - 12, Color.white, Color4.WHITE));
 
-        inputs.add(new GUIButton("eCostCancel", this, nextPlace(parent.getStartPos(), 4, 1), BUTTON_SIZE, "Cancel", Color.white));
+        inputs.add(new GUIButton("eCostCancel", this, nextPlace(parent.getStartPos(), 4, 1), BUTTON_SIZE, "Back", Color.white));
         components.add(new GUIPanel("cancelPanel", nextPlace(parent.getStartPos(), 4, 1), BUTTON_SIZE, Color4.RED.multiply(0.8)));
 
     }

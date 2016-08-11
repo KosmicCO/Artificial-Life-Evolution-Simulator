@@ -41,7 +41,7 @@ public class CreaturePresetSpec extends ComponentInputGUI {
         for (int i = 0; i < 4; i++) {
             components.add(new GUIPanel("top1." + i, nextPlace(parent.getStartPos(), 3, -i), BUTTON_SIZE.multiply(new Vec2(2 - (i == 3 ? 1 : 0), 1)), getColor(0).multiply(0.8 - 0.1 * i)));
         }
-        inputs.add(new GUIButton("cancelBtn", this, nextPlace(parent.getStartPos(), 3, 1), BUTTON_SIZE, "Cancel", Color.white));
+        inputs.add(new GUIButton("cancelBtn", this, nextPlace(parent.getStartPos(), 3, 1), BUTTON_SIZE, "Back", Color.white));
         components.add(new GUIPanel("cancelPanel", nextPlace(parent.getStartPos(), 3, 1), BUTTON_SIZE, Color4.RED.multiply(0.8)));
 
         inputs.add(new GUIButton("eCostSetVisible", this, nextPlace(parent.getStartPos(), 3, -3), BUTTON_SIZE, "Energy Costs", Color.white));
